@@ -1,4 +1,4 @@
-module Composer.Model exposing (Model, Msg, init)
+module Composer.Model exposing (Model, Msg)
 
 {-| Module implementing the composed model for complete application.
 -}
@@ -15,10 +15,3 @@ type alias Model =
 -}
 type Msg
     = Nop
-
-
-{-| Initialize the model.
--}
-init : ( Model, Cmd Msg )
-init =
-    ( { placeHolder = 0 }, Cmd.none )

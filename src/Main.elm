@@ -3,7 +3,7 @@ module Main exposing (main)
 {-| Main module. Just forward everything to the Composer module.
 -}
 
-import Composer.Model as Composer exposing (Model, Msg)
+import Composer.Model exposing (Model, Msg)
 import Composer.Update as Composer
 import Composer.View as Composer
 import Html
