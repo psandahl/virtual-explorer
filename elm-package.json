@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
-    "summary": "Create a virtual 3D world. Travel around and take postcards",
-    "repository": "https://github.com/psandahl/virtual-postcard.git",
+    "summary": "Create a virtual 3D world. Explore it and take postcards",
+    "repository": "https://github.com/psandahl/virtual-explorer.git",
     "license": "MIT",
     "source-directories": [
         "src"

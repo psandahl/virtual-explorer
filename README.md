@@ -1,2 +1,2 @@
 # virtual-postcard
-Create a virtual 3D world. Travel around and take virtual postcards.
+Create a virtual 3D world. Explore it and take virtual postcards.
