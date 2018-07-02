@@ -1,9 +1,10 @@
-module Composer.Model exposing (Model, Msg)
+module Composer.Model exposing (Model, Msg(..))
 
 {-| Module implementing the composed model for complete application.
 -}
 
 import Graphics.Model as Graphics
+import Window exposing (Size)
 
 
 {-| Model record.
@@ -16,4 +17,4 @@ type alias Model =
 {-| The message type.
 -}
 type Msg
-    = Nop
+    = SetViewport Size
