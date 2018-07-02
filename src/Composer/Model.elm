@@ -3,6 +3,7 @@ module Composer.Model exposing (Model, Msg(..))
 {-| Module implementing the composed model for complete application.
 -}
 
+import Compass.Model as Compass
 import Graphics.Model as Graphics
 import Window exposing (Size)
 
@@ -11,6 +12,7 @@ import Window exposing (Size)
 -}
 type alias Model =
     { graphics : Graphics.Model
+    , compass : Compass.Model
     }
 
 
