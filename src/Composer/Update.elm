@@ -4,13 +4,14 @@ module Composer.Update exposing (init, subscriptions, update)
 -}
 
 import Composer.Model exposing (Model, Msg)
+import Graphics.Update as Graphics
 
 
 {-| Initialize the model.
 -}
 init : ( Model, Cmd Msg )
 init =
-    ( { placeHolder = 0 }, Cmd.none )
+    ( { graphics = Graphics.init }, Cmd.none )
 
 
 {-| The main update function for the complete application.

@@ -4,6 +4,7 @@ module Composer.View exposing (view)
 -}
 
 import Composer.Model exposing (Model, Msg)
+import Graphics.View as Graphics
 import Html exposing (Html)
 
 
@@ -11,4 +12,6 @@ import Html exposing (Html)
 -}
 view : Model -> Html Msg
 view model =
-    Html.text "Hepp"
+    Html.div []
+        [ Graphics.view model.graphics
+        ]
