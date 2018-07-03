@@ -3,11 +3,13 @@ module Composer.Update exposing (init, subscriptions, update)
 {-| Module implementing the composed message handling for the complete application.
 -}
 
+import Camera.Update as Camera
 import Compass.Update as Compass
 import Composer.Model exposing (Model, Msg(..))
+import Graphics.Model exposing (Cursor(..))
 import Graphics.Update as Graphics
 import Keyboard exposing (KeyCode)
-import Mouse
+import Mouse exposing (Position)
 import Task
 import Window
 import Debug
@@ -19,6 +21,7 @@ init : ( Model, Cmd Msg )
 init =
     ( { graphics = Graphics.init
       , compass = Compass.init
+      , camera = Camera.init
       , ctrlKeyDown = False
       , trackedMousePosition = Nothing
       }
@@ -37,19 +40,68 @@ update msg model =
             )
 
         CtrlKeyDown ->
-            ( { model | ctrlKeyDown = True }, Cmd.none )
+            ( { model
+                | ctrlKeyDown = True
+                , graphics = Graphics.setCursor (cursorType True model.trackedMousePosition) model.graphics
+              }
+            , Cmd.none
+            )
 
         CtrlKeyUp ->
-            ( { model | ctrlKeyDown = False }, Cmd.none )
+            ( { model
+                | ctrlKeyDown = False
+                , graphics = Graphics.setCursor (cursorType False model.trackedMousePosition) model.graphics
+              }
+            , Cmd.none
+            )
 
         GraphicsViewMouseDown position ->
-            ( model, Cmd.none )
+            ( { model
+                | trackedMousePosition = Just position
+                , graphics = Graphics.setCursor (cursorType model.ctrlKeyDown <| Just position) model.graphics
+              }
+            , Cmd.none
+            )
 
-        GraphicsViewMouseMoved position ->
-            ( model, Cmd.none )
+        GraphicsViewMouseMoved to ->
+            case model.trackedMousePosition of
+                Just from ->
+                    ( { model
+                        | trackedMousePosition = Just to
+                        , camera =
+                            case model.ctrlKeyDown of
+                                True ->
+                                    Camera.mouseRotateCamera from to model.camera
 
-        GraphicsViewMouseReleased position ->
-            ( model, Cmd.none )
+                                False ->
+                                    Camera.mouseMovePosition from to model.camera
+                        , graphics = Graphics.setCursor (cursorType model.ctrlKeyDown <| Just to) model.graphics
+                      }
+                    , Cmd.none
+                    )
+
+                Nothing ->
+                    Debug.crash "Shall have a tracked position"
+
+        GraphicsViewMouseReleased to ->
+            case model.trackedMousePosition of
+                Just from ->
+                    ( { model
+                        | trackedMousePosition = Nothing
+                        , camera =
+                            case model.ctrlKeyDown of
+                                True ->
+                                    Camera.mouseRotateCamera from to model.camera
+
+                                False ->
+                                    Camera.mouseMovePosition from to model.camera
+                        , graphics = Graphics.setCursor (cursorType model.ctrlKeyDown Nothing) model.graphics
+                      }
+                    , Cmd.none
+                    )
+
+                Nothing ->
+                    Debug.crash "Shall have a tracked position"
 
         Nop ->
             ( model, Cmd.none )
@@ -91,3 +143,16 @@ ifCtrlKeyInsert msg keyCode =
 isCtrlKeyCode : KeyCode -> Bool
 isCtrlKeyCode keyCode =
     keyCode == 17
+
+
+cursorType : Bool -> Maybe Position -> Cursor
+cursorType ctrlKeyDown trackedMousePosition =
+    case ( ctrlKeyDown, trackedMousePosition ) of
+        ( True, Just _ ) ->
+            Crosshair
+
+        ( False, Just _ ) ->
+            Move
+
+        ( _, Nothing ) ->
+            Default
