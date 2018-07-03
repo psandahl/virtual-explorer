@@ -40,6 +40,9 @@ update msg model =
         CtrlKeyUp ->
             ( { model | ctrlKeyDown = False }, Cmd.none )
 
+        GraphicsViewMouseDown position ->
+            ( model, Cmd.none )
+
         Nop ->
             ( model, Cmd.none )
 

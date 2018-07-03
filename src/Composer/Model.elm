@@ -5,6 +5,7 @@ module Composer.Model exposing (Model, Msg(..))
 
 import Compass.Model as Compass
 import Graphics.Model as Graphics
+import Mouse exposing (Position)
 import Window exposing (Size)
 
 
@@ -23,4 +24,5 @@ type Msg
     = SetViewport Size
     | CtrlKeyDown
     | CtrlKeyUp
+    | GraphicsViewMouseDown Position
     | Nop

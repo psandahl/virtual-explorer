@@ -3,10 +3,13 @@ module Graphics.View exposing (view)
 {-| Module implementing the main rendering functionality for the graphics view.
 -}
 
-import Composer.Model exposing (Msg)
+import Composer.Model exposing (Msg(..))
 import Graphics.Model exposing (Model)
-import Html exposing (Html)
+import Html exposing (Attribute, Html)
 import Html.Attributes as Attr
+import Html.Events as Events
+import Json.Decode as Decode
+import Mouse
 import WebGL as GL
 
 
@@ -22,5 +25,11 @@ view model =
         ]
         [ Attr.height model.viewport.height
         , Attr.width model.viewport.width
+        , onMouseDown
         ]
         []
+
+
+onMouseDown : Attribute Msg
+onMouseDown =
+    Events.on "mousedown" <| Decode.map GraphicsViewMouseDown Mouse.position
