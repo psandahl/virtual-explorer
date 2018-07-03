@@ -8,6 +8,8 @@ import Composer.Model exposing (Model, Msg(..))
 import Graphics.Update as Graphics
 import Task
 import Window
+import Keyboard exposing (KeyCode)
+import Debug
 
 
 {-| Initialize the model.
@@ -16,6 +18,7 @@ init : ( Model, Cmd Msg )
 init =
     ( { graphics = Graphics.init
       , compass = Compass.init
+      , ctrlKeyDown = False
       }
     , Task.perform SetViewport Window.size
     )
@@ -31,9 +34,35 @@ update msg model =
             , Cmd.none
             )
 
+        CtrlKeyDown ->
+            ( { model | ctrlKeyDown = True }, Cmd.none )
+
+        CtrlKeyUp ->
+            ( { model | ctrlKeyDown = False }, Cmd.none )
+
+        Nop ->
+            ( model, Cmd.none )
+
 
 {-| Handle subscriptions for the application.
 -}
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Window.resizes SetViewport
+    Sub.batch
+        [ Window.resizes SetViewport
+        , Keyboard.downs (ifCtrlKeyInsert CtrlKeyDown)
+        , Keyboard.ups (ifCtrlKeyInsert CtrlKeyUp)
+        ]
+
+
+ifCtrlKeyInsert : Msg -> KeyCode -> Msg
+ifCtrlKeyInsert msg keyCode =
+    if isCtrlKeyCode keyCode then
+        msg
+    else
+        Nop
+
+
+isCtrlKeyCode : KeyCode -> Bool
+isCtrlKeyCode keyCode =
+    keyCode == 17

@@ -13,6 +13,7 @@ import Window exposing (Size)
 type alias Model =
     { graphics : Graphics.Model
     , compass : Compass.Model
+    , ctrlKeyDown : Bool
     }
 
 
@@ -20,3 +21,6 @@ type alias Model =
 -}
 type Msg
     = SetViewport Size
+    | CtrlKeyDown
+    | CtrlKeyUp
+    | Nop
