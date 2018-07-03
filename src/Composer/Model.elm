@@ -15,6 +15,7 @@ type alias Model =
     { graphics : Graphics.Model
     , compass : Compass.Model
     , ctrlKeyDown : Bool
+    , trackedMousePosition : Maybe Position
     }
 
 
@@ -25,4 +26,6 @@ type Msg
     | CtrlKeyDown
     | CtrlKeyUp
     | GraphicsViewMouseDown Position
+    | GraphicsViewMouseMoved Position
+    | GraphicsViewMouseReleased Position
     | Nop

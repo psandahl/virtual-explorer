@@ -1,9 +1,9 @@
-module Graphics.Update exposing (init, setViewport)
+module Graphics.Update exposing (init, setViewport, setCursor)
 
 {-| Model manipulating functions for the graphics view.
 -}
 
-import Graphics.Model exposing (Model)
+import Graphics.Model exposing (Model, Cursor(..))
 import Math.Matrix4 as Mat4 exposing (Mat4)
 import Window exposing (Size)
 
@@ -14,6 +14,7 @@ init : Model
 init =
     { viewport = defaultViewport
     , projectionMatrix = makeProjectionMatrix defaultViewport
+    , cursor = Default
     }
 
 
@@ -25,6 +26,13 @@ setViewport viewport model =
         | viewport = viewport
         , projectionMatrix = makeProjectionMatrix viewport
     }
+
+
+{-| Set the cursor type.
+-}
+setCursor : Cursor -> Model -> Model
+setCursor cursor model =
+    { model | cursor = cursor }
 
 
 {-| Give a default viewport before the browser reports the real one.

@@ -6,9 +6,10 @@ module Composer.Update exposing (init, subscriptions, update)
 import Compass.Update as Compass
 import Composer.Model exposing (Model, Msg(..))
 import Graphics.Update as Graphics
+import Keyboard exposing (KeyCode)
+import Mouse
 import Task
 import Window
-import Keyboard exposing (KeyCode)
 import Debug
 
 
@@ -19,6 +20,7 @@ init =
     ( { graphics = Graphics.init
       , compass = Compass.init
       , ctrlKeyDown = False
+      , trackedMousePosition = Nothing
       }
     , Task.perform SetViewport Window.size
     )
@@ -43,6 +45,12 @@ update msg model =
         GraphicsViewMouseDown position ->
             ( model, Cmd.none )
 
+        GraphicsViewMouseMoved position ->
+            ( model, Cmd.none )
+
+        GraphicsViewMouseReleased position ->
+            ( model, Cmd.none )
+
         Nop ->
             ( model, Cmd.none )
 
@@ -51,11 +59,25 @@ update msg model =
 -}
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch
-        [ Window.resizes SetViewport
-        , Keyboard.downs (ifCtrlKeyInsert CtrlKeyDown)
-        , Keyboard.ups (ifCtrlKeyInsert CtrlKeyUp)
-        ]
+    let
+        baseSubscriptions =
+            [ Window.resizes SetViewport
+            , Keyboard.downs (ifCtrlKeyInsert CtrlKeyDown)
+            , Keyboard.ups (ifCtrlKeyInsert CtrlKeyUp)
+            ]
+
+        mouseSubscriptions =
+            [ Mouse.moves GraphicsViewMouseMoved
+            , Mouse.ups GraphicsViewMouseReleased
+            ]
+    in
+        Sub.batch <|
+            case model.trackedMousePosition of
+                Just _ ->
+                    baseSubscriptions ++ mouseSubscriptions
+
+                Nothing ->
+                    baseSubscriptions
 
 
 ifCtrlKeyInsert : Msg -> KeyCode -> Msg

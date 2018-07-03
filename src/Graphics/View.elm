@@ -4,7 +4,7 @@ module Graphics.View exposing (view)
 -}
 
 import Composer.Model exposing (Msg(..))
-import Graphics.Model exposing (Model)
+import Graphics.Model exposing (Model, Cursor(..))
 import Html exposing (Attribute, Html)
 import Html.Attributes as Attr
 import Html.Events as Events
@@ -26,6 +26,9 @@ view model =
         [ Attr.height model.viewport.height
         , Attr.width model.viewport.width
         , onMouseDown
+        , Attr.style
+            [ ( "cursor", cursorToString model.cursor )
+            ]
         ]
         []
 
@@ -33,3 +36,16 @@ view model =
 onMouseDown : Attribute Msg
 onMouseDown =
     Events.on "mousedown" <| Decode.map GraphicsViewMouseDown Mouse.position
+
+
+cursorToString : Cursor -> String
+cursorToString cursor =
+    case cursor of
+        Default ->
+            "default"
+
+        Move ->
+            "move"
+
+        Crosshair ->
+            "crosshair"
