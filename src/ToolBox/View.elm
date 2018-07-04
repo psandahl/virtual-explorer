@@ -47,6 +47,8 @@ pane =
         [ Attr.style
             [ ( "display", "inline-block" )
             , ( "position", "absolute" )
+            , ( "left", "0" )
+            , ( "top", "0" )
             , ( "background-color", "rgba(88, 88, 88, 0.5)" )
             , ( "color", "white" )
             , ( "width", "160px" )
