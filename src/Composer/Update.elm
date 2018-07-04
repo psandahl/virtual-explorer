@@ -8,6 +8,7 @@ import Compass.Update as Compass
 import Composer.Model exposing (Model, Msg(..))
 import Graphics.Model exposing (Cursor(..))
 import Graphics.Update as Graphics
+import ToolBox.Update as ToolBox
 import Keyboard exposing (KeyCode)
 import Mouse exposing (Position)
 import Task
@@ -22,6 +23,7 @@ init =
     ( { graphics = Graphics.init defaultViewport
       , compass = Compass.init defaultViewport
       , camera = Camera.init defaultViewport
+      , toolBox = ToolBox.init
       , ctrlKeyDown = False
       , trackedMousePosition = Nothing
       }
@@ -106,6 +108,12 @@ update msg model =
 
                 Nothing ->
                     Debug.crash "Shall have a tracked position"
+
+        OpenToolBox ->
+            ( { model | toolBox = ToolBox.openToolBox model.toolBox }, Cmd.none )
+
+        CloseToolBox ->
+            ( { model | toolBox = ToolBox.closeToolBox model.toolBox }, Cmd.none )
 
         Nop ->
             ( model, Cmd.none )

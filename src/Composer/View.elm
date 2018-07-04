@@ -7,6 +7,7 @@ import Camera.Update as Camera
 import Compass.View as Compass
 import Composer.Model exposing (Model, Msg)
 import Graphics.View as Graphics
+import ToolBox.View as ToolBox
 import Html exposing (Html)
 
 
@@ -15,6 +16,7 @@ import Html exposing (Html)
 view : Model -> Html Msg
 view model =
     Html.div []
-        [ Graphics.view model.graphics
+        [ ToolBox.view model.toolBox
+        , Graphics.view model.graphics
         , Compass.view model.camera.heading model.compass
         ]
