@@ -13,7 +13,7 @@ import Svg.Attributes as SAttr
 
 {-| Render the compass.
 -}
-view : Float -> Model -> Html Msg
+view : Int -> Model -> Html Msg
 view heading model =
     Html.div
         [ Attr.style

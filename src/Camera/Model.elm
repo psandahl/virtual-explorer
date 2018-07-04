@@ -16,4 +16,5 @@ import Window exposing (Size)
 
 type alias Model =
     { viewport : Size
+    , heading : Int
     }

@@ -16,5 +16,5 @@ view : Model -> Html Msg
 view model =
     Html.div []
         [ Graphics.view model.graphics
-        , Compass.view (Camera.getHeading model.camera) model.compass
+        , Compass.view model.camera.heading model.compass
         ]

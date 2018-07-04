@@ -4,7 +4,6 @@ module Camera.Update
         , setViewport
         , mouseMovePosition
         , mouseRotateCamera
-        , getHeading
         )
 
 {-| Module implementing model manipulating functions for the camera.
@@ -19,7 +18,9 @@ import Window exposing (Size)
 -}
 init : Size -> Model
 init viewport =
-    { viewport = viewport }
+    { viewport = viewport
+    , heading = 0
+    }
 
 
 {-| Set a new viewport.
@@ -40,11 +41,18 @@ mouseMovePosition from to model =
 -}
 mouseRotateCamera : Position -> Position -> Model -> Model
 mouseRotateCamera from to model =
-    model
+    let
+        deltaX =
+            to.x - from.x
 
+        normalizedChange =
+            if model.viewport.width < 360 then
+                toFloat deltaX
+            else
+                (toFloat deltaX) / (toFloat model.viewport.width) * 360
 
-{-| Get the heading angle from the camera.
--}
-getHeading : Model -> Float
-getHeading model =
-    0
+        heading =
+            (model.heading + round normalizedChange)
+                % 360
+    in
+        { model | heading = heading }
