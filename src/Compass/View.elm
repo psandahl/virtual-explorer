@@ -27,16 +27,7 @@ view heading model =
             [ SAttr.width "100"
             , SAttr.height "100"
             ]
-            [ Svg.circle
-                [ SAttr.cx "50"
-                , SAttr.cy "50"
-                , SAttr.r "45"
-                , SAttr.stroke "black"
-                , SAttr.strokeWidth "1"
-                , SAttr.fillOpacity "0.0"
-                ]
-                []
-            , Svg.polygon
+            [ Svg.polygon
                 [ SAttr.points "50,5 45,50 55,50"
                 , SAttr.fill "red"
                 , SAttr.fillOpacity "1.0"
