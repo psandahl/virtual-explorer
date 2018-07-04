@@ -1,20 +1,21 @@
-module Compass.Update exposing (init, setAngle)
+module Compass.Update exposing (init, setViewport)
 
 {-| Model manipulating functions for the compass view.
 -}
 
 import Compass.Model exposing (Model)
+import Window exposing (Size)
 
 
 {-| Initialize the compass.
 -}
-init : Model
-init =
-    { angle = 0 }
+init : Size -> Model
+init viewport =
+    { viewport = viewport }
 
 
-{-| Set the angle for the compass.
+{-| Set a new viewport.
 -}
-setAngle : Float -> Model -> Model
-setAngle angle model =
-    { model | angle = angle }
+setViewport : Size -> Model -> Model
+setViewport viewport model =
+    { model | viewport = viewport }

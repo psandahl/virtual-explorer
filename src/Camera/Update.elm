@@ -4,6 +4,7 @@ module Camera.Update
         , setViewport
         , mouseMovePosition
         , mouseRotateCamera
+        , getHeading
         )
 
 {-| Module implementing model manipulating functions for the camera.
@@ -40,3 +41,10 @@ mouseMovePosition from to model =
 mouseRotateCamera : Position -> Position -> Model -> Model
 mouseRotateCamera from to model =
     model
+
+
+{-| Get the heading angle from the camera.
+-}
+getHeading : Model -> Float
+getHeading model =
+    0

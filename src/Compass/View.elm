@@ -13,14 +13,14 @@ import Svg.Attributes as SAttr
 
 {-| Render the compass.
 -}
-view : Model -> Html Msg
-view model =
+view : Float -> Model -> Html Msg
+view heading model =
     Html.div
         [ Attr.style
             [ ( "position", "absolute" )
             , ( "right", "10px" )
             , ( "top", "10px" )
-            , ( "transform", "rotate(" ++ toString model.angle ++ "deg)" )
+            , ( "transform", "rotate(" ++ toString heading ++ "deg)" )
             ]
         ]
         [ Svg.svg

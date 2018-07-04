@@ -20,7 +20,7 @@ import Debug
 init : ( Model, Cmd Msg )
 init =
     ( { graphics = Graphics.init defaultViewport
-      , compass = Compass.init
+      , compass = Compass.init defaultViewport
       , camera = Camera.init defaultViewport
       , ctrlKeyDown = False
       , trackedMousePosition = Nothing
@@ -37,6 +37,7 @@ update msg model =
         SetViewport viewport ->
             ( { model
                 | graphics = Graphics.setViewport viewport model.graphics
+                , compass = Compass.setViewport viewport model.compass
                 , camera = Camera.setViewport viewport model.camera
               }
             , Cmd.none
