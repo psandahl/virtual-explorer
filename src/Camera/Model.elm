@@ -11,6 +11,9 @@ The camera does not have a view.
 
 -}
 
+import Window exposing (Size)
+
 
 type alias Model =
-    {}
+    { viewport : Size
+    }

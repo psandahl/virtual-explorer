@@ -1,17 +1,31 @@
-module Camera.Update exposing (init, mouseMovePosition, mouseRotateCamera)
+module Camera.Update
+    exposing
+        ( init
+        , setViewport
+        , mouseMovePosition
+        , mouseRotateCamera
+        )
 
 {-| Module implementing model manipulating functions for the camera.
 -}
 
 import Camera.Model exposing (Model)
 import Mouse exposing (Position)
+import Window exposing (Size)
 
 
 {-| Initialize the camera.
 -}
-init : Model
-init =
-    {}
+init : Size -> Model
+init viewport =
+    { viewport = viewport }
+
+
+{-| Set a new viewport.
+-}
+setViewport : Size -> Model -> Model
+setViewport viewport model =
+    { model | viewport = viewport }
 
 
 {-| Move camera position from a change in mouse position.

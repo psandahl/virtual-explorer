@@ -11,7 +11,7 @@ import Graphics.Update as Graphics
 import Keyboard exposing (KeyCode)
 import Mouse exposing (Position)
 import Task
-import Window
+import Window exposing (Size)
 import Debug
 
 
@@ -19,9 +19,9 @@ import Debug
 -}
 init : ( Model, Cmd Msg )
 init =
-    ( { graphics = Graphics.init
+    ( { graphics = Graphics.init defaultViewport
       , compass = Compass.init
-      , camera = Camera.init
+      , camera = Camera.init defaultViewport
       , ctrlKeyDown = False
       , trackedMousePosition = Nothing
       }
@@ -35,7 +35,10 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SetViewport viewport ->
-            ( { model | graphics = Graphics.setViewport viewport model.graphics }
+            ( { model
+                | graphics = Graphics.setViewport viewport model.graphics
+                , camera = Camera.setViewport viewport model.camera
+              }
             , Cmd.none
             )
 
@@ -156,3 +159,10 @@ cursorType ctrlKeyDown trackedMousePosition =
 
         ( _, Nothing ) ->
             Default
+
+
+{-| Give a default viewport before the browser reports the real one.
+-}
+defaultViewport : Size
+defaultViewport =
+    { width = 1024, height = 768 }

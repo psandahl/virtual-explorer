@@ -10,10 +10,10 @@ import Window exposing (Size)
 
 {-| Initialize the model.
 -}
-init : Model
-init =
-    { viewport = defaultViewport
-    , projectionMatrix = makeProjectionMatrix defaultViewport
+init : Size -> Model
+init viewport =
+    { viewport = viewport
+    , projectionMatrix = makeProjectionMatrix viewport
     , cursor = Default
     }
 
@@ -33,13 +33,6 @@ setViewport viewport model =
 setCursor : Cursor -> Model -> Model
 setCursor cursor model =
     { model | cursor = cursor }
-
-
-{-| Give a default viewport before the browser reports the real one.
--}
-defaultViewport : Size
-defaultViewport =
-    { width = 1024, height = 768 }
 
 
 {-| Calculate the projection matrix for a viewport size.
