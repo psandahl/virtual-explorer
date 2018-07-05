@@ -115,6 +115,9 @@ update msg model =
         CloseToolBox ->
             ( { model | toolBox = ToolBox.closeToolBox model.toolBox }, Cmd.none )
 
+        ToolBoxSliderChange slider value ->
+            ( { model | toolBox = ToolBox.setSliderValue slider value model.toolBox }, Cmd.none )
+
         Nop ->
             ( model, Cmd.none )
 

@@ -1,4 +1,4 @@
-module ToolBox.Model exposing (Model, State(..))
+module ToolBox.Model exposing (Model, State(..), Slider(..))
 
 {-| Module implementing the model for the tool box.
 -}
@@ -11,8 +11,17 @@ type State
     | Open
 
 
+{-| Slider id.
+-}
+type Slider
+    = Octave0WaveLength
+    | Octave0Altitude
+
+
 {-| The model.
 -}
 type alias Model =
     { state : State
+    , octave0WaveLength : Int
+    , octave0Altitude : Int
     }

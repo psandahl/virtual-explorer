@@ -6,7 +6,7 @@ module Composer.Model exposing (Model, Msg(..))
 import Camera.Model as Camera
 import Compass.Model as Compass
 import Graphics.Model as Graphics
-import ToolBox.Model as ToolBox
+import ToolBox.Model as ToolBox exposing (Slider)
 import Mouse exposing (Position)
 import Window exposing (Size)
 
@@ -34,4 +34,5 @@ type Msg
     | GraphicsViewMouseReleased Position
     | OpenToolBox
     | CloseToolBox
+    | ToolBoxSliderChange Slider Int
     | Nop

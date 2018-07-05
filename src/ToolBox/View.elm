@@ -5,10 +5,11 @@ module ToolBox.View exposing (view)
 
 import Char
 import Composer.Model exposing (Msg(..))
-import Html exposing (Html)
+import Html exposing (Html, Attribute)
 import Html.Attributes as Attr
 import Html.Events as Events
-import ToolBox.Model exposing (Model, State(..))
+import Json.Decode as Decode
+import ToolBox.Model exposing (Model, State(..), Slider(..))
 
 
 {-| The view function. Depending on state either the open button or the tool
@@ -21,7 +22,7 @@ view model =
         [ if model.state == Closed then
             button
           else
-            pane
+            pane model
         ]
 
 
@@ -42,8 +43,8 @@ button =
         ]
 
 
-pane : Html Msg
-pane =
+pane : Model -> Html Msg
+pane model =
     Html.div
         [ Attr.style
             [ ( "display", "inline-block" )
@@ -71,13 +72,13 @@ pane =
             [ Html.text <| String.fromChar <| Char.fromCode 215
             ]
         , Html.p [ Attr.style [ ( "margin-top", "35px" ) ] ] []
-        , slider "Octave0: Wave length" 1 100 50
-        , slider "Octave0: Altitude" 1 100 50
+        , slider Octave0WaveLength "Octave0: Wave length" 1 100 model.octave0WaveLength
+        , slider Octave0Altitude "Octave0: Altitude" 1 100 model.octave0Altitude
         ]
 
 
-slider : String -> Int -> Int -> Int -> Html Msg
-slider caption min max value =
+slider : Slider -> String -> Int -> Int -> Int -> Html Msg
+slider slider caption min max value =
     Html.div
         [ Attr.style
             [ ( "width", "100%" )
@@ -102,7 +103,13 @@ slider caption min max value =
                     , ( "height", "15px" )
                     , ( "margin-left", "5%" )
                     ]
+                , onSliderChange slider
                 ]
                 []
             ]
         ]
+
+
+onSliderChange : Slider -> Attribute Msg
+onSliderChange slider =
+    Events.on "input" (Decode.map (\x -> String.toInt x |> Result.withDefault 0 |> ToolBoxSliderChange slider) Events.targetValue)
