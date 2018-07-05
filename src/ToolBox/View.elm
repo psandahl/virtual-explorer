@@ -11,7 +11,8 @@ import Html.Events as Events
 import ToolBox.Model exposing (Model, State(..))
 
 
-{-| The view function.
+{-| The view function. Depending on state either the open button or the tool
+box pane is rendered.
 -}
 view : Model -> Html Msg
 view model =
@@ -46,21 +47,21 @@ pane =
     Html.div
         [ Attr.style
             [ ( "display", "inline-block" )
-            , ( "position", "absolute" )
+            , ( "position", "fixed" )
             , ( "left", "0" )
             , ( "top", "0" )
             , ( "background-color", "rgba(88, 88, 88, 0.5)" )
             , ( "color", "white" )
-            , ( "width", "160px" )
+            , ( "width", "250px" )
             , ( "height", "100%" )
             , ( "z-index", "1" )
             ]
         ]
         [ Html.span
             [ Attr.style
-                [ ( "float", "right" )
-                , ( "margin-right", "15px" )
-                , ( "margin-top", "15px" )
+                [ ( "position", "absolute" )
+                , ( "top", "0px" )
+                , ( "right", "15px" )
                 , ( "font-size", "30px" )
                 , ( "cursor", "pointer" )
                 , ( "font-family", "sans-serif" )
@@ -68,5 +69,40 @@ pane =
             , Events.onClick CloseToolBox
             ]
             [ Html.text <| String.fromChar <| Char.fromCode 215
+            ]
+        , Html.p [ Attr.style [ ( "margin-top", "35px" ) ] ] []
+        , slider "Octave0: Wave length" 1 100 50
+        , slider "Octave0: Altitude" 1 100 50
+        ]
+
+
+slider : String -> Int -> Int -> Int -> Html Msg
+slider caption min max value =
+    Html.div
+        [ Attr.style
+            [ ( "width", "100%" )
+            ]
+        ]
+        [ Html.span
+            [ Attr.style
+                [ ( "font-size", "12px" )
+                , ( "font-family", "sans-serif" )
+                , ( "color", "white" )
+                , ( "margin-left", "5%" )
+                ]
+            ]
+            [ Html.text <| caption ++ " (value: " ++ toString value ++ ")"
+            , Html.input
+                [ Attr.type_ "range"
+                , Attr.min <| toString min
+                , Attr.max <| toString max
+                , Attr.value <| toString value
+                , Attr.style
+                    [ ( "width", "90%" )
+                    , ( "height", "15px" )
+                    , ( "margin-left", "5%" )
+                    ]
+                ]
+                []
             ]
         ]
