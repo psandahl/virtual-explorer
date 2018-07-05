@@ -126,8 +126,8 @@ subscriptions model =
     let
         baseSubscriptions =
             [ Window.resizes SetViewport
-            , Keyboard.downs (ifCtrlKeyInsert CtrlKeyDown)
-            , Keyboard.ups (ifCtrlKeyInsert CtrlKeyUp)
+            , Keyboard.downs keyDownHandler
+            , Keyboard.ups keyUpHandler
             ]
 
         mouseSubscriptions =
@@ -144,17 +144,22 @@ subscriptions model =
                     baseSubscriptions
 
 
-ifCtrlKeyInsert : Msg -> KeyCode -> Msg
-ifCtrlKeyInsert msg keyCode =
-    if isCtrlKeyCode keyCode then
-        msg
+keyDownHandler : KeyCode -> Msg
+keyDownHandler keyCode =
+    if keyCode == 17 then
+        CtrlKeyDown
     else
         Nop
 
 
-isCtrlKeyCode : KeyCode -> Bool
-isCtrlKeyCode keyCode =
-    keyCode == 17
+keyUpHandler : KeyCode -> Msg
+keyUpHandler keyCode =
+    if keyCode == 17 then
+        CtrlKeyUp
+    else if keyCode == 27 then
+        CloseToolBox
+    else
+        Nop
 
 
 cursorType : Bool -> Maybe Position -> Cursor
