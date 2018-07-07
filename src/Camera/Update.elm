@@ -20,11 +20,17 @@ import Window exposing (Size)
 -}
 init : Size -> Model
 init viewport =
-    { viewport = viewport
-    , heading = 0
-    , position = defaultPosition
-    , viewMatrix = makeViewMatrix defaultPosition
-    }
+    let
+        defaultViewDirection =
+            makeViewDirection defaultHeading defaultPitch
+    in
+        { viewport = viewport
+        , heading = defaultHeading
+        , pitch = defaultPitch
+        , position = defaultPosition
+        , viewDirection = defaultViewDirection
+        , viewMatrix = makeViewMatrix defaultPosition defaultViewDirection
+        }
 
 
 {-| Set a new viewport.
@@ -58,8 +64,28 @@ mouseRotateCamera from to model =
         heading =
             (model.heading + round normalizedChange)
                 % 360
+
+        viewDirection =
+            makeViewDirection heading model.pitch
+
+        viewMatrix =
+            makeViewMatrix model.position viewDirection
     in
-        { model | heading = heading }
+        { model
+            | heading = heading
+            , viewDirection = viewDirection
+            , viewMatrix = viewMatrix
+        }
+
+
+defaultHeading : Int
+defaultHeading =
+    0
+
+
+defaultPitch : Int
+defaultPitch =
+    45
 
 
 defaultPosition : Vec3
@@ -67,10 +93,24 @@ defaultPosition =
     Vec3.vec3 0 100 0
 
 
-makeViewMatrix : Vec3 -> Mat4
-makeViewMatrix position =
-    Mat4.makeLookAt
-        position
-        (Vec3.vec3 0 0 120)
-    <|
-        Vec3.vec3 0 1 0
+makeViewMatrix : Vec3 -> Vec3 -> Mat4
+makeViewMatrix position viewDirection =
+    Mat4.makeLookAt position (Vec3.add position viewDirection) <| Vec3.vec3 0 1 0
+
+
+makeViewDirection : Int -> Int -> Vec3
+makeViewDirection heading pitch =
+    let
+        ahead =
+            Vec3.vec3 0 0 1
+
+        pitchMatrix =
+            Mat4.makeRotate (degrees <| toFloat pitch) <| Vec3.vec3 1 0 0
+
+        headingMatrix =
+            Mat4.makeRotate (degrees <| toFloat heading) <| Vec3.vec3 0 1 0
+
+        rotateMatrix =
+            Mat4.mul headingMatrix pitchMatrix
+    in
+        Vec3.normalize <| Mat4.transform rotateMatrix ahead
