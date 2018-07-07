@@ -29,7 +29,8 @@ init viewport =
         , pitch = defaultPitch
         , position = defaultPosition
         , viewDirection = defaultViewDirection
-        , viewMatrix = makeViewMatrix defaultPosition defaultViewDirection
+        , upDirection = defaultUpDirection
+        , viewMatrix = makeViewMatrix defaultPosition defaultViewDirection defaultUpDirection
         }
 
 
@@ -81,7 +82,7 @@ mouseRotateCamera from to model =
             makeViewDirection heading pitch
 
         viewMatrix =
-            makeViewMatrix model.position viewDirection
+            makeViewMatrix model.position viewDirection model.upDirection
     in
         { model
             | heading = heading
@@ -112,11 +113,18 @@ defaultPosition =
     Vec3.vec3 0 100 0
 
 
+{-| Default up direction.
+-}
+defaultUpDirection : Vec3
+defaultUpDirection =
+    Vec3.vec3 0 1 0
+
+
 {-| Make a view matrix.
 -}
-makeViewMatrix : Vec3 -> Vec3 -> Mat4
-makeViewMatrix position viewDirection =
-    Mat4.makeLookAt position (Vec3.add position viewDirection) <| Vec3.vec3 0 1 0
+makeViewMatrix : Vec3 -> Vec3 -> Vec3 -> Mat4
+makeViewMatrix position viewDirection upDirection =
+    Mat4.makeLookAt position (Vec3.add position viewDirection) upDirection
 
 
 {-| Make a view direction vector from heading and pitch.

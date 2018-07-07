@@ -27,5 +27,6 @@ type alias Model =
     , pitch : Int
     , position : Vec3
     , viewDirection : Vec3
+    , upDirection : Vec3
     , viewMatrix : Mat4
     }
