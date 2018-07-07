@@ -4,7 +4,7 @@ module Graphics.Model exposing (Model, Cursor(..))
 -}
 
 import Graphics.Internal.TerrainPager as TerrainPager exposing (TerrainPager)
-import Graphics.Mesh.Terrain as Terrain
+import Graphics.Internal.Terrain as Terrain
 import Math.Matrix4 exposing (Mat4)
 import Window exposing (Size)
 import WebGL exposing (Mesh)
