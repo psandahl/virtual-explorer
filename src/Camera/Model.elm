@@ -18,6 +18,9 @@ import Math.Vector3 exposing (Vec3)
 import Window exposing (Size)
 
 
+{-| The camera model. Have the current viewport size, the heading angle,
+the pitch angle, the position, the view direction and the view matrix.
+-}
 type alias Model =
     { viewport : Size
     , heading : Int

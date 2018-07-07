@@ -55,49 +55,72 @@ mouseRotateCamera from to model =
         deltaX =
             to.x - from.x
 
-        normalizedChange =
+        normalizedXChange =
             if model.viewport.width < 360 then
                 toFloat deltaX
             else
                 (toFloat deltaX) / (toFloat model.viewport.width) * 360
 
         heading =
-            (model.heading + round normalizedChange)
+            (model.heading + round normalizedXChange)
                 % 360
 
+        deltaY =
+            from.y - to.y
+
+        normalizedYChange =
+            if model.viewport.height < 360 then
+                toFloat deltaY
+            else
+                (toFloat deltaY) / (toFloat model.viewport.height) * 120
+
+        pitch =
+            clamp -60 60 <| model.pitch + round normalizedYChange
+
         viewDirection =
-            makeViewDirection heading model.pitch
+            makeViewDirection heading pitch
 
         viewMatrix =
             makeViewMatrix model.position viewDirection
     in
         { model
             | heading = heading
+            , pitch = pitch
             , viewDirection = viewDirection
             , viewMatrix = viewMatrix
         }
 
 
+{-| Default heading angle.
+-}
 defaultHeading : Int
 defaultHeading =
     0
 
 
+{-| Default pitch angle.
+-}
 defaultPitch : Int
 defaultPitch =
-    45
+    30
 
 
+{-| Default position.
+-}
 defaultPosition : Vec3
 defaultPosition =
     Vec3.vec3 0 100 0
 
 
+{-| Make a view matrix.
+-}
 makeViewMatrix : Vec3 -> Vec3 -> Mat4
 makeViewMatrix position viewDirection =
     Mat4.makeLookAt position (Vec3.add position viewDirection) <| Vec3.vec3 0 1 0
 
 
+{-| Make a view direction vector from heading and pitch.
+-}
 makeViewDirection : Int -> Int -> Vec3
 makeViewDirection heading pitch =
     let
