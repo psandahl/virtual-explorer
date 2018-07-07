@@ -3,6 +3,7 @@ module Graphics.Model exposing (Model, Cursor(..))
 {-| Module implementing the model for the graphics view.
 -}
 
+import Graphics.Internal.TerrainPager as TerrainPager exposing (TerrainPager)
 import Graphics.Mesh.Terrain as Terrain
 import Math.Matrix4 exposing (Mat4)
 import Window exposing (Size)
@@ -25,4 +26,5 @@ type alias Model =
     , projectionMatrix : Mat4
     , cursor : Cursor
     , terrainMesh : Mesh Terrain.Vertex
+    , terrainPager : TerrainPager
     }

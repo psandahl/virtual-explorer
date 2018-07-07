@@ -17,6 +17,6 @@ view : Model -> Html Msg
 view model =
     Html.div []
         [ ToolBox.view model.toolBox
-        , Graphics.view model.graphics
+        , Graphics.view model.camera model.graphics
         , Compass.view model.camera.heading model.compass
         ]

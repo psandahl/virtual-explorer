@@ -3,7 +3,10 @@ module Graphics.View exposing (view)
 {-| Module implementing the main rendering functionality for the graphics view.
 -}
 
+import Camera.Model as Camera
 import Composer.Model exposing (Msg(..))
+import Graphics.Internal.TerrainPager as TerrainPager
+import Graphics.Mesh.Terrain as Terrain
 import Graphics.Model exposing (Model, Cursor(..))
 import Html exposing (Attribute, Html)
 import Html.Attributes as Attr
@@ -11,12 +14,14 @@ import Html.Events as Events
 import Json.Decode as Decode
 import Mouse
 import WebGL as GL
+import WebGL.Settings as Settings
+import WebGL.Settings.DepthTest as DepthTest
 
 
 {-| Main view function for the graphics view.
 -}
-view : Model -> Html Msg
-view model =
+view : Camera.Model -> Model -> Html Msg
+view camera model =
     GL.toHtmlWith
         [ GL.antialias
         , GL.depth 1
@@ -30,7 +35,22 @@ view model =
             [ ( "cursor", cursorToString model.cursor )
             ]
         ]
-        []
+    <|
+        List.map
+            (\tileModelMatrix ->
+                GL.entityWith
+                    [ DepthTest.default
+                    , Settings.cullFace Settings.back
+                    ]
+                    Terrain.vertexShader
+                    Terrain.fragmentShader
+                    model.terrainMesh
+                    { uProjectionMatrix = model.projectionMatrix
+                    , uViewMatrix = camera.viewMatrix
+                    , uModelMatrix = tileModelMatrix
+                    }
+            )
+            (TerrainPager.page camera model.terrainPager)
 
 
 onMouseDown : Attribute Msg

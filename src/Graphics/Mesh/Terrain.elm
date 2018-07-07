@@ -120,7 +120,7 @@ vertexShader :
             , uViewMatrix : Mat4
             , uProjectionMatrix : Mat4
         }
-        {}
+        { vColor : Vec3 }
 vertexShader =
     [glsl|
 precision mediump float;
@@ -131,8 +131,12 @@ uniform mat4 uModelMatrix;
 uniform mat4 uViewMatrix;
 uniform mat4 uProjectionMatrix;
 
+varying vec3 vColor;
+
 void main()
 {
+    vColor = vec3(1.0, 0.0, 0.0);
+
     mat4 mvp = uProjectionMatrix * uViewMatrix * uModelMatrix;
     gl_Position = mvp * vec4(aPosition, 1.0);
 }
@@ -141,15 +145,15 @@ void main()
 
 {-| Fragment shader for the terrain.
 -}
-fragmentShader : Shader {} { uniforms | uColor : Vec3 } {}
+fragmentShader : Shader {} uniforms { vColor : Vec3 }
 fragmentShader =
     [glsl|
 precision mediump float;
 
-uniform vec3 uColor;
+varying vec3 vColor;
 
 void main()
 {
-    gl_FragColor = vec4(uColor, 1.0);
+    gl_FragColor = vec4(vColor, 1.0);
 }
     |]

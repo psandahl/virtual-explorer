@@ -10,6 +10,8 @@ module Camera.Update
 -}
 
 import Camera.Model exposing (Model)
+import Math.Vector3 as Vec3 exposing (Vec3)
+import Math.Matrix4 as Mat4 exposing (Mat4)
 import Mouse exposing (Position)
 import Window exposing (Size)
 
@@ -20,6 +22,8 @@ init : Size -> Model
 init viewport =
     { viewport = viewport
     , heading = 0
+    , position = defaultPosition
+    , viewMatrix = makeViewMatrix defaultPosition
     }
 
 
@@ -56,3 +60,17 @@ mouseRotateCamera from to model =
                 % 360
     in
         { model | heading = heading }
+
+
+defaultPosition : Vec3
+defaultPosition =
+    Vec3.vec3 0 100 0
+
+
+makeViewMatrix : Vec3 -> Mat4
+makeViewMatrix position =
+    Mat4.makeLookAt
+        position
+        (Vec3.vec3 0 0 120)
+    <|
+        Vec3.vec3 0 1 0
