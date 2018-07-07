@@ -4,7 +4,7 @@ module Graphics.Update exposing (init, setViewport, setCursor)
 -}
 
 import Graphics.Model exposing (Model, Cursor(..))
-import Graphics.Terrain as Terrain
+import Graphics.Mesh.Terrain as Terrain
 import Math.Matrix4 as Mat4 exposing (Mat4)
 import Window exposing (Size)
 

@@ -1,4 +1,4 @@
-module Graphics.Terrain
+module Graphics.Mesh.Terrain
     exposing
         ( Vertex
         , makeMesh
