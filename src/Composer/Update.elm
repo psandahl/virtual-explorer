@@ -107,7 +107,11 @@ update msg model =
                     )
 
                 Nothing ->
-                    Debug.crash "Shall have a tracked position"
+                    let
+                        dgb =
+                            Debug.log "Mouse released without having a tracked position. Unexpeced"
+                    in
+                        ( model, Cmd.none )
 
         OpenToolBox ->
             ( { model | toolBox = ToolBox.openToolBox model.toolBox }, Cmd.none )
