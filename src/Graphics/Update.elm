@@ -4,6 +4,7 @@ module Graphics.Update exposing (init, setViewport, setCursor)
 -}
 
 import Graphics.Model exposing (Model, Cursor(..))
+import Graphics.Internal.Settings as Settings
 import Graphics.Internal.TerrainPager as TerrainPager
 import Graphics.Internal.Terrain as Terrain
 import Math.Matrix4 as Mat4 exposing (Mat4)
@@ -43,4 +44,7 @@ setCursor cursor model =
 -}
 makeProjectionMatrix : Size -> Mat4
 makeProjectionMatrix viewport =
-    Mat4.makePerspective 45 (toFloat viewport.width / toFloat viewport.height) 1 1000
+    Mat4.makePerspective Settings.fov
+        (toFloat viewport.width / toFloat viewport.height)
+        Settings.near
+        Settings.far
