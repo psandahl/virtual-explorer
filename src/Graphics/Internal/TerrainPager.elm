@@ -29,6 +29,6 @@ init =
 
 {-| Page a set of tiles (each tile represented as a model matrix) from the camera.
 -}
-page : Camera.Model -> TerrainPager -> List Mat4
-page camera terrainPager =
+page : Float -> Camera.Model -> TerrainPager -> List Mat4
+page aspectRatio camera terrainPager =
     terrainPager.tiles

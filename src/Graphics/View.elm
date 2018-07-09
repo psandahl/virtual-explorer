@@ -50,7 +50,7 @@ view camera model =
                     , uModelMatrix = tileModelMatrix
                     }
             )
-            (TerrainPager.page camera model.terrainPager)
+            (TerrainPager.page model.aspectRatio camera model.terrainPager)
 
 
 onMouseDown : Attribute Msg
