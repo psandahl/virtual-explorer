@@ -1,4 +1,10 @@
-module Graphics.Internal.Frustum exposing (Frustum, fromVectors, containPoint)
+module Graphics.Internal.Frustum
+    exposing
+        ( Frustum
+        , fromCamera
+        , fromVectors
+        , containPoint
+        )
 
 {-| Implementation of light weight frustum for testing of points.
 -}
