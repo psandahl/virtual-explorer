@@ -4,6 +4,7 @@ module Graphics.Internal.TerrainPager exposing (TerrainPager, init, page)
 -}
 
 import Camera.Model as Camera
+import Graphics.Internal.Frustum exposing (Frustum)
 import Math.Matrix4 as Mat4 exposing (Mat4)
 
 
