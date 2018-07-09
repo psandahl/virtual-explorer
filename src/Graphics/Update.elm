@@ -16,7 +16,8 @@ import Window exposing (Size)
 init : Size -> Model
 init viewport =
     { viewport = viewport
-    , projectionMatrix = makeProjectionMatrix viewport
+    , aspectRatio = getAspectRatio viewport
+    , projectionMatrix = makeProjectionMatrix <| getAspectRatio viewport
     , cursor = Default
     , terrainMesh = Terrain.makeMesh
     , terrainPager = TerrainPager.init
@@ -29,7 +30,8 @@ setViewport : Size -> Model -> Model
 setViewport viewport model =
     { model
         | viewport = viewport
-        , projectionMatrix = makeProjectionMatrix viewport
+        , aspectRatio = getAspectRatio viewport
+        , projectionMatrix = makeProjectionMatrix <| getAspectRatio viewport
     }
 
 
@@ -40,11 +42,16 @@ setCursor cursor model =
     { model | cursor = cursor }
 
 
-{-| Calculate the projection matrix for a viewport size.
+{-| Calculate the projection matrix for an aspect ratio.
 -}
-makeProjectionMatrix : Size -> Mat4
-makeProjectionMatrix viewport =
+makeProjectionMatrix : Float -> Mat4
+makeProjectionMatrix aspectRatio =
     Mat4.makePerspective Settings.fov
-        (toFloat viewport.width / toFloat viewport.height)
+        aspectRatio
         Settings.near
         Settings.far
+
+
+getAspectRatio : Size -> Float
+getAspectRatio viewport =
+    toFloat viewport.width / toFloat viewport.height

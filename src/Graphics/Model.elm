@@ -23,6 +23,7 @@ adapted to the current viewport size.
 -}
 type alias Model =
     { viewport : Size
+    , aspectRatio : Float
     , projectionMatrix : Mat4
     , cursor : Cursor
     , terrainMesh : Mesh Terrain.Vertex
