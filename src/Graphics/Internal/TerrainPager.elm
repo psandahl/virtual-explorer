@@ -1,10 +1,11 @@
-module Graphics.Internal.TerrainPager exposing (TerrainPager, Tile, init, page)
+module Graphics.Internal.TerrainPager exposing (TerrainPager, Tile, init, page, oneTile)
 
 {-| Module that selects - pages - a set of terrain tiles from the camera position.
 -}
 
 import Camera.Model as Camera
 import Graphics.Internal.Frustum as Frustum exposing (Frustum)
+import Graphics.Internal.Terrain as Terrain
 import Math.Matrix4 as Mat4 exposing (Mat4)
 import Math.Vector3 as Vec3 exposing (Vec3)
 import Debug
@@ -17,6 +18,8 @@ type alias TerrainPager =
     }
 
 
+{-| Tile record.
+-}
 type alias Tile =
     { point0 : Vec3
     , point1 : Vec3
@@ -31,35 +34,42 @@ type alias Tile =
 init : TerrainPager
 init =
     { tiles =
-        [ { point0 = Vec3.vec3 0 0 0
-          , point1 = Vec3.vec3 64 0 0
-          , point2 = Vec3.vec3 0 0 64
-          , point3 = Vec3.vec3 64 0 64
-          , translationMatrix = Mat4.makeTranslate3 0 0 0
-          }
-        , { point0 = Vec3.vec3 0 0 65
-          , point1 = Vec3.vec3 64 0 65
-          , point2 = Vec3.vec3 0 0 128
-          , point3 = Vec3.vec3 64 0 128
-          , translationMatrix = Mat4.makeTranslate3 0 0 65
-          }
-        , { point0 = Vec3.vec3 0 0 130
-          , point1 = Vec3.vec3 64 0 130
-          , point2 = Vec3.vec3 0 0 194
-          , point3 = Vec3.vec3 64 0 194
-          , translationMatrix = Mat4.makeTranslate3 0 0 130
-          }
-        ]
+        List.concat <|
+            List.map
+                (\column ->
+                    List.map (oneTile column) <| List.range -3 2
+                )
+            <|
+                List.range -3 2
     }
 
 
-
-{- tiles =
-   [ Mat4.makeTranslate3 0 0 0
-   , Mat4.makeTranslate3 0 0 65
-   , Mat4.makeTranslate3 0 0 130
-   ]
+{-| Generate one tile. Use the column and row indices for setting the values.
 -}
+oneTile : Int -> Int -> Tile
+oneTile column row =
+    let
+        ( width, height ) =
+            Terrain.dimensions
+
+        col0 =
+            toFloat <| (column * (width - 1))
+
+        col1 =
+            toFloat <| ((column + 1) * (width - 1))
+
+        row0 =
+            toFloat <| (row * (height - 1))
+
+        row1 =
+            toFloat <| ((row + 1) * (height - 1))
+    in
+        { point0 = Vec3.vec3 col0 0 row0
+        , point1 = Vec3.vec3 col1 0 row0
+        , point2 = Vec3.vec3 col0 0 row1
+        , point3 = Vec3.vec3 col1 0 row1
+        , translationMatrix = Mat4.makeTranslate3 col0 0 row0
+        }
 
 
 {-| Page a set of tiles (each tile represented as a model matrix) from the camera.
@@ -71,11 +81,16 @@ page aspectRatio camera terrainPager =
             Frustum.fromCamera aspectRatio camera
 
         selected =
-            Debug.log "Selected: " <| List.filter (isInside frustum) terrainPager.tiles
+            List.filter (isInside frustum) terrainPager.tiles
+
+        dbg =
+            Debug.log "(#tiles selected, #tiles) " <| ( List.length selected, List.length terrainPager.tiles )
     in
         selected
 
 
+{-| Check if a tile is inside the frustum.
+-}
 isInside : Frustum -> Tile -> Bool
 isInside frustum tile =
     Frustum.containPoint tile.point0 frustum
