@@ -1,6 +1,13 @@
-module Graphics.Internal.TerrainPager exposing (TerrainPager, Tile, init, page, oneTile)
+module Graphics.Internal.TerrainPager
+    exposing
+        ( TerrainPager
+        , Tile
+        , init
+        , page
+        )
 
-{-| Module that selects - pages - a set of terrain tiles from the camera position.
+{-| Module that creates and selects - pages - a set of terrain tiles from
+the camera position.
 -}
 
 import Camera.Model as Camera
