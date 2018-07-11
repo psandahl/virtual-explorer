@@ -175,11 +175,17 @@ uniform vec3 uSunLightDirection;
 // The color produced for the vertex.
 varying vec3 vColor;
 
+// Generate the height (y) value for the position x, z.
+float generateHeight(vec3 position);
+
 // Calculate the vertex color.
 vec3 vertexColor();
 
 // Calculate the ambient light.
 vec3 ambientLight();
+
+// Calculate the sun light.
+vec3 sunLight(vec3 normal);
 
 // Functions for the implementation of simple noise.
 vec3 mod289(vec3 x);
@@ -189,10 +195,59 @@ float snoise(vec2 v);
 
 void main()
 {
-    vColor = vertexColor() * ambientLight();
+    // Step 1. Transform the position to it's world coordinates. Needed
+    // for the height value generation.
+    vec3 currentPosition = (uModelMatrix * vec4(aPosition, 1.0)).xyz;
 
-    mat4 mvp = uProjectionMatrix * uViewMatrix * uModelMatrix;
-    gl_Position = mvp * vec4(aPosition, 1.0);
+    // Step 2. Convert the world offset to a vec3.
+    vec3 worldOffset = vec3(uWorldOffset.x, 0.0, uWorldOffset.y);
+
+    // Step 3. Calculate heights for the current position as well as for
+    // six neighbour vertices.
+    vec3 v0 = currentPosition + vec3(0.0, 0.0, -1.0);
+    v0.y = generateHeight(v0 + worldOffset);
+
+    vec3 v1 = currentPosition + vec3(1.0, 0.0, -1.0);
+    v1.y = generateHeight(v1 + worldOffset);
+
+    vec3 v2 = currentPosition + vec3(-1.0, 0.0, 0.0);
+    v2.y = generateHeight(v2 + worldOffset);
+
+    vec3 v3 = currentPosition + vec3(1.0, 0.0, 0.0);
+    v3.y = generateHeight(v3 + worldOffset);
+
+    vec3 v4 = currentPosition + vec3(-1.0, 0.0, 1.0);
+    v4.y = generateHeight(v4 + worldOffset);
+
+    vec3 v5 = currentPosition + vec3(0.0, 0.0, 1.0);
+    v5.y = generateHeight(v5 + worldOffset);
+
+    currentPosition.y = generateHeight(currentPosition + worldOffset);
+
+    // Step 3. Calculate smooth normal using the neighbour vertices.
+    vec3 norm0 = normalize(cross(v0 - v2, v0 - currentPosition));
+    vec3 norm1 = normalize(cross(v1 - v0, v1 - currentPosition));
+    vec3 norm2 = normalize(cross(v1 - currentPosition, v1 - v3));
+    vec3 norm3 = normalize(cross(currentPosition - v2, currentPosition - v4));
+    vec3 norm4 = normalize(cross(currentPosition - v4, currentPosition - v5));
+    vec3 norm5 = normalize(cross(v3 - currentPosition, v3 - v5));
+
+    vec3 normal = normalize(norm0 + norm1 + norm2 + norm3 + norm4 + norm5);
+
+    // Step 4. Color the vertex.
+    vColor = vertexColor() * (ambientLight() + sunLight(normal));
+
+    // Step 5. Final transformation.
+    gl_Position = uProjectionMatrix * uViewMatrix * vec4(currentPosition, 1.0);
+}
+
+float generateHeight(vec3 position)
+{
+    float dividend = float(uOctave0WaveLength);
+    vec2 inp = vec2(position.x / dividend, position.z / dividend);
+    float h = snoise(inp) * float(uOctave0Altitude);
+
+    return h;
 }
 
 vec3 vertexColor()
@@ -203,6 +258,12 @@ vec3 vertexColor()
 vec3 ambientLight()
 {
     return uAmbientLightColor * uAmbientLightStrength;
+}
+
+vec3 sunLight(vec3 normal)
+{
+    float diffuse = max(dot(normal, uSunLightDirection), 0.0);
+    return uSunLightColor * diffuse;
 }
 
 vec3 mod289(vec3 x) {
