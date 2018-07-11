@@ -21,6 +21,8 @@ init =
     , octave0WaveLength = 50
     , octave0Altitude = 50
     , color0 = Vec3.vec3 0.4 0.4 0.4
+    , ambientLightColor = Vec3.vec3 1 1 1
+    , ambientLightStrength = 0.2
     }
 
 

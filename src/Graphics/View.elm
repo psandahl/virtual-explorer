@@ -50,6 +50,8 @@ view camera toolBox model =
                     , uViewMatrix = camera.viewMatrix
                     , uModelMatrix = tileModelMatrix
                     , uColor0 = toolBox.color0
+                    , uAmbientLightColor = toolBox.ambientLightColor
+                    , uAmbientLightStrength = toolBox.ambientLightStrength
                     }
             )
         <|

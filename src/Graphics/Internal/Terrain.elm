@@ -120,6 +120,8 @@ vertexShader :
             , uViewMatrix : Mat4
             , uProjectionMatrix : Mat4
             , uColor0 : Vec3
+            , uAmbientLightColor : Vec3
+            , uAmbientLightStrength : Float
         }
         { vColor : Vec3 }
 vertexShader =
@@ -137,20 +139,41 @@ uniform mat4 uProjectionMatrix;
 // Color uniforms.
 uniform vec3 uColor0;
 
+// Lightning uniforms.
+uniform vec3 uAmbientLightColor;
+uniform float uAmbientLightStrength;
+
 // The color produced for the vertex.
 varying vec3 vColor;
 
+// Calculate the vertex color.
+vec3 vertexColor();
+
+// Calculate the ambient light.
+vec3 ambientLight();
+
 void main()
 {
-    vColor = uColor0;
+    vColor = vertexColor() * ambientLight();
 
     mat4 mvp = uProjectionMatrix * uViewMatrix * uModelMatrix;
     gl_Position = mvp * vec4(aPosition, 1.0);
 }
+
+vec3 vertexColor()
+{
+    return uColor0;
+}
+
+vec3 ambientLight()
+{
+    return uAmbientLightColor * uAmbientLightStrength;
+}
+
     |]
 
 
-{-| Fragment shader for the terrain.
+{-| Fragment shader for the terrain. Extremely simple.
 -}
 fragmentShader : Shader {} uniforms { vColor : Vec3 }
 fragmentShader =
