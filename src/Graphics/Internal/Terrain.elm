@@ -138,6 +138,12 @@ vertexShader :
             , uOctave0HorizontalWaveLength : Int
             , uOctave0VerticalWaveLength : Int
             , uOctave0Altitude : Int
+            , uOctave1HorizontalWaveLength : Int
+            , uOctave1VerticalWaveLength : Int
+            , uOctave1Altitude : Int
+            , uOctave2HorizontalWaveLength : Int
+            , uOctave2VerticalWaveLength : Int
+            , uOctave2Altitude : Int
             , uColor0 : Vec3
             , uAmbientLightColor : Vec3
             , uAmbientLightStrength : Float
@@ -163,6 +169,14 @@ uniform vec2 uWorldOffset;
 uniform int uOctave0HorizontalWaveLength;
 uniform int uOctave0VerticalWaveLength;
 uniform int uOctave0Altitude;
+
+uniform int uOctave1HorizontalWaveLength;
+uniform int uOctave1VerticalWaveLength;
+uniform int uOctave1Altitude;
+
+uniform int uOctave2HorizontalWaveLength;
+uniform int uOctave2VerticalWaveLength;
+uniform int uOctave2Altitude;
 
 // Color uniforms.
 uniform vec3 uColor0;
@@ -245,12 +259,22 @@ void main()
 
 float generateHeight(vec3 position)
 {
-    float horizontalDividend = float(uOctave0HorizontalWaveLength);
-    float verticalDividend = float(uOctave0VerticalWaveLength);
-    vec2 inp = vec2(position.x / horizontalDividend, position.z / verticalDividend);
-    float h = snoise(inp) * float(uOctave0Altitude);
+    float horizontalDividend0 = float(uOctave0HorizontalWaveLength);
+    float verticalDividend0 = float(uOctave0VerticalWaveLength);
+    vec2 inp0 = vec2(position.x / horizontalDividend0, position.z / verticalDividend0);
+    float h0 = snoise(inp0) * float(uOctave0Altitude);
 
-    return h;
+    float horizontalDividend1 = float(uOctave1HorizontalWaveLength);
+    float verticalDividend1 = float(uOctave1VerticalWaveLength);
+    vec2 inp1 = vec2(position.x / horizontalDividend1, position.z / verticalDividend1);
+    float h1 = snoise(inp1) * float(uOctave1Altitude);
+
+    float horizontalDividend2 = float(uOctave2HorizontalWaveLength);
+    float verticalDividend2 = float(uOctave2VerticalWaveLength);
+    vec2 inp2 = vec2(position.x / horizontalDividend2, position.z / verticalDividend2);
+    float h2 = snoise(inp2) * float(uOctave2Altitude);
+
+    return h0 + h1 + h2;
 }
 
 vec3 vertexColor()

@@ -21,6 +21,12 @@ type Slider
     = Octave0HorizontalWaveLength
     | Octave0VerticalWaveLength
     | Octave0Altitude
+    | Octave1HorizontalWaveLength
+    | Octave1VerticalWaveLength
+    | Octave1Altitude
+    | Octave2HorizontalWaveLength
+    | Octave2VerticalWaveLength
+    | Octave2Altitude
 
 
 {-| The model.
@@ -30,6 +36,12 @@ type alias Model =
     , octave0HorizontalWaveLength : Int
     , octave0VerticalWaveLength : Int
     , octave0Altitude : Int
+    , octave1HorizontalWaveLength : Int
+    , octave1VerticalWaveLength : Int
+    , octave1Altitude : Int
+    , octave2HorizontalWaveLength : Int
+    , octave2VerticalWaveLength : Int
+    , octave2Altitude : Int
     , color0 : Vec3
     , ambientLightColor : Vec3
     , ambientLightStrength : Float

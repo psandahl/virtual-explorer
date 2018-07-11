@@ -72,9 +72,15 @@ pane model =
             [ Html.text <| String.fromChar <| Char.fromCode 215
             ]
         , Html.p [ Attr.style [ ( "margin-top", "35px" ) ] ] []
-        , slider Octave0HorizontalWaveLength "O[0]: Horizontal length" 1 1024 model.octave0HorizontalWaveLength
-        , slider Octave0VerticalWaveLength "O[0]: Vertical length" 1 1024 model.octave0VerticalWaveLength
-        , slider Octave0Altitude "O[0]: Altitude" 1 100 model.octave0Altitude
+        , slider Octave0HorizontalWaveLength "Oct[0]: Horizontal length" 1 2048 model.octave0HorizontalWaveLength
+        , slider Octave0VerticalWaveLength "Oct[0]: Vertical length" 1 2048 model.octave0VerticalWaveLength
+        , slider Octave0Altitude "Oct[0]: Altitude" 0 50 model.octave0Altitude
+        , slider Octave1HorizontalWaveLength "Oct[1]: Horizontal length" 1 2048 model.octave1HorizontalWaveLength
+        , slider Octave1VerticalWaveLength "Oct[1]: Vertical length" 1 2048 model.octave1VerticalWaveLength
+        , slider Octave1Altitude "Oct[1]: Altitude" 0 50 model.octave1Altitude
+        , slider Octave2HorizontalWaveLength "Oct[2]: Horizontal length" 1 2048 model.octave2HorizontalWaveLength
+        , slider Octave2VerticalWaveLength "Oct[2]: Vertical length" 1 2048 model.octave2VerticalWaveLength
+        , slider Octave2Altitude "Oct[2]: Altitude" 0 50 model.octave2Altitude
         ]
 
 
