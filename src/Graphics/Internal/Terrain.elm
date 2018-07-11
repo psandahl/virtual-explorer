@@ -135,7 +135,8 @@ vertexShader :
             , uViewMatrix : Mat4
             , uProjectionMatrix : Mat4
             , uWorldOffset : Vec2
-            , uOctave0WaveLength : Int
+            , uOctave0HorizontalWaveLength : Int
+            , uOctave0VerticalWaveLength : Int
             , uOctave0Altitude : Int
             , uColor0 : Vec3
             , uAmbientLightColor : Vec3
@@ -159,7 +160,8 @@ uniform mat4 uProjectionMatrix;
 // Terrain shaping uniforms.
 uniform vec2 uWorldOffset;
 
-uniform int uOctave0WaveLength;
+uniform int uOctave0HorizontalWaveLength;
+uniform int uOctave0VerticalWaveLength;
 uniform int uOctave0Altitude;
 
 // Color uniforms.
@@ -243,8 +245,9 @@ void main()
 
 float generateHeight(vec3 position)
 {
-    float dividend = float(uOctave0WaveLength);
-    vec2 inp = vec2(position.x / dividend, position.z / dividend);
+    float horizontalDividend = float(uOctave0HorizontalWaveLength);
+    float verticalDividend = float(uOctave0VerticalWaveLength);
+    vec2 inp = vec2(position.x / horizontalDividend, position.z / verticalDividend);
     float h = snoise(inp) * float(uOctave0Altitude);
 
     return h;

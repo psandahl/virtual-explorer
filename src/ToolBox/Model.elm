@@ -18,7 +18,8 @@ type State
 {-| Slider id.
 -}
 type Slider
-    = Octave0WaveLength
+    = Octave0HorizontalWaveLength
+    | Octave0VerticalWaveLength
     | Octave0Altitude
 
 
@@ -26,7 +27,8 @@ type Slider
 -}
 type alias Model =
     { state : State
-    , octave0WaveLength : Int
+    , octave0HorizontalWaveLength : Int
+    , octave0VerticalWaveLength : Int
     , octave0Altitude : Int
     , color0 : Vec3
     , ambientLightColor : Vec3

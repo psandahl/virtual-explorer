@@ -18,7 +18,8 @@ import Math.Vector3 as Vec3
 init : Model
 init =
     { state = Closed
-    , octave0WaveLength = 512
+    , octave0HorizontalWaveLength = 512
+    , octave0VerticalWaveLength = 512
     , octave0Altitude = 0
     , color0 = Vec3.vec3 0.4 0.4 0.4
     , ambientLightColor = Vec3.vec3 1 1 1
@@ -47,8 +48,11 @@ closeToolBox model =
 setSliderValue : Slider -> Int -> Model -> Model
 setSliderValue slider value model =
     case slider of
-        Octave0WaveLength ->
-            { model | octave0WaveLength = value }
+        Octave0HorizontalWaveLength ->
+            { model | octave0HorizontalWaveLength = value }
+
+        Octave0VerticalWaveLength ->
+            { model | octave0VerticalWaveLength = value }
 
         Octave0Altitude ->
             { model | octave0Altitude = value }
