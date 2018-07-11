@@ -13,6 +13,7 @@ import Html.Attributes as Attr
 import Html.Events as Events
 import Json.Decode as Decode
 import Mouse
+import ToolBox.Model as ToolBox
 import WebGL as GL
 import WebGL.Settings as Settings
 import WebGL.Settings.DepthTest as DepthTest
@@ -20,8 +21,8 @@ import WebGL.Settings.DepthTest as DepthTest
 
 {-| Main view function for the graphics view.
 -}
-view : Camera.Model -> Model -> Html Msg
-view camera model =
+view : Camera.Model -> ToolBox.Model -> Model -> Html Msg
+view camera toolBox model =
     GL.toHtmlWith
         [ GL.antialias
         , GL.depth 1
@@ -48,6 +49,7 @@ view camera model =
                     { uProjectionMatrix = model.projectionMatrix
                     , uViewMatrix = camera.viewMatrix
                     , uModelMatrix = tileModelMatrix
+                    , uColor0 = toolBox.color0
                     }
             )
         <|

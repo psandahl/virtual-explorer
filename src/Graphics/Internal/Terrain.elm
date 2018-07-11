@@ -119,23 +119,30 @@ vertexShader :
             | uModelMatrix : Mat4
             , uViewMatrix : Mat4
             , uProjectionMatrix : Mat4
+            , uColor0 : Vec3
         }
         { vColor : Vec3 }
 vertexShader =
     [glsl|
 precision mediump float;
 
+// Single attribute: the vertex position.
 attribute vec3 aPosition;
 
+// Transformation matrices.
 uniform mat4 uModelMatrix;
 uniform mat4 uViewMatrix;
 uniform mat4 uProjectionMatrix;
 
+// Color uniforms.
+uniform vec3 uColor0;
+
+// The color produced for the vertex.
 varying vec3 vColor;
 
 void main()
 {
-    vColor = vec3(1.0, 0.0, 0.0);
+    vColor = uColor0;
 
     mat4 mvp = uProjectionMatrix * uViewMatrix * uModelMatrix;
     gl_Position = mvp * vec4(aPosition, 1.0);

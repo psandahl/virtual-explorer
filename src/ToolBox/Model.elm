@@ -3,6 +3,8 @@ module ToolBox.Model exposing (Model, State(..), Slider(..))
 {-| Module implementing the model for the tool box.
 -}
 
+import Math.Vector3 exposing (Vec3)
+
 
 {-| The state for the ToolBox; it's either closed or open.
 -}
@@ -24,4 +26,5 @@ type alias Model =
     { state : State
     , octave0WaveLength : Int
     , octave0Altitude : Int
+    , color0 : Vec3
     }

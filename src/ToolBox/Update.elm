@@ -10,6 +10,7 @@ module ToolBox.Update
 -}
 
 import ToolBox.Model exposing (Model, State(..), Slider(..))
+import Math.Vector3 as Vec3
 
 
 {-| Initialize the ToolBox.
@@ -19,6 +20,7 @@ init =
     { state = Closed
     , octave0WaveLength = 50
     , octave0Altitude = 50
+    , color0 = Vec3.vec3 0.4 0.4 0.4
     }
 
 
