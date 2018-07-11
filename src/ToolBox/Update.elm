@@ -23,6 +23,8 @@ init =
     , color0 = Vec3.vec3 0.4 0.4 0.4
     , ambientLightColor = Vec3.vec3 1 1 1
     , ambientLightStrength = 0.2
+    , sunLightColor = Vec3.vec3 1 1 1
+    , sunLightDirection = Vec3.normalize <| Vec3.vec3 1 1 0
     }
 
 

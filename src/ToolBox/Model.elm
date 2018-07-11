@@ -31,4 +31,6 @@ type alias Model =
     , color0 : Vec3
     , ambientLightColor : Vec3
     , ambientLightStrength : Float
+    , sunLightColor : Vec3
+    , sunLightDirection : Vec3
     }

@@ -49,9 +49,14 @@ view camera toolBox model =
                     { uProjectionMatrix = model.projectionMatrix
                     , uViewMatrix = camera.viewMatrix
                     , uModelMatrix = tileModelMatrix
+                    , uWorldOffset = camera.worldOffset
+                    , uOctave0WaveLength = toolBox.octave0WaveLength
+                    , uOctave0Altitude = toolBox.octave0Altitude
                     , uColor0 = toolBox.color0
                     , uAmbientLightColor = toolBox.ambientLightColor
                     , uAmbientLightStrength = toolBox.ambientLightStrength
+                    , uSunLightColor = toolBox.sunLightColor
+                    , uSunLightDirection = toolBox.sunLightDirection
                     }
             )
         <|

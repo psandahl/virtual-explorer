@@ -10,8 +10,9 @@ module Camera.Update
 -}
 
 import Camera.Model exposing (Model)
-import Math.Vector3 as Vec3 exposing (Vec3)
 import Math.Matrix4 as Mat4 exposing (Mat4)
+import Math.Vector2 as Vec2 exposing (Vec2)
+import Math.Vector3 as Vec3 exposing (Vec3)
 import Mouse exposing (Position)
 import Window exposing (Size)
 
@@ -25,6 +26,7 @@ init viewport =
             makeViewDirection defaultHeading defaultPitch
     in
         { viewport = viewport
+        , worldOffset = defaultWorldOffset
         , heading = defaultHeading
         , pitch = defaultPitch
         , position = defaultPosition
@@ -90,6 +92,13 @@ mouseRotateCamera from to model =
             , viewDirection = viewDirection
             , viewMatrix = viewMatrix
         }
+
+
+{-| The default world offset.
+-}
+defaultWorldOffset : Vec2
+defaultWorldOffset =
+    Vec2.vec2 0 0
 
 
 {-| Default heading angle.
