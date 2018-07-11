@@ -87,7 +87,7 @@ update msg model =
                     )
 
                 Nothing ->
-                    Debug.crash "Shall have a tracked position"
+                    debugLog "Mouse released without having a tracked position. Unexpeced" model
 
         GraphicsViewMouseReleased to ->
             case model.trackedMousePosition of
@@ -107,11 +107,7 @@ update msg model =
                     )
 
                 Nothing ->
-                    let
-                        dgb =
-                            Debug.log "Mouse released without having a tracked position. Unexpeced"
-                    in
-                        ( model, Cmd.none )
+                    debugLog "Mouse released without having a tracked position. Unexpected" model
 
         OpenToolBox ->
             ( { model | toolBox = ToolBox.openToolBox model.toolBox }, Cmd.none )
@@ -187,3 +183,12 @@ cursorType ctrlKeyDown trackedMousePosition =
 defaultViewport : Size
 defaultViewport =
     { width = 1024, height = 768 }
+
+
+debugLog : String -> Model -> ( Model, Cmd Msg )
+debugLog str model =
+    let
+        dgb =
+            Debug.log str
+    in
+        ( model, Cmd.none )
