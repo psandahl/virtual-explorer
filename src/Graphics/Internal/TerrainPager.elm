@@ -44,10 +44,10 @@ init =
         List.concat <|
             List.map
                 (\column ->
-                    List.map (oneTile column) <| List.range -3 2
+                    List.map (oneTile column) <| List.range -16 15
                 )
             <|
-                List.range -3 2
+                List.range -16 15
     }
 
 

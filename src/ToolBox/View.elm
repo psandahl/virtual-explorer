@@ -72,7 +72,7 @@ pane model =
             [ Html.text <| String.fromChar <| Char.fromCode 215
             ]
         , Html.p [ Attr.style [ ( "margin-top", "35px" ) ] ] []
-        , slider Octave0WaveLength "Octave0: Wave length" 1 100 model.octave0WaveLength
+        , slider Octave0WaveLength "Octave0: Wave length" 1 1024 model.octave0WaveLength
         , slider Octave0Altitude "Octave0: Altitude" 1 100 model.octave0Altitude
         ]
 

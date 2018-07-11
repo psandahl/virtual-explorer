@@ -112,7 +112,7 @@ defaultHeading =
 -}
 defaultPitch : Int
 defaultPitch =
-    30
+    10
 
 
 {-| Default position.

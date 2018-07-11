@@ -18,13 +18,13 @@ import Math.Vector3 as Vec3
 init : Model
 init =
     { state = Closed
-    , octave0WaveLength = 50
-    , octave0Altitude = 50
+    , octave0WaveLength = 512
+    , octave0Altitude = 0
     , color0 = Vec3.vec3 0.4 0.4 0.4
     , ambientLightColor = Vec3.vec3 1 1 1
     , ambientLightStrength = 0.2
     , sunLightColor = Vec3.vec3 1 1 1
-    , sunLightDirection = Vec3.normalize <| Vec3.vec3 1 1 0
+    , sunLightDirection = Vec3.normalize <| Vec3.vec3 -1 1 0 -- Sun from the east (remember: north is positive z)
     }
 
 
