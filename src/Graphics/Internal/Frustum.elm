@@ -19,6 +19,7 @@ import Math.Vector3 as Vec3 exposing (Vec3)
 type alias Frustum =
     { cameraPosition : Vec3
     , aspectRatio : Float
+    , tangFov : Float
     , x : Vec3
     , y : Vec3
     , z : Vec3
@@ -52,6 +53,8 @@ fromVectors aspectRatio cameraPosition cameraLookAt up =
     in
         { cameraPosition = cameraPosition
         , aspectRatio = aspectRatio
+        , tangFov =
+            0.5 * (tan <| degrees Settings.fov)
         , x = x
         , y = y
         , z = z
@@ -66,29 +69,28 @@ containPoint point frustum =
         vec =
             Vec3.sub point frustum.cameraPosition
 
-        tangFov =
-            0.5 * (tan <| degrees Settings.fov)
-
         pointZ =
             Vec3.dot vec <| Vec3.negate frustum.z
-
-        pointY =
-            Vec3.dot vec frustum.y
-
-        maxY =
-            tangFov * pointZ
-
-        pointX =
-            Vec3.dot vec frustum.x
-
-        maxX =
-            maxY * frustum.aspectRatio
     in
         if (pointZ < Settings.near) || (pointZ > Settings.far) then
             False
-        else if (pointY < -maxY) || (pointY > maxY) then
-            False
-        else if (pointX < -maxX) || (pointX > maxX) then
-            False
         else
-            True
+            let
+                pointY =
+                    Vec3.dot vec frustum.y
+
+                maxY =
+                    frustum.tangFov * pointZ
+
+                pointX =
+                    Vec3.dot vec frustum.x
+
+                maxX =
+                    maxY * frustum.aspectRatio
+            in
+                if (pointY < -maxY) || (pointY > maxY) then
+                    False
+                else if (pointX < -maxX) || (pointX > maxX) then
+                    False
+                else
+                    True
