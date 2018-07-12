@@ -9,6 +9,7 @@ module ToolBox.Update
 {-| Module implementing the model manipulating functions for the ToolBox.
 -}
 
+import Settings
 import ToolBox.Model exposing (Model, State(..), Slider(..))
 import Math.Vector3 as Vec3
 
@@ -18,14 +19,14 @@ import Math.Vector3 as Vec3
 init : Model
 init =
     { state = Closed
-    , octave0HorizontalWaveLength = 2048
-    , octave0VerticalWaveLength = 2048
+    , octave0HorizontalWaveLength = Settings.octave0MaxWaveLength
+    , octave0VerticalWaveLength = Settings.octave0MaxWaveLength
     , octave0Altitude = 0
-    , octave1HorizontalWaveLength = 256
-    , octave1VerticalWaveLength = 256
+    , octave1HorizontalWaveLength = Settings.octave1MaxWaveLength
+    , octave1VerticalWaveLength = Settings.octave1MaxWaveLength
     , octave1Altitude = 0
-    , octave2HorizontalWaveLength = 64
-    , octave2VerticalWaveLength = 64
+    , octave2HorizontalWaveLength = Settings.octave2MaxWaveLength
+    , octave2VerticalWaveLength = Settings.octave2MaxWaveLength
     , octave2Altitude = 0
     , color0 = Vec3.vec3 0.4 0.4 0.4
     , ambientLightColor = Vec3.vec3 1 1 1

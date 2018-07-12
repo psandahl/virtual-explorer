@@ -13,6 +13,7 @@ import Camera.Model exposing (Model)
 import Math.Matrix4 as Mat4 exposing (Mat4)
 import Math.Vector2 as Vec2 exposing (Vec2)
 import Math.Vector3 as Vec3 exposing (Vec3)
+import Settings
 import Mouse exposing (Position)
 import Window exposing (Size)
 
@@ -101,7 +102,7 @@ defaultWorldOffset =
     Vec2.vec2 0 0
 
 
-{-| Default heading angle.
+{-| Default heading angle. North is in positive z direction.
 -}
 defaultHeading : Int
 defaultHeading =
@@ -119,7 +120,7 @@ defaultPitch =
 -}
 defaultPosition : Vec3
 defaultPosition =
-    Vec3.vec3 0 155 0
+    Vec3.vec3 0 (toFloat Settings.maxCameraAltitude) 0
 
 
 {-| Default up direction.

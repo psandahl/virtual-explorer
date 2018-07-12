@@ -9,6 +9,7 @@ import Html exposing (Html, Attribute)
 import Html.Attributes as Attr
 import Html.Events as Events
 import Json.Decode as Decode
+import Settings
 import ToolBox.Model exposing (Model, State(..), Slider(..))
 
 
@@ -72,15 +73,51 @@ pane model =
             [ Html.text <| String.fromChar <| Char.fromCode 215
             ]
         , Html.p [ Attr.style [ ( "margin-top", "35px" ) ] ] []
-        , slider Octave0HorizontalWaveLength "Oct[0]: Horizontal length" 1 2048 model.octave0HorizontalWaveLength
-        , slider Octave0VerticalWaveLength "Oct[0]: Vertical length" 1 2048 model.octave0VerticalWaveLength
-        , slider Octave0Altitude "Oct[0]: Altitude" 0 100 model.octave0Altitude
-        , slider Octave1HorizontalWaveLength "Oct[1]: Horizontal length" 1 256 model.octave1HorizontalWaveLength
-        , slider Octave1VerticalWaveLength "Oct[1]: Vertical length" 1 256 model.octave1VerticalWaveLength
-        , slider Octave1Altitude "Oct[1]: Altitude" 0 40 model.octave1Altitude
-        , slider Octave2HorizontalWaveLength "Oct[2]: Horizontal length" 1 64 model.octave2HorizontalWaveLength
-        , slider Octave2VerticalWaveLength "Oct[2]: Vertical length" 1 64 model.octave2VerticalWaveLength
-        , slider Octave2Altitude "Oct[2]: Altitude" 0 10 model.octave2Altitude
+        , slider Octave0HorizontalWaveLength
+            "Oct[0]: Horizontal length"
+            1
+            Settings.octave0MaxWaveLength
+            model.octave0HorizontalWaveLength
+        , slider Octave0VerticalWaveLength
+            "Oct[0]: Vertical length"
+            1
+            Settings.octave0MaxWaveLength
+            model.octave0VerticalWaveLength
+        , slider Octave0Altitude
+            "Oct[0]: Altitude"
+            0
+            Settings.octave0MaxAltitude
+            model.octave0Altitude
+        , slider Octave1HorizontalWaveLength
+            "Oct[1]: Horizontal length"
+            1
+            Settings.octave1MaxWaveLength
+            model.octave1HorizontalWaveLength
+        , slider Octave1VerticalWaveLength
+            "Oct[1]: Vertical length"
+            1
+            Settings.octave1MaxWaveLength
+            model.octave1VerticalWaveLength
+        , slider Octave1Altitude
+            "Oct[1]: Altitude"
+            0
+            Settings.octave1MaxAltitude
+            model.octave1Altitude
+        , slider Octave2HorizontalWaveLength
+            "Oct[2]: Horizontal length"
+            1
+            Settings.octave2MaxWaveLength
+            model.octave2HorizontalWaveLength
+        , slider Octave2VerticalWaveLength
+            "Oct[2]: Vertical length"
+            1
+            Settings.octave2MaxWaveLength
+            model.octave2VerticalWaveLength
+        , slider Octave2Altitude
+            "Oct[2]: Altitude"
+            0
+            Settings.octave2MaxAltitude
+            model.octave2Altitude
         ]
 
 
