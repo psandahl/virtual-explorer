@@ -10,7 +10,7 @@ module Graphics.Internal.Frustum
 -}
 
 import Camera.Model as Camera
-import Graphics.Internal.Settings as Settings
+import Settings
 import Math.Vector3 as Vec3 exposing (Vec3)
 
 
@@ -72,7 +72,7 @@ containPoint point frustum =
         pointZ =
             Vec3.dot vec <| Vec3.negate frustum.z
     in
-        if (pointZ < Settings.near) || (pointZ > Settings.far) then
+        if (pointZ < Settings.nearPlane) || (pointZ > Settings.farPlane) then
             False
         else
             let

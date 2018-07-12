@@ -11,7 +11,7 @@ module Graphics.Update
 
 import Camera.Model as Camera
 import Graphics.Model exposing (Model, Cursor(..))
-import Graphics.Internal.Settings as Settings
+import Settings
 import Graphics.Internal.TerrainPager as TerrainPager
 import Graphics.Internal.Terrain as Terrain
 import Math.Matrix4 as Mat4 exposing (Mat4)
@@ -62,8 +62,8 @@ makeProjectionMatrix : Float -> Mat4
 makeProjectionMatrix aspectRatio =
     Mat4.makePerspective Settings.fov
         aspectRatio
-        Settings.near
-        Settings.far
+        Settings.nearPlane
+        Settings.farPlane
 
 
 getAspectRatio : Size -> Float
