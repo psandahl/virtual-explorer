@@ -74,13 +74,13 @@ pane model =
         , Html.p [ Attr.style [ ( "margin-top", "35px" ) ] ] []
         , slider Octave0HorizontalWaveLength "Oct[0]: Horizontal length" 1 2048 model.octave0HorizontalWaveLength
         , slider Octave0VerticalWaveLength "Oct[0]: Vertical length" 1 2048 model.octave0VerticalWaveLength
-        , slider Octave0Altitude "Oct[0]: Altitude" 0 50 model.octave0Altitude
-        , slider Octave1HorizontalWaveLength "Oct[1]: Horizontal length" 1 2048 model.octave1HorizontalWaveLength
-        , slider Octave1VerticalWaveLength "Oct[1]: Vertical length" 1 2048 model.octave1VerticalWaveLength
-        , slider Octave1Altitude "Oct[1]: Altitude" 0 50 model.octave1Altitude
-        , slider Octave2HorizontalWaveLength "Oct[2]: Horizontal length" 1 2048 model.octave2HorizontalWaveLength
-        , slider Octave2VerticalWaveLength "Oct[2]: Vertical length" 1 2048 model.octave2VerticalWaveLength
-        , slider Octave2Altitude "Oct[2]: Altitude" 0 50 model.octave2Altitude
+        , slider Octave0Altitude "Oct[0]: Altitude" 0 100 model.octave0Altitude
+        , slider Octave1HorizontalWaveLength "Oct[1]: Horizontal length" 1 256 model.octave1HorizontalWaveLength
+        , slider Octave1VerticalWaveLength "Oct[1]: Vertical length" 1 256 model.octave1VerticalWaveLength
+        , slider Octave1Altitude "Oct[1]: Altitude" 0 40 model.octave1Altitude
+        , slider Octave2HorizontalWaveLength "Oct[2]: Horizontal length" 1 64 model.octave2HorizontalWaveLength
+        , slider Octave2VerticalWaveLength "Oct[2]: Vertical length" 1 64 model.octave2VerticalWaveLength
+        , slider Octave2Altitude "Oct[2]: Altitude" 0 10 model.octave2Altitude
         ]
 
 
@@ -119,4 +119,12 @@ slider slider caption min max value =
 
 onSliderChange : Slider -> Attribute Msg
 onSliderChange slider =
-    Events.on "input" (Decode.map (\x -> String.toInt x |> Result.withDefault 0 |> ToolBoxSliderChange slider) Events.targetValue)
+    Events.on "input"
+        (Decode.map
+            (\x ->
+                String.toInt x
+                    |> Result.withDefault 0
+                    |> ToolBoxSliderChange slider
+            )
+            Events.targetValue
+        )
