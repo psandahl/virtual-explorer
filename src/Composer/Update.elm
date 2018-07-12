@@ -20,15 +20,19 @@ import Debug
 -}
 init : ( Model, Cmd Msg )
 init =
-    ( { graphics = Graphics.init defaultViewport
-      , compass = Compass.init defaultViewport
-      , camera = Camera.init defaultViewport
-      , toolBox = ToolBox.init
-      , ctrlKeyDown = False
-      , trackedMousePosition = Nothing
-      }
-    , Task.perform SetViewport Window.size
-    )
+    let
+        camera =
+            Camera.init defaultViewport
+    in
+        ( { graphics = Graphics.init defaultViewport camera
+          , compass = Compass.init defaultViewport
+          , camera = camera
+          , toolBox = ToolBox.init
+          , ctrlKeyDown = False
+          , trackedMousePosition = Nothing
+          }
+        , Task.perform SetViewport Window.size
+        )
 
 
 {-| The main update function for the complete application.
@@ -38,7 +42,9 @@ update msg model =
     case msg of
         SetViewport viewport ->
             ( { model
-                | graphics = Graphics.setViewport viewport model.graphics
+                | graphics =
+                    Graphics.pageTiles model.camera <|
+                        Graphics.setViewport viewport model.graphics
                 , compass = Compass.setViewport viewport model.compass
                 , camera = Camera.setViewport viewport model.camera
               }
@@ -72,19 +78,30 @@ update msg model =
         GraphicsViewMouseMoved to ->
             case model.trackedMousePosition of
                 Just from ->
-                    ( { model
-                        | trackedMousePosition = Just to
-                        , camera =
-                            case model.ctrlKeyDown of
-                                True ->
+                    case model.ctrlKeyDown of
+                        True ->
+                            let
+                                camera =
                                     Camera.mouseRotateCamera from to model.camera
+                            in
+                                ( { model
+                                    | trackedMousePosition = Just to
+                                    , camera = camera
+                                    , graphics =
+                                        Graphics.pageTiles camera <|
+                                            Graphics.setCursor (cursorType model.ctrlKeyDown <| Just to) model.graphics
+                                  }
+                                , Cmd.none
+                                )
 
-                                False ->
-                                    Camera.mouseMovePosition from to model.camera
-                        , graphics = Graphics.setCursor (cursorType model.ctrlKeyDown <| Just to) model.graphics
-                      }
-                    , Cmd.none
-                    )
+                        False ->
+                            ( { model
+                                | trackedMousePosition = Just to
+                                , camera = Camera.mouseMovePosition from to model.camera
+                                , graphics = Graphics.setCursor (cursorType model.ctrlKeyDown <| Just to) model.graphics
+                              }
+                            , Cmd.none
+                            )
 
                 Nothing ->
                     debugLog "Mouse released without having a tracked position. Unexpeced" model
@@ -92,19 +109,30 @@ update msg model =
         GraphicsViewMouseReleased to ->
             case model.trackedMousePosition of
                 Just from ->
-                    ( { model
-                        | trackedMousePosition = Nothing
-                        , camera =
-                            case model.ctrlKeyDown of
-                                True ->
+                    case model.ctrlKeyDown of
+                        True ->
+                            let
+                                camera =
                                     Camera.mouseRotateCamera from to model.camera
+                            in
+                                ( { model
+                                    | trackedMousePosition = Nothing
+                                    , camera = camera
+                                    , graphics =
+                                        Graphics.pageTiles camera <|
+                                            Graphics.setCursor (cursorType model.ctrlKeyDown Nothing) model.graphics
+                                  }
+                                , Cmd.none
+                                )
 
-                                False ->
-                                    Camera.mouseMovePosition from to model.camera
-                        , graphics = Graphics.setCursor (cursorType model.ctrlKeyDown Nothing) model.graphics
-                      }
-                    , Cmd.none
-                    )
+                        False ->
+                            ( { model
+                                | trackedMousePosition = Nothing
+                                , camera = Camera.mouseMovePosition from to model.camera
+                                , graphics = Graphics.setCursor (cursorType model.ctrlKeyDown Nothing) model.graphics
+                              }
+                            , Cmd.none
+                            )
 
                 Nothing ->
                     debugLog "Mouse released without having a tracked position. Unexpected" model

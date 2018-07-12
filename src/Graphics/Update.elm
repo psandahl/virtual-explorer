@@ -1,8 +1,15 @@
-module Graphics.Update exposing (init, setViewport, setCursor)
+module Graphics.Update
+    exposing
+        ( init
+        , setViewport
+        , setCursor
+        , pageTiles
+        )
 
 {-| Model manipulating functions for the graphics view.
 -}
 
+import Camera.Model as Camera
 import Graphics.Model exposing (Model, Cursor(..))
 import Graphics.Internal.Settings as Settings
 import Graphics.Internal.TerrainPager as TerrainPager
@@ -13,14 +20,14 @@ import Window exposing (Size)
 
 {-| Initialize the model.
 -}
-init : Size -> Model
-init viewport =
+init : Size -> Camera.Model -> Model
+init viewport camera =
     { viewport = viewport
     , aspectRatio = getAspectRatio viewport
     , projectionMatrix = makeProjectionMatrix <| getAspectRatio viewport
     , cursor = Default
     , terrainMesh = Terrain.makeMesh
-    , terrainPager = TerrainPager.init
+    , terrainPager = TerrainPager.init (getAspectRatio viewport) camera
     }
 
 
@@ -40,6 +47,13 @@ setViewport viewport model =
 setCursor : Cursor -> Model -> Model
 setCursor cursor model =
     { model | cursor = cursor }
+
+
+{-| Page tiles for the given camera.
+-}
+pageTiles : Camera.Model -> Model -> Model
+pageTiles camera model =
+    { model | terrainPager = TerrainPager.selectFromCamera (getAspectRatio model.viewport) camera model.terrainPager }
 
 
 {-| Calculate the projection matrix for an aspect ratio.

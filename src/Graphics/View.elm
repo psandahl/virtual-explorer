@@ -67,10 +67,7 @@ view camera toolBox model =
                     }
             )
         <|
-            List.map
-                (\tile -> tile.translationMatrix)
-            <|
-                (TerrainPager.page model.aspectRatio camera model.terrainPager)
+            model.terrainPager.translationMatrices
 
 
 onMouseDown : Attribute Msg

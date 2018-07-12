@@ -3,7 +3,7 @@ module Graphics.Internal.TerrainPager
         ( TerrainPager
         , Tile
         , init
-        , page
+        , selectFromCamera
         )
 
 {-| Module that creates and selects - pages - a set of terrain tiles from
@@ -22,6 +22,7 @@ import Debug
 -}
 type alias TerrainPager =
     { tiles : List Tile
+    , translationMatrices : List Mat4
     }
 
 
@@ -38,17 +39,26 @@ type alias Tile =
 
 {-| Initialize the terrain pager.
 -}
-init : TerrainPager
-init =
-    { tiles =
-        List.concat <|
-            List.map
-                (\column ->
-                    List.map (oneTile column) <| List.range -16 15
-                )
-            <|
-                List.range -16 15
-    }
+init : Float -> Camera.Model -> TerrainPager
+init aspectRatio camera =
+    let
+        tiles =
+            List.concat <|
+                List.map
+                    (\column ->
+                        List.map (oneTile column) <| List.range -16 15
+                    )
+                <|
+                    List.range -16 15
+    in
+        { tiles = tiles, translationMatrices = pageFromCamera aspectRatio camera tiles }
+
+
+{-| Select a set of tiles from the camera.
+-}
+selectFromCamera : Float -> Camera.Model -> TerrainPager -> TerrainPager
+selectFromCamera aspectRatio camera terrainPager =
+    { terrainPager | translationMatrices = pageFromCamera aspectRatio camera terrainPager.tiles }
 
 
 {-| Generate one tile. Use the column and row indices for setting the values.
@@ -79,21 +89,18 @@ oneTile column row =
         }
 
 
-{-| Page a set of tiles (each tile represented as a model matrix) from the camera.
+{-| Working horse for paging.
 -}
-page : Float -> Camera.Model -> TerrainPager -> List Tile
-page aspectRatio camera terrainPager =
+pageFromCamera : Float -> Camera.Model -> List Tile -> List Mat4
+pageFromCamera aspectRatio camera tiles =
     let
         frustum =
             Frustum.fromCamera aspectRatio camera
 
         selected =
-            List.filter (isInside frustum) terrainPager.tiles
-
-        dbg =
-            Debug.log "(#tiles selected, #tiles) " <| ( List.length selected, List.length terrainPager.tiles )
+            List.filter (isInside frustum) tiles
     in
-        selected
+        List.map (\tile -> tile.translationMatrix) selected
 
 
 {-| Check if a tile is inside the frustum.
