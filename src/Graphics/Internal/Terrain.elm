@@ -21,7 +21,6 @@ recursion.
 
 -}
 
-import List.Extra as List
 import Math.Matrix4 exposing (Mat4)
 import Math.Vector2 exposing (Vec2)
 import Math.Vector3 as Vec3 exposing (Vec3)
@@ -60,56 +59,47 @@ dimensions =
 -}
 makeVertices : ( Int, Int ) -> List Vertex
 makeVertices ( cols, rows ) =
-    List.initialize (cols * rows) <|
-        \vertice ->
-            let
-                x =
-                    vertice % cols
-
-                z =
-                    vertice // cols
-            in
-                { aPosition = Vec3.vec3 (toFloat x) 0 (toFloat z) }
+    List.concatMap
+        (\row ->
+            List.map
+                (\col ->
+                    { aPosition = Vec3.vec3 (toFloat col) 0 (toFloat row) }
+                )
+            <|
+                List.range 0 (cols - 1)
+        )
+    <|
+        List.range 0 (rows - 1)
 
 
 {-| Make triangle indices for the given dimensions
 -}
 makeIndices : ( Int, Int ) -> List ( Int, Int, Int )
 makeIndices ( cols, rows ) =
-    -- Convert vertices count to quad count, and then to triangle count ...
-    List.initialize ((cols - 1) * (rows - 1) * 2) <|
-        \triangle ->
-            let
-                quad =
-                    triangle // 2
+    List.concatMap
+        (\row ->
+            List.concatMap
+                (\col ->
+                    let
+                        i0 =
+                            row * cols + col
 
-                row =
-                    quad // (rows - 1)
+                        i1 =
+                            i0 + 1
 
-                col =
-                    quad % (cols - 1)
+                        i2 =
+                            (row + 1) * cols + col
 
-                v0 =
-                    col + (row * cols)
-
-                v1 =
-                    v0 + 1
-
-                v2 =
-                    col + ((row + 1) * cols)
-
-                v3 =
-                    v2 + 1
-            in
-                if isEven triangle then
-                    ( v1, v0, v2 )
-                else
-                    ( v1, v2, v3 )
-
-
-isEven : Int -> Bool
-isEven n =
-    n % 2 == 0
+                        i3 =
+                            i2 + 1
+                    in
+                        [ ( i1, i0, i2 ), ( i1, i2, i3 ) ]
+                )
+            <|
+                List.range 0 (cols - 2)
+        )
+    <|
+        List.range 0 (rows - 2)
 
 
 
