@@ -46,10 +46,10 @@ init aspectRatio camera =
             List.concat <|
                 List.map
                     (\column ->
-                        List.map (oneTile column) <| List.range -16 15
+                        List.map (oneTile column) <| List.range -5 4
                     )
                 <|
-                    List.range -16 15
+                    List.range -5 4
     in
         { tiles = tiles, translationMatrices = pageFromCamera aspectRatio camera tiles }
 
@@ -99,6 +99,9 @@ pageFromCamera aspectRatio camera tiles =
 
         selected =
             List.filter (isInside frustum) tiles
+
+        dgb =
+            Debug.log "pageFromCamera (#selected, total): " ( List.length selected, List.length tiles )
     in
         List.map (\tile -> tile.translationMatrix) selected
 

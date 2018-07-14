@@ -5,7 +5,6 @@ module Graphics.View exposing (view)
 
 import Camera.Model as Camera
 import Composer.Model exposing (Msg(..))
-import Graphics.Internal.TerrainPager as TerrainPager exposing (Tile)
 import Graphics.Internal.Terrain as Terrain
 import Graphics.Model exposing (Model, Cursor(..))
 import Html exposing (Attribute, Html)

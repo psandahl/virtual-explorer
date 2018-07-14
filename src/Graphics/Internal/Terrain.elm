@@ -52,7 +52,7 @@ makeMesh =
 -}
 dimensions : ( Int, Int )
 dimensions =
-    ( 65, 65 )
+    ( 256, 256 )
 
 
 {-| Make vertices for the given dimensions.
