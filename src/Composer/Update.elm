@@ -6,6 +6,7 @@ module Composer.Update exposing (init, subscriptions, update)
 import Camera.Update as Camera
 import Compass.Update as Compass
 import Composer.Model exposing (Model, Msg(..))
+import Coordinate.Update as Coordinate
 import Debug
 import Graphics.Model exposing (Cursor(..))
 import Graphics.Update as Graphics
@@ -25,6 +26,7 @@ init =
             Camera.init defaultViewport
     in
     ( { graphics = Graphics.init defaultViewport camera
+      , coordinate = Coordinate.init defaultViewport
       , compass = Compass.init defaultViewport
       , camera = camera
       , toolBox = ToolBox.init
@@ -45,6 +47,7 @@ update msg model =
                 | graphics =
                     Graphics.pageTiles model.camera <|
                         Graphics.setViewport viewport model.graphics
+                , coordinate = Coordinate.setViewport viewport model.coordinate
                 , compass = Compass.setViewport viewport model.compass
                 , camera = Camera.setViewport viewport model.camera
               }

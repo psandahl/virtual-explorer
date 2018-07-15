@@ -5,9 +5,10 @@ module Composer.Model exposing (Model, Msg(..))
 
 import Camera.Model as Camera
 import Compass.Model as Compass
+import Coordinate.Model as Coordinate
 import Graphics.Model as Graphics
-import ToolBox.Model as ToolBox exposing (Slider)
 import Mouse exposing (Position)
+import ToolBox.Model as ToolBox exposing (Slider)
 import Window exposing (Size)
 
 
@@ -15,6 +16,7 @@ import Window exposing (Size)
 -}
 type alias Model =
     { graphics : Graphics.Model
+    , coordinate : Coordinate.Model
     , compass : Compass.Model
     , camera : Camera.Model
     , toolBox : ToolBox.Model

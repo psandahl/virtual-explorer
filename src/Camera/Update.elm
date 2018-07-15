@@ -4,6 +4,7 @@ module Camera.Update
         , mouseMoveWorldOffset
         , mouseRotateCamera
         , setViewport
+        , virtualPosition
         )
 
 {-| Module implementing model manipulating functions for the camera. All angles
@@ -36,6 +37,14 @@ init viewport =
     , upDirection = defaultUpDirection
     , viewMatrix = makeViewMatrix defaultPosition defaultViewDirection defaultUpDirection
     }
+
+
+{-| Get the virtual position. I.e. a combination of the camera height and the
+world offset. Z is height.
+-}
+virtualPosition : Model -> Vec3
+virtualPosition model =
+    Vec3.vec3 (Vec2.getX model.worldOffset) (Vec2.getY model.worldOffset) (Vec3.getY model.position)
 
 
 {-| Set a new viewport.

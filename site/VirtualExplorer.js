@@ -12837,6 +12837,13 @@ var _psandahl$virtual_explorer$Camera_Update$setViewport = F2(
 			model,
 			{viewport: viewport});
 	});
+var _psandahl$virtual_explorer$Camera_Update$virtualPosition = function (model) {
+	return A3(
+		_elm_community$linear_algebra$Math_Vector3$vec3,
+		_elm_community$linear_algebra$Math_Vector2$getX(model.worldOffset),
+		_elm_community$linear_algebra$Math_Vector2$getY(model.worldOffset),
+		_elm_community$linear_algebra$Math_Vector3$getY(model.position));
+};
 var _psandahl$virtual_explorer$Camera_Update$init = function (viewport) {
 	var defaultViewDirection = A2(_psandahl$virtual_explorer$Camera_Update$makeViewDirection, _psandahl$virtual_explorer$Camera_Update$defaultHeading, _psandahl$virtual_explorer$Camera_Update$defaultPitch);
 	return {
@@ -12863,6 +12870,10 @@ var _psandahl$virtual_explorer$Compass_Update$setViewport = F2(
 	});
 var _psandahl$virtual_explorer$Compass_Update$init = function (viewport) {
 	return {viewport: viewport};
+};
+
+var _psandahl$virtual_explorer$Coordinate_Model$Model = function (a) {
+	return {viewport: a};
 };
 
 var _psandahl$virtual_explorer$Graphics_Internal_Frustum$containPoint = F2(
@@ -13097,9 +13108,9 @@ var _psandahl$virtual_explorer$ToolBox_Model$Octave0Altitude = {ctor: 'Octave0Al
 var _psandahl$virtual_explorer$ToolBox_Model$Octave0VerticalWaveLength = {ctor: 'Octave0VerticalWaveLength'};
 var _psandahl$virtual_explorer$ToolBox_Model$Octave0HorizontalWaveLength = {ctor: 'Octave0HorizontalWaveLength'};
 
-var _psandahl$virtual_explorer$Composer_Model$Model = F6(
-	function (a, b, c, d, e, f) {
-		return {graphics: a, compass: b, camera: c, toolBox: d, ctrlKeyDown: e, trackedMousePosition: f};
+var _psandahl$virtual_explorer$Composer_Model$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {graphics: a, coordinate: b, compass: c, camera: d, toolBox: e, ctrlKeyDown: f, trackedMousePosition: g};
 	});
 var _psandahl$virtual_explorer$Composer_Model$Nop = {ctor: 'Nop'};
 var _psandahl$virtual_explorer$Composer_Model$ToolBoxSliderChange = F2(
@@ -13214,6 +13225,16 @@ var _psandahl$virtual_explorer$Compass_View$view = F2(
 				_1: {ctor: '[]'}
 			});
 	});
+
+var _psandahl$virtual_explorer$Coordinate_Update$setViewport = F2(
+	function (viewport, model) {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{viewport: viewport});
+	});
+var _psandahl$virtual_explorer$Coordinate_Update$init = function (viewport) {
+	return {viewport: viewport};
+};
 
 var _psandahl$virtual_explorer$Graphics_Update$getAspectRatio = function (viewport) {
 	return _elm_lang$core$Basics$toFloat(viewport.width) / _elm_lang$core$Basics$toFloat(viewport.height);
@@ -13410,6 +13431,7 @@ var _psandahl$virtual_explorer$Composer_Update$update = F2(
 								_psandahl$virtual_explorer$Graphics_Update$pageTiles,
 								model.camera,
 								A2(_psandahl$virtual_explorer$Graphics_Update$setViewport, _p3, model.graphics)),
+							coordinate: A2(_psandahl$virtual_explorer$Coordinate_Update$setViewport, _p3, model.coordinate),
 							compass: A2(_psandahl$virtual_explorer$Compass_Update$setViewport, _p3, model.compass),
 							camera: A2(_psandahl$virtual_explorer$Camera_Update$setViewport, _p3, model.camera)
 						}),
@@ -13595,6 +13617,7 @@ var _psandahl$virtual_explorer$Composer_Update$init = function () {
 		ctor: '_Tuple2',
 		_0: {
 			graphics: A2(_psandahl$virtual_explorer$Graphics_Update$init, _psandahl$virtual_explorer$Composer_Update$defaultViewport, camera),
+			coordinate: _psandahl$virtual_explorer$Coordinate_Update$init(_psandahl$virtual_explorer$Composer_Update$defaultViewport),
 			compass: _psandahl$virtual_explorer$Compass_Update$init(_psandahl$virtual_explorer$Composer_Update$defaultViewport),
 			camera: camera,
 			toolBox: _psandahl$virtual_explorer$ToolBox_Update$init,
@@ -13604,6 +13627,72 @@ var _psandahl$virtual_explorer$Composer_Update$init = function () {
 		_1: A2(_elm_lang$core$Task$perform, _psandahl$virtual_explorer$Composer_Model$SetViewport, _elm_lang$window$Window$size)
 	};
 }();
+
+var _psandahl$virtual_explorer$Coordinate_View$view = F2(
+	function (coordinate, model) {
+		return A2(
+			_elm_lang$html$Html$span,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$style(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'position', _1: 'absolute'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'right', _1: '10px'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'bottom', _1: '10px'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'font-family', _1: 'sans-serif'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'font-size', _1: '15px'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'(x: ',
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_elm_lang$core$Basics$toString(
+								_elm_lang$core$Basics$round(
+									0 - _elm_community$linear_algebra$Math_Vector3$getX(coordinate))),
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								', y: ',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									_elm_lang$core$Basics$toString(
+										_elm_lang$core$Basics$round(
+											0 - _elm_community$linear_algebra$Math_Vector3$getY(coordinate))),
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										', z: ',
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											_elm_lang$core$Basics$toString(
+												_elm_lang$core$Basics$round(
+													_elm_community$linear_algebra$Math_Vector3$getZ(coordinate))),
+											')'))))))),
+				_1: {ctor: '[]'}
+			});
+	});
 
 var _psandahl$virtual_explorer$Graphics_View$cursorToString = function (cursor) {
 	var _p0 = cursor;
@@ -14022,8 +14111,15 @@ var _psandahl$virtual_explorer$Composer_View$view = function (model) {
 				_0: A3(_psandahl$virtual_explorer$Graphics_View$view, model.camera, model.toolBox, model.graphics),
 				_1: {
 					ctor: '::',
-					_0: A2(_psandahl$virtual_explorer$Compass_View$view, model.camera.heading, model.compass),
-					_1: {ctor: '[]'}
+					_0: A2(
+						_psandahl$virtual_explorer$Coordinate_View$view,
+						_psandahl$virtual_explorer$Camera_Update$virtualPosition(model.camera),
+						model.coordinate),
+					_1: {
+						ctor: '::',
+						_0: A2(_psandahl$virtual_explorer$Compass_View$view, model.camera.heading, model.compass),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		});
