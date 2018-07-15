@@ -6,14 +6,14 @@ module Composer.Update exposing (init, subscriptions, update)
 import Camera.Update as Camera
 import Compass.Update as Compass
 import Composer.Model exposing (Model, Msg(..))
+import Debug
 import Graphics.Model exposing (Cursor(..))
 import Graphics.Update as Graphics
-import ToolBox.Update as ToolBox
 import Keyboard exposing (KeyCode)
 import Mouse exposing (Position)
 import Task
+import ToolBox.Update as ToolBox
 import Window exposing (Size)
-import Debug
 
 
 {-| Initialize the model.
@@ -24,15 +24,15 @@ init =
         camera =
             Camera.init defaultViewport
     in
-        ( { graphics = Graphics.init defaultViewport camera
-          , compass = Compass.init defaultViewport
-          , camera = camera
-          , toolBox = ToolBox.init
-          , ctrlKeyDown = False
-          , trackedMousePosition = Nothing
-          }
-        , Task.perform SetViewport Window.size
-        )
+    ( { graphics = Graphics.init defaultViewport camera
+      , compass = Compass.init defaultViewport
+      , camera = camera
+      , toolBox = ToolBox.init
+      , ctrlKeyDown = False
+      , trackedMousePosition = Nothing
+      }
+    , Task.perform SetViewport Window.size
+    )
 
 
 {-| The main update function for the complete application.
@@ -84,20 +84,20 @@ update msg model =
                                 camera =
                                     Camera.mouseRotateCamera from to model.camera
                             in
-                                ( { model
-                                    | trackedMousePosition = Just to
-                                    , camera = camera
-                                    , graphics =
-                                        Graphics.pageTiles camera <|
-                                            Graphics.setCursor (cursorType model.ctrlKeyDown <| Just to) model.graphics
-                                  }
-                                , Cmd.none
-                                )
+                            ( { model
+                                | trackedMousePosition = Just to
+                                , camera = camera
+                                , graphics =
+                                    Graphics.pageTiles camera <|
+                                        Graphics.setCursor (cursorType model.ctrlKeyDown <| Just to) model.graphics
+                              }
+                            , Cmd.none
+                            )
 
                         False ->
                             ( { model
                                 | trackedMousePosition = Just to
-                                , camera = Camera.mouseMovePosition from to model.camera
+                                , camera = Camera.mouseMoveWorldOffset from to model.camera
                                 , graphics = Graphics.setCursor (cursorType model.ctrlKeyDown <| Just to) model.graphics
                               }
                             , Cmd.none
@@ -115,20 +115,20 @@ update msg model =
                                 camera =
                                     Camera.mouseRotateCamera from to model.camera
                             in
-                                ( { model
-                                    | trackedMousePosition = Nothing
-                                    , camera = camera
-                                    , graphics =
-                                        Graphics.pageTiles camera <|
-                                            Graphics.setCursor (cursorType model.ctrlKeyDown Nothing) model.graphics
-                                  }
-                                , Cmd.none
-                                )
+                            ( { model
+                                | trackedMousePosition = Nothing
+                                , camera = camera
+                                , graphics =
+                                    Graphics.pageTiles camera <|
+                                        Graphics.setCursor (cursorType model.ctrlKeyDown Nothing) model.graphics
+                              }
+                            , Cmd.none
+                            )
 
                         False ->
                             ( { model
                                 | trackedMousePosition = Nothing
-                                , camera = Camera.mouseMovePosition from to model.camera
+                                , camera = Camera.mouseMoveWorldOffset from to model.camera
                                 , graphics = Graphics.setCursor (cursorType model.ctrlKeyDown Nothing) model.graphics
                               }
                             , Cmd.none
@@ -166,13 +166,13 @@ subscriptions model =
             , Mouse.ups GraphicsViewMouseReleased
             ]
     in
-        Sub.batch <|
-            case model.trackedMousePosition of
-                Just _ ->
-                    baseSubscriptions ++ mouseSubscriptions
+    Sub.batch <|
+        case model.trackedMousePosition of
+            Just _ ->
+                baseSubscriptions ++ mouseSubscriptions
 
-                Nothing ->
-                    baseSubscriptions
+            Nothing ->
+                baseSubscriptions
 
 
 keyDownHandler : KeyCode -> Msg
@@ -219,4 +219,4 @@ debugLog str model =
         dgb =
             Debug.log str
     in
-        ( model, Cmd.none )
+    ( model, Cmd.none )

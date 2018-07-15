@@ -1,20 +1,21 @@
 module Camera.Update
     exposing
         ( init
-        , setViewport
-        , mouseMovePosition
+        , mouseMoveWorldOffset
         , mouseRotateCamera
+        , setViewport
         )
 
-{-| Module implementing model manipulating functions for the camera.
+{-| Module implementing model manipulating functions for the camera. All angles
+are degrees.
 -}
 
 import Camera.Model exposing (Model)
 import Math.Matrix4 as Mat4 exposing (Mat4)
 import Math.Vector2 as Vec2 exposing (Vec2)
 import Math.Vector3 as Vec3 exposing (Vec3)
-import Settings
 import Mouse exposing (Position)
+import Settings
 import Window exposing (Size)
 
 
@@ -26,15 +27,15 @@ init viewport =
         defaultViewDirection =
             makeViewDirection defaultHeading defaultPitch
     in
-        { viewport = viewport
-        , worldOffset = defaultWorldOffset
-        , heading = defaultHeading
-        , pitch = defaultPitch
-        , position = defaultPosition
-        , viewDirection = defaultViewDirection
-        , upDirection = defaultUpDirection
-        , viewMatrix = makeViewMatrix defaultPosition defaultViewDirection defaultUpDirection
-        }
+    { viewport = viewport
+    , worldOffset = defaultWorldOffset
+    , heading = defaultHeading
+    , pitch = defaultPitch
+    , position = defaultPosition
+    , viewDirection = defaultViewDirection
+    , upDirection = defaultUpDirection
+    , viewMatrix = makeViewMatrix defaultPosition defaultViewDirection defaultUpDirection
+    }
 
 
 {-| Set a new viewport.
@@ -44,11 +45,30 @@ setViewport viewport model =
     { model | viewport = viewport }
 
 
-{-| Move camera position from a change in mouse position.
+{-| Move world offset from a mouse move. Adapt to heading angle.
 -}
-mouseMovePosition : Position -> Position -> Model -> Model
-mouseMovePosition from to model =
-    model
+mouseMoveWorldOffset : Position -> Position -> Model -> Model
+mouseMoveWorldOffset from to model =
+    let
+        fromVec =
+            Vec3.vec3 (toFloat from.x) (toFloat from.y) 0
+
+        toVec =
+            Vec3.vec3 (toFloat to.x) (toFloat to.y) 0
+
+        rotZ =
+            Mat4.makeRotate (degrees <| toFloat -model.heading) <| Vec3.vec3 0 0 1
+
+        move =
+            Mat4.transform rotZ <| Vec3.sub toVec fromVec
+
+        current =
+            Vec3.vec3 (Vec2.getX model.worldOffset) (Vec2.getY model.worldOffset) 0
+
+        new =
+            Vec3.add current move
+    in
+    { model | worldOffset = Vec2.vec2 (Vec3.getX new) (Vec3.getY new) }
 
 
 {-| Rotate camera from a change in mouse position.
@@ -63,7 +83,7 @@ mouseRotateCamera from to model =
             if model.viewport.width < 360 then
                 toFloat deltaX
             else
-                (toFloat deltaX) / (toFloat model.viewport.width) * 360
+                toFloat deltaX / toFloat model.viewport.width * 360
 
         heading =
             (model.heading + round normalizedXChange)
@@ -76,7 +96,7 @@ mouseRotateCamera from to model =
             if model.viewport.height < 360 then
                 toFloat deltaY
             else
-                (toFloat deltaY) / (toFloat model.viewport.height) * 120
+                toFloat deltaY / toFloat model.viewport.height * 120
 
         pitch =
             clamp -60 60 <| model.pitch + round normalizedYChange
@@ -87,12 +107,12 @@ mouseRotateCamera from to model =
         viewMatrix =
             makeViewMatrix model.position viewDirection model.upDirection
     in
-        { model
-            | heading = heading
-            , pitch = pitch
-            , viewDirection = viewDirection
-            , viewMatrix = viewMatrix
-        }
+    { model
+        | heading = heading
+        , pitch = pitch
+        , viewDirection = viewDirection
+        , viewMatrix = viewMatrix
+    }
 
 
 {-| The default world offset.
@@ -154,4 +174,4 @@ makeViewDirection heading pitch =
         rotateMatrix =
             Mat4.mul headingMatrix pitchMatrix
     in
-        Vec3.normalize <| Mat4.transform rotateMatrix ahead
+    Vec3.normalize <| Mat4.transform rotateMatrix ahead

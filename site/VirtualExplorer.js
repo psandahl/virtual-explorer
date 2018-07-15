@@ -12795,9 +12795,41 @@ var _psandahl$virtual_explorer$Camera_Update$mouseRotateCamera = F3(
 			model,
 			{heading: heading, pitch: pitch, viewDirection: viewDirection, viewMatrix: viewMatrix});
 	});
-var _psandahl$virtual_explorer$Camera_Update$mouseMovePosition = F3(
+var _psandahl$virtual_explorer$Camera_Update$mouseMoveWorldOffset = F3(
 	function (from, to, model) {
-		return model;
+		var current = A3(
+			_elm_community$linear_algebra$Math_Vector3$vec3,
+			_elm_community$linear_algebra$Math_Vector2$getX(model.worldOffset),
+			_elm_community$linear_algebra$Math_Vector2$getY(model.worldOffset),
+			0);
+		var rotZ = A2(
+			_elm_community$linear_algebra$Math_Matrix4$makeRotate,
+			_elm_lang$core$Basics$degrees(
+				_elm_lang$core$Basics$toFloat(0 - model.heading)),
+			A3(_elm_community$linear_algebra$Math_Vector3$vec3, 0, 0, 1));
+		var toVec = A3(
+			_elm_community$linear_algebra$Math_Vector3$vec3,
+			_elm_lang$core$Basics$toFloat(to.x),
+			_elm_lang$core$Basics$toFloat(to.y),
+			0);
+		var fromVec = A3(
+			_elm_community$linear_algebra$Math_Vector3$vec3,
+			_elm_lang$core$Basics$toFloat(from.x),
+			_elm_lang$core$Basics$toFloat(from.y),
+			0);
+		var move = A2(
+			_elm_community$linear_algebra$Math_Matrix4$transform,
+			rotZ,
+			A2(_elm_community$linear_algebra$Math_Vector3$sub, toVec, fromVec));
+		var $new = A2(_elm_community$linear_algebra$Math_Vector3$add, current, move);
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				worldOffset: A2(
+					_elm_community$linear_algebra$Math_Vector2$vec2,
+					_elm_community$linear_algebra$Math_Vector3$getX($new),
+					_elm_community$linear_algebra$Math_Vector3$getY($new))
+			});
 	});
 var _psandahl$virtual_explorer$Camera_Update$setViewport = F2(
 	function (viewport, model) {
@@ -13464,7 +13496,7 @@ var _psandahl$virtual_explorer$Composer_Update$update = F2(
 								model,
 								{
 									trackedMousePosition: _elm_lang$core$Maybe$Just(_p8),
-									camera: A3(_psandahl$virtual_explorer$Camera_Update$mouseMovePosition, _p7, _p8, model.camera),
+									camera: A3(_psandahl$virtual_explorer$Camera_Update$mouseMoveWorldOffset, _p7, _p8, model.camera),
 									graphics: A2(
 										_psandahl$virtual_explorer$Graphics_Update$setCursor,
 										A2(
@@ -13511,7 +13543,7 @@ var _psandahl$virtual_explorer$Composer_Update$update = F2(
 								model,
 								{
 									trackedMousePosition: _elm_lang$core$Maybe$Nothing,
-									camera: A3(_psandahl$virtual_explorer$Camera_Update$mouseMovePosition, _p11, _p12, model.camera),
+									camera: A3(_psandahl$virtual_explorer$Camera_Update$mouseMoveWorldOffset, _p11, _p12, model.camera),
 									graphics: A2(
 										_psandahl$virtual_explorer$Graphics_Update$setCursor,
 										A2(_psandahl$virtual_explorer$Composer_Update$cursorType, model.ctrlKeyDown, _elm_lang$core$Maybe$Nothing),
