@@ -12982,7 +12982,7 @@ var _psandahl$virtual_explorer$Graphics_Internal_Terrain$Vertex = function (a) {
 
 var _psandahl$virtual_explorer$Graphics_Internal_TerrainPager$isInside = F2(
 	function (frustum, tile) {
-		return A2(_psandahl$virtual_explorer$Graphics_Internal_Frustum$containPoint, tile.point0, frustum) || (A2(_psandahl$virtual_explorer$Graphics_Internal_Frustum$containPoint, tile.point1, frustum) || (A2(_psandahl$virtual_explorer$Graphics_Internal_Frustum$containPoint, tile.point2, frustum) || A2(_psandahl$virtual_explorer$Graphics_Internal_Frustum$containPoint, tile.point3, frustum)));
+		return A2(_psandahl$virtual_explorer$Graphics_Internal_Frustum$containPoint, tile.point0, frustum) || (A2(_psandahl$virtual_explorer$Graphics_Internal_Frustum$containPoint, tile.point1, frustum) || (A2(_psandahl$virtual_explorer$Graphics_Internal_Frustum$containPoint, tile.point2, frustum) || (A2(_psandahl$virtual_explorer$Graphics_Internal_Frustum$containPoint, tile.point3, frustum) || (A2(_psandahl$virtual_explorer$Graphics_Internal_Frustum$containPoint, tile.point4, frustum) || (A2(_psandahl$virtual_explorer$Graphics_Internal_Frustum$containPoint, tile.point5, frustum) || (A2(_psandahl$virtual_explorer$Graphics_Internal_Frustum$containPoint, tile.point6, frustum) || A2(_psandahl$virtual_explorer$Graphics_Internal_Frustum$containPoint, tile.point7, frustum)))))));
 	});
 var _psandahl$virtual_explorer$Graphics_Internal_TerrainPager$pageFromCamera = F3(
 	function (aspectRatio, camera, tiles) {
@@ -13016,10 +13016,46 @@ var _psandahl$virtual_explorer$Graphics_Internal_TerrainPager$oneTile = F2(
 		var row0 = _elm_lang$core$Basics$toFloat(row * (height - 1));
 		var row1 = _elm_lang$core$Basics$toFloat((row + 1) * (height - 1));
 		return {
-			point0: A3(_elm_community$linear_algebra$Math_Vector3$vec3, col0, 0, row0),
-			point1: A3(_elm_community$linear_algebra$Math_Vector3$vec3, col1, 0, row0),
-			point2: A3(_elm_community$linear_algebra$Math_Vector3$vec3, col0, 0, row1),
-			point3: A3(_elm_community$linear_algebra$Math_Vector3$vec3, col1, 0, row1),
+			point0: A3(
+				_elm_community$linear_algebra$Math_Vector3$vec3,
+				col0,
+				_elm_lang$core$Basics$toFloat(0 - _psandahl$virtual_explorer$Settings$maxTerrainAltitude),
+				row0),
+			point1: A3(
+				_elm_community$linear_algebra$Math_Vector3$vec3,
+				col1,
+				_elm_lang$core$Basics$toFloat(0 - _psandahl$virtual_explorer$Settings$maxTerrainAltitude),
+				row0),
+			point2: A3(
+				_elm_community$linear_algebra$Math_Vector3$vec3,
+				col0,
+				_elm_lang$core$Basics$toFloat(0 - _psandahl$virtual_explorer$Settings$maxTerrainAltitude),
+				row1),
+			point3: A3(
+				_elm_community$linear_algebra$Math_Vector3$vec3,
+				col1,
+				_elm_lang$core$Basics$toFloat(0 - _psandahl$virtual_explorer$Settings$maxTerrainAltitude),
+				row1),
+			point4: A3(
+				_elm_community$linear_algebra$Math_Vector3$vec3,
+				col0,
+				_elm_lang$core$Basics$toFloat(_psandahl$virtual_explorer$Settings$maxTerrainAltitude),
+				row0),
+			point5: A3(
+				_elm_community$linear_algebra$Math_Vector3$vec3,
+				col1,
+				_elm_lang$core$Basics$toFloat(_psandahl$virtual_explorer$Settings$maxTerrainAltitude),
+				row0),
+			point6: A3(
+				_elm_community$linear_algebra$Math_Vector3$vec3,
+				col0,
+				_elm_lang$core$Basics$toFloat(_psandahl$virtual_explorer$Settings$maxTerrainAltitude),
+				row1),
+			point7: A3(
+				_elm_community$linear_algebra$Math_Vector3$vec3,
+				col1,
+				_elm_lang$core$Basics$toFloat(_psandahl$virtual_explorer$Settings$maxTerrainAltitude),
+				row1),
 			translationMatrix: A3(_elm_community$linear_algebra$Math_Matrix4$makeTranslate3, col0, 0, row0)
 		};
 	});
@@ -13052,9 +13088,9 @@ var _psandahl$virtual_explorer$Graphics_Internal_TerrainPager$TerrainPager = F2(
 	function (a, b) {
 		return {tiles: a, translationMatrices: b};
 	});
-var _psandahl$virtual_explorer$Graphics_Internal_TerrainPager$Tile = F5(
-	function (a, b, c, d, e) {
-		return {point0: a, point1: b, point2: c, point3: d, translationMatrix: e};
+var _psandahl$virtual_explorer$Graphics_Internal_TerrainPager$Tile = F9(
+	function (a, b, c, d, e, f, g, h, i) {
+		return {point0: a, point1: b, point2: c, point3: d, point4: e, point5: f, point6: g, point7: h, translationMatrix: i};
 	});
 
 var _psandahl$virtual_explorer$Graphics_Model$Model = F6(

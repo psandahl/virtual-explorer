@@ -11,11 +11,12 @@ the camera position.
 -}
 
 import Camera.Model as Camera
+import Debug
 import Graphics.Internal.Frustum as Frustum exposing (Frustum)
 import Graphics.Internal.Terrain as Terrain
 import Math.Matrix4 as Mat4 exposing (Mat4)
 import Math.Vector3 as Vec3 exposing (Vec3)
-import Debug
+import Settings
 
 
 {-| The terrain pager record.
@@ -26,13 +27,18 @@ type alias TerrainPager =
     }
 
 
-{-| Tile record.
+{-| Tile record. The points are forming a box, where the first four points are
+the the "bottom points" and the last four are the "top points".
 -}
 type alias Tile =
     { point0 : Vec3
     , point1 : Vec3
     , point2 : Vec3
     , point3 : Vec3
+    , point4 : Vec3
+    , point5 : Vec3
+    , point6 : Vec3
+    , point7 : Vec3
     , translationMatrix : Mat4
     }
 
@@ -51,7 +57,7 @@ init aspectRatio camera =
                 <|
                     List.range -5 4
     in
-        { tiles = tiles, translationMatrices = pageFromCamera aspectRatio camera tiles }
+    { tiles = tiles, translationMatrices = pageFromCamera aspectRatio camera tiles }
 
 
 {-| Select a set of tiles from the camera.
@@ -81,12 +87,16 @@ oneTile column row =
         row1 =
             toFloat <| ((row + 1) * (height - 1))
     in
-        { point0 = Vec3.vec3 col0 0 row0
-        , point1 = Vec3.vec3 col1 0 row0
-        , point2 = Vec3.vec3 col0 0 row1
-        , point3 = Vec3.vec3 col1 0 row1
-        , translationMatrix = Mat4.makeTranslate3 col0 0 row0
-        }
+    { point0 = Vec3.vec3 col0 (toFloat -Settings.maxTerrainAltitude) row0
+    , point1 = Vec3.vec3 col1 (toFloat -Settings.maxTerrainAltitude) row0
+    , point2 = Vec3.vec3 col0 (toFloat -Settings.maxTerrainAltitude) row1
+    , point3 = Vec3.vec3 col1 (toFloat -Settings.maxTerrainAltitude) row1
+    , point4 = Vec3.vec3 col0 (toFloat Settings.maxTerrainAltitude) row0
+    , point5 = Vec3.vec3 col1 (toFloat Settings.maxTerrainAltitude) row0
+    , point6 = Vec3.vec3 col0 (toFloat Settings.maxTerrainAltitude) row1
+    , point7 = Vec3.vec3 col1 (toFloat Settings.maxTerrainAltitude) row1
+    , translationMatrix = Mat4.makeTranslate3 col0 0 row0
+    }
 
 
 {-| Working horse for paging.
@@ -103,7 +113,7 @@ pageFromCamera aspectRatio camera tiles =
         dgb =
             Debug.log "pageFromCamera (#selected, total): " ( List.length selected, List.length tiles )
     in
-        List.map (\tile -> tile.translationMatrix) selected
+    List.map (\tile -> tile.translationMatrix) selected
 
 
 {-| Check if a tile is inside the frustum.
@@ -114,3 +124,7 @@ isInside frustum tile =
         || Frustum.containPoint tile.point1 frustum
         || Frustum.containPoint tile.point2 frustum
         || Frustum.containPoint tile.point3 frustum
+        || Frustum.containPoint tile.point4 frustum
+        || Frustum.containPoint tile.point5 frustum
+        || Frustum.containPoint tile.point6 frustum
+        || Frustum.containPoint tile.point7 frustum
