@@ -163,35 +163,6 @@ octaveSliderGroup caption sliders =
                 sliders
 
 
-slider : Slider -> String -> Int -> Int -> Int -> Html Msg
-slider slider caption min max value =
-    Html.div
-        [ Attr.style
-            [ ( "width", "100%" )
-            ]
-        ]
-        [ Html.span
-            [ Attr.style
-                [ ( "font-size", "12px" )
-                , ( "font-family", "sans-serif" )
-                , ( "color", "white" )
-                , ( "margin-left", "5%" )
-                ]
-            ]
-            [ Html.text <| caption ++ " (value: " ++ toString value ++ ")"
-            , Html.input
-                [ Attr.type_ "range"
-                , Attr.min <| toString min
-                , Attr.max <| toString max
-                , Attr.value <| toString value
-                , Attr.class "slider"
-                , onSliderChange slider
-                ]
-                []
-            ]
-        ]
-
-
 onSliderChange : Slider -> Attribute Msg
 onSliderChange slider =
     Events.on "input"
