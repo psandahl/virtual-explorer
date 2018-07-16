@@ -13955,6 +13955,106 @@ var _psandahl$virtual_explorer$ToolBox_View$slider = F5(
 				_1: {ctor: '[]'}
 			});
 	});
+var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup = F2(
+	function (caption, sliders) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$style(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'width', _1: '95%'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '5px'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '1%'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'border', _1: '2px solid gray'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '5px'},
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$span,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$style(
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'font-size', _1: '12px'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'font-family', _1: 'sans-serif'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '2.5%'},
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(caption),
+						_1: {ctor: '[]'}
+					}),
+				_1: A2(
+					_elm_lang$core$List$map,
+					function (_p0) {
+						var _p1 = _p0;
+						return A2(
+							_elm_lang$html$Html$input,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$type_('range'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$min(
+										_elm_lang$core$Basics$toString(_p1._1)),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$max(
+											_elm_lang$core$Basics$toString(_p1._2)),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$value(
+												_elm_lang$core$Basics$toString(_p1._3)),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('slider'),
+												_1: {
+													ctor: '::',
+													_0: _psandahl$virtual_explorer$ToolBox_View$onSliderChange(_p1._0),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}
+								}
+							},
+							{ctor: '[]'});
+					},
+					sliders)
+			});
+	});
 var _psandahl$virtual_explorer$ToolBox_View$pane = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -14062,38 +14162,59 @@ var _psandahl$virtual_explorer$ToolBox_View$pane = function (model) {
 					{ctor: '[]'}),
 				_1: {
 					ctor: '::',
-					_0: A5(_psandahl$virtual_explorer$ToolBox_View$slider, _psandahl$virtual_explorer$ToolBox_Model$Octave0HorizontalWaveLength, 'Oct[0]: Horizontal length', 1, _psandahl$virtual_explorer$Settings$octave0MaxWaveLength, model.octave0HorizontalWaveLength),
-					_1: {
-						ctor: '::',
-						_0: A5(_psandahl$virtual_explorer$ToolBox_View$slider, _psandahl$virtual_explorer$ToolBox_Model$Octave0VerticalWaveLength, 'Oct[0]: Vertical length', 1, _psandahl$virtual_explorer$Settings$octave0MaxWaveLength, model.octave0VerticalWaveLength),
-						_1: {
+					_0: A2(
+						_psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup,
+						'Octave0 horizontal/vertical/altitude',
+						{
 							ctor: '::',
-							_0: A5(_psandahl$virtual_explorer$ToolBox_View$slider, _psandahl$virtual_explorer$ToolBox_Model$Octave0Altitude, 'Oct[0]: Altitude', 0, _psandahl$virtual_explorer$Settings$octave0MaxAltitude, model.octave0Altitude),
+							_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave0HorizontalWaveLength, _1: 1, _2: _psandahl$virtual_explorer$Settings$octave0MaxWaveLength, _3: model.octave0HorizontalWaveLength},
 							_1: {
 								ctor: '::',
-								_0: A5(_psandahl$virtual_explorer$ToolBox_View$slider, _psandahl$virtual_explorer$ToolBox_Model$Octave1HorizontalWaveLength, 'Oct[1]: Horizontal length', 1, _psandahl$virtual_explorer$Settings$octave1MaxWaveLength, model.octave1HorizontalWaveLength),
+								_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave0VerticalWaveLength, _1: 1, _2: _psandahl$virtual_explorer$Settings$octave0MaxWaveLength, _3: model.octave0VerticalWaveLength},
 								_1: {
 									ctor: '::',
-									_0: A5(_psandahl$virtual_explorer$ToolBox_View$slider, _psandahl$virtual_explorer$ToolBox_Model$Octave1VerticalWaveLength, 'Oct[1]: Vertical length', 1, _psandahl$virtual_explorer$Settings$octave1MaxWaveLength, model.octave1VerticalWaveLength),
-									_1: {
-										ctor: '::',
-										_0: A5(_psandahl$virtual_explorer$ToolBox_View$slider, _psandahl$virtual_explorer$ToolBox_Model$Octave1Altitude, 'Oct[1]: Altitude', 0, _psandahl$virtual_explorer$Settings$octave1MaxAltitude, model.octave1Altitude),
-										_1: {
-											ctor: '::',
-											_0: A5(_psandahl$virtual_explorer$ToolBox_View$slider, _psandahl$virtual_explorer$ToolBox_Model$Octave2HorizontalWaveLength, 'Oct[2]: Horizontal length', 1, _psandahl$virtual_explorer$Settings$octave2MaxWaveLength, model.octave2HorizontalWaveLength),
-											_1: {
-												ctor: '::',
-												_0: A5(_psandahl$virtual_explorer$ToolBox_View$slider, _psandahl$virtual_explorer$ToolBox_Model$Octave2VerticalWaveLength, 'Oct[2]: Vertical length', 1, _psandahl$virtual_explorer$Settings$octave2MaxWaveLength, model.octave2VerticalWaveLength),
-												_1: {
-													ctor: '::',
-													_0: A5(_psandahl$virtual_explorer$ToolBox_View$slider, _psandahl$virtual_explorer$ToolBox_Model$Octave2Altitude, 'Oct[2]: Altitude', 0, _psandahl$virtual_explorer$Settings$octave2MaxAltitude, model.octave2Altitude),
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									}
+									_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave0Altitude, _1: 0, _2: _psandahl$virtual_explorer$Settings$octave0MaxAltitude, _3: model.octave0Altitude},
+									_1: {ctor: '[]'}
 								}
 							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup,
+							'Octave1 horizontal/vertical/altitude',
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave1HorizontalWaveLength, _1: 1, _2: _psandahl$virtual_explorer$Settings$octave1MaxWaveLength, _3: model.octave1HorizontalWaveLength},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave1VerticalWaveLength, _1: 1, _2: _psandahl$virtual_explorer$Settings$octave1MaxWaveLength, _3: model.octave1VerticalWaveLength},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave1Altitude, _1: 0, _2: _psandahl$virtual_explorer$Settings$octave1MaxAltitude, _3: model.octave1Altitude},
+										_1: {ctor: '[]'}
+									}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup,
+								'Octave2 horizontal/vertical/altitude',
+								{
+									ctor: '::',
+									_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave2HorizontalWaveLength, _1: 1, _2: _psandahl$virtual_explorer$Settings$octave2MaxWaveLength, _3: model.octave2HorizontalWaveLength},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave2VerticalWaveLength, _1: 1, _2: _psandahl$virtual_explorer$Settings$octave2MaxWaveLength, _3: model.octave2VerticalWaveLength},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave2Altitude, _1: 0, _2: _psandahl$virtual_explorer$Settings$octave2MaxAltitude, _3: model.octave2Altitude},
+											_1: {ctor: '[]'}
+										}
+									}
+								}),
+							_1: {ctor: '[]'}
 						}
 					}
 				}

@@ -73,52 +73,94 @@ pane model =
             [ Html.text <| String.fromChar <| Char.fromCode 215
             ]
         , Html.p [ Attr.style [ ( "margin-top", "35px" ) ] ] []
-        , slider Octave0HorizontalWaveLength
-            "Oct[0]: Horizontal length"
-            1
-            Settings.octave0MaxWaveLength
-            model.octave0HorizontalWaveLength
-        , slider Octave0VerticalWaveLength
-            "Oct[0]: Vertical length"
-            1
-            Settings.octave0MaxWaveLength
-            model.octave0VerticalWaveLength
-        , slider Octave0Altitude
-            "Oct[0]: Altitude"
-            0
-            Settings.octave0MaxAltitude
-            model.octave0Altitude
-        , slider Octave1HorizontalWaveLength
-            "Oct[1]: Horizontal length"
-            1
-            Settings.octave1MaxWaveLength
-            model.octave1HorizontalWaveLength
-        , slider Octave1VerticalWaveLength
-            "Oct[1]: Vertical length"
-            1
-            Settings.octave1MaxWaveLength
-            model.octave1VerticalWaveLength
-        , slider Octave1Altitude
-            "Oct[1]: Altitude"
-            0
-            Settings.octave1MaxAltitude
-            model.octave1Altitude
-        , slider Octave2HorizontalWaveLength
-            "Oct[2]: Horizontal length"
-            1
-            Settings.octave2MaxWaveLength
-            model.octave2HorizontalWaveLength
-        , slider Octave2VerticalWaveLength
-            "Oct[2]: Vertical length"
-            1
-            Settings.octave2MaxWaveLength
-            model.octave2VerticalWaveLength
-        , slider Octave2Altitude
-            "Oct[2]: Altitude"
-            0
-            Settings.octave2MaxAltitude
-            model.octave2Altitude
+        , octaveSliderGroup "Octave0 horizontal/vertical/altitude"
+            [ ( Octave0HorizontalWaveLength
+              , 1
+              , Settings.octave0MaxWaveLength
+              , model.octave0HorizontalWaveLength
+              )
+            , ( Octave0VerticalWaveLength
+              , 1
+              , Settings.octave0MaxWaveLength
+              , model.octave0VerticalWaveLength
+              )
+            , ( Octave0Altitude
+              , 0
+              , Settings.octave0MaxAltitude
+              , model.octave0Altitude
+              )
+            ]
+        , octaveSliderGroup "Octave1 horizontal/vertical/altitude"
+            [ ( Octave1HorizontalWaveLength
+              , 1
+              , Settings.octave1MaxWaveLength
+              , model.octave1HorizontalWaveLength
+              )
+            , ( Octave1VerticalWaveLength
+              , 1
+              , Settings.octave1MaxWaveLength
+              , model.octave1VerticalWaveLength
+              )
+            , ( Octave1Altitude
+              , 0
+              , Settings.octave1MaxAltitude
+              , model.octave1Altitude
+              )
+            ]
+        , octaveSliderGroup "Octave2 horizontal/vertical/altitude"
+            [ ( Octave2HorizontalWaveLength
+              , 1
+              , Settings.octave2MaxWaveLength
+              , model.octave2HorizontalWaveLength
+              )
+            , ( Octave2VerticalWaveLength
+              , 1
+              , Settings.octave2MaxWaveLength
+              , model.octave2VerticalWaveLength
+              )
+            , ( Octave2Altitude
+              , 0
+              , Settings.octave2MaxAltitude
+              , model.octave2Altitude
+              )
+            ]
         ]
+
+
+octaveSliderGroup : String -> List ( Slider, Int, Int, Int ) -> Html Msg
+octaveSliderGroup caption sliders =
+    Html.div
+        [ Attr.style
+            [ ( "width", "95%" )
+            , ( "margin-top", "5px" )
+            , ( "margin-left", "1%" )
+            , ( "border", "2px solid gray" )
+            , ( "border-radius", "5px" )
+            ]
+        ]
+    <|
+        Html.span
+            [ Attr.style
+                [ ( "font-size", "12px" )
+                , ( "font-family", "sans-serif" )
+                , ( "color", "white" )
+                , ( "margin-left", "2.5%" )
+                ]
+            ]
+            [ Html.text caption ]
+            :: List.map
+                (\( slider, min, max, value ) ->
+                    Html.input
+                        [ Attr.type_ "range"
+                        , Attr.min <| toString min
+                        , Attr.max <| toString max
+                        , Attr.value <| toString value
+                        , Attr.class "slider"
+                        , onSliderChange slider
+                        ]
+                        []
+                )
+                sliders
 
 
 slider : Slider -> String -> Int -> Int -> Int -> Html Msg
