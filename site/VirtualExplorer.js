@@ -13846,7 +13846,7 @@ var _psandahl$virtual_explorer$Graphics_View$view = F3(
 				model.terrainPager.translationMatrices));
 	});
 
-var _psandahl$virtual_explorer$ToolBox_View$onSliderChange = function (slider) {
+var _psandahl$virtual_explorer$ToolBox_View$onOctaveSliderChange = function (slider) {
 	return A2(
 		_elm_lang$html$Html_Events$on,
 		'input',
@@ -13950,7 +13950,7 @@ var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup = F2(
 												_0: _elm_lang$html$Html_Attributes$class('slider'),
 												_1: {
 													ctor: '::',
-													_0: _psandahl$virtual_explorer$ToolBox_View$onSliderChange(_p1._0),
+													_0: _psandahl$virtual_explorer$ToolBox_View$onOctaveSliderChange(_p1._0),
 													_1: {ctor: '[]'}
 												}
 											}

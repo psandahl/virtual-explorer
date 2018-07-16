@@ -156,15 +156,15 @@ octaveSliderGroup caption sliders =
                         , Attr.max <| toString max
                         , Attr.value <| toString value
                         , Attr.class "slider"
-                        , onSliderChange slider
+                        , onOctaveSliderChange slider
                         ]
                         []
                 )
                 sliders
 
 
-onSliderChange : Slider -> Attribute Msg
-onSliderChange slider =
+onOctaveSliderChange : Slider -> Attribute Msg
+onOctaveSliderChange slider =
     Events.on "input"
         (Decode.map
             (\x ->
