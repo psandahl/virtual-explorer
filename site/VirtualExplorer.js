@@ -13863,6 +13863,143 @@ var _psandahl$virtual_explorer$ToolBox_View$onOctaveSliderChange = function (sli
 			},
 			_elm_lang$html$Html_Events$targetValue));
 };
+var _psandahl$virtual_explorer$ToolBox_View$rgbFromVec = function (color) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		'rgb(',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			function (_p0) {
+				return _elm_lang$core$Basics$toString(
+					_elm_lang$core$Basics$round(_p0));
+			}(
+				_elm_community$linear_algebra$Math_Vector3$getX(color) * 255),
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				',',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					function (_p1) {
+						return _elm_lang$core$Basics$toString(
+							_elm_lang$core$Basics$round(_p1));
+					}(
+						_elm_community$linear_algebra$Math_Vector3$getY(color) * 255),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						',',
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							function (_p2) {
+								return _elm_lang$core$Basics$toString(
+									_elm_lang$core$Basics$round(_p2));
+							}(
+								_elm_community$linear_algebra$Math_Vector3$getZ(color) * 255),
+							')'))))));
+};
+var _psandahl$virtual_explorer$ToolBox_View$colorSliderGroup = F2(
+	function (caption, color) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$style(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'width', _1: '95%'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '5px'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '1%'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'border', _1: '2px solid gray'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '5px'},
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$span,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$style(
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'font-size', _1: '12px'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'font-family', _1: 'sans-serif'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '2.5%'},
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(caption),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$style(
+										{
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'width', _1: '40%'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'height', _1: '15px'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'float', _1: 'right'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 'margin-right', _1: '1%'},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: 'border', _1: '1px solid black'},
+															_1: {
+																ctor: '::',
+																_0: {
+																	ctor: '_Tuple2',
+																	_0: 'background',
+																	_1: _psandahl$virtual_explorer$ToolBox_View$rgbFromVec(color)
+																},
+																_1: {ctor: '[]'}
+															}
+														}
+													}
+												}
+											}
+										}),
+									_1: {ctor: '[]'}
+								},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {ctor: '[]'}
+			});
+	});
 var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup = F2(
 	function (caption, sliders) {
 		return A2(
@@ -13926,8 +14063,8 @@ var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup = F2(
 					}),
 				_1: A2(
 					_elm_lang$core$List$map,
-					function (_p0) {
-						var _p1 = _p0;
+					function (_p3) {
+						var _p4 = _p3;
 						return A2(
 							_elm_lang$html$Html$input,
 							{
@@ -13936,21 +14073,21 @@ var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup = F2(
 								_1: {
 									ctor: '::',
 									_0: _elm_lang$html$Html_Attributes$min(
-										_elm_lang$core$Basics$toString(_p1._1)),
+										_elm_lang$core$Basics$toString(_p4._1)),
 									_1: {
 										ctor: '::',
 										_0: _elm_lang$html$Html_Attributes$max(
-											_elm_lang$core$Basics$toString(_p1._2)),
+											_elm_lang$core$Basics$toString(_p4._2)),
 										_1: {
 											ctor: '::',
 											_0: _elm_lang$html$Html_Attributes$value(
-												_elm_lang$core$Basics$toString(_p1._3)),
+												_elm_lang$core$Basics$toString(_p4._3)),
 											_1: {
 												ctor: '::',
 												_0: _elm_lang$html$Html_Attributes$class('slider'),
 												_1: {
 													ctor: '::',
-													_0: _psandahl$virtual_explorer$ToolBox_View$onOctaveSliderChange(_p1._0),
+													_0: _psandahl$virtual_explorer$ToolBox_View$onOctaveSliderChange(_p4._0),
 													_1: {ctor: '[]'}
 												}
 											}
@@ -14122,7 +14259,23 @@ var _psandahl$virtual_explorer$ToolBox_View$pane = function (model) {
 										}
 									}
 								}),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: A2(_psandahl$virtual_explorer$ToolBox_View$colorSliderGroup, 'Color0 r/g/b', model.color0),
+								_1: {
+									ctor: '::',
+									_0: A2(_psandahl$virtual_explorer$ToolBox_View$colorSliderGroup, 'Color1 r/g/b', model.color1),
+									_1: {
+										ctor: '::',
+										_0: A2(_psandahl$virtual_explorer$ToolBox_View$colorSliderGroup, 'Color2 r/g/b', model.color2),
+										_1: {
+											ctor: '::',
+											_0: A2(_psandahl$virtual_explorer$ToolBox_View$colorSliderGroup, 'Color3 r/g/b', model.color3),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
 						}
 					}
 				}

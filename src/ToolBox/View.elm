@@ -9,6 +9,7 @@ import Html exposing (Html, Attribute)
 import Html.Attributes as Attr
 import Html.Events as Events
 import Json.Decode as Decode
+import Math.Vector3 as Vec3 exposing (Vec3)
 import Settings
 import ToolBox.Model exposing (Model, State(..), Slider(..))
 
@@ -124,6 +125,10 @@ pane model =
               , model.octave2Altitude
               )
             ]
+        , colorSliderGroup "Color0 r/g/b" model.color0
+        , colorSliderGroup "Color1 r/g/b" model.color1
+        , colorSliderGroup "Color2 r/g/b" model.color2
+        , colorSliderGroup "Color3 r/g/b" model.color3
         ]
 
 
@@ -161,6 +166,52 @@ octaveSliderGroup caption sliders =
                         []
                 )
                 sliders
+
+
+colorSliderGroup : String -> Vec3 -> Html Msg
+colorSliderGroup caption color =
+    Html.div
+        [ Attr.style
+            [ ( "width", "95%" )
+            , ( "margin-top", "5px" )
+            , ( "margin-left", "1%" )
+            , ( "border", "2px solid gray" )
+            , ( "border-radius", "5px" )
+            ]
+        ]
+        [ Html.span
+            [ Attr.style
+                [ ( "font-size", "12px" )
+                , ( "font-family", "sans-serif" )
+                , ( "color", "white" )
+                , ( "margin-left", "2.5%" )
+                ]
+            ]
+            [ Html.text caption
+            , Html.div
+                [ Attr.style
+                    [ ( "width", "40%" )
+                    , ( "height", "15px" )
+                    , ( "float", "right" )
+                    , ( "margin-right", "1%" )
+                    , ( "border", "1px solid black" )
+                    , ( "background", rgbFromVec color )
+                    ]
+                ]
+                []
+            ]
+        ]
+
+
+rgbFromVec : Vec3 -> String
+rgbFromVec color =
+    "rgb("
+        ++ (toString << round <| Vec3.getX color * 255)
+        ++ ","
+        ++ (toString << round <| Vec3.getY color * 255)
+        ++ ","
+        ++ (toString << round <| Vec3.getZ color * 255)
+        ++ ")"
 
 
 onOctaveSliderChange : Slider -> Attribute Msg
