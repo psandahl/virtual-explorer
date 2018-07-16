@@ -1,4 +1,4 @@
-module ToolBox.Model exposing (Model, State(..), Slider(..))
+module ToolBox.Model exposing (Model, Slider(..), State(..))
 
 {-| Module implementing the model for the tool box. The tool box have a
 collection of values used for the rendering. The values are adjustable in
@@ -43,6 +43,9 @@ type alias Model =
     , octave2VerticalWaveLength : Int
     , octave2Altitude : Int
     , color0 : Vec3
+    , color1 : Vec3
+    , color2 : Vec3
+    , color3 : Vec3
     , ambientLightColor : Vec3
     , ambientLightStrength : Float
     , sunLightColor : Vec3

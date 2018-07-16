@@ -1,10 +1,10 @@
 module Graphics.Internal.Terrain
     exposing
         ( Vertex
-        , makeMesh
         , dimensions
-        , vertexShader
         , fragmentShader
+        , makeMesh
+        , vertexShader
         )
 
 {-| Module implementing the terrain graphics; generating the mesh and providing
@@ -45,7 +45,7 @@ makeMesh =
         indices =
             makeIndices dimensions
     in
-        GL.indexedTriangles vertices indices
+    GL.indexedTriangles vertices indices
 
 
 {-| Give the vertice count dimensions for a tile. (x, z).
@@ -93,7 +93,7 @@ makeIndices ( cols, rows ) =
                         i3 =
                             i2 + 1
                     in
-                        [ ( i1, i0, i2 ), ( i1, i2, i3 ) ]
+                    [ ( i1, i0, i2 ), ( i1, i2, i3 ) ]
                 )
             <|
                 List.range 0 (cols - 2)
@@ -134,7 +134,11 @@ vertexShader :
             , uOctave2HorizontalWaveLength : Int
             , uOctave2VerticalWaveLength : Int
             , uOctave2Altitude : Int
+            , uMaxTerrainAltitude : Float
             , uColor0 : Vec3
+            , uColor1 : Vec3
+            , uColor2 : Vec3
+            , uColor3 : Vec3
             , uAmbientLightColor : Vec3
             , uAmbientLightStrength : Float
             , uSunLightColor : Vec3
@@ -169,7 +173,11 @@ uniform int uOctave2VerticalWaveLength;
 uniform int uOctave2Altitude;
 
 // Color uniforms.
+uniform float uMaxTerrainAltitude;
 uniform vec3 uColor0;
+uniform vec3 uColor1;
+uniform vec3 uColor2;
+uniform vec3 uColor3;
 
 // Lightning uniforms.
 uniform vec3 uAmbientLightColor;
@@ -185,7 +193,7 @@ varying vec3 vColor;
 float generateHeight(vec3 position);
 
 // Calculate the vertex color.
-vec3 vertexColor();
+vec3 vertexColor(float height);
 
 // Calculate the ambient light.
 vec3 ambientLight();
@@ -241,7 +249,7 @@ void main()
     vec3 normal = normalize(norm0 + norm1 + norm2 + norm3 + norm4 + norm5);
 
     // Step 4. Color the vertex.
-    vColor = vertexColor() * (ambientLight() + sunLight(normal));
+    vColor = vertexColor(currentPosition.y) * (ambientLight() + sunLight(normal));
 
     // Step 5. Final transformation.
     gl_Position = uProjectionMatrix * uViewMatrix * vec4(currentPosition, 1.0);
@@ -267,9 +275,20 @@ float generateHeight(vec3 position)
     return h0 + h1 + h2;
 }
 
-vec3 vertexColor()
+vec3 vertexColor(float height)
 {
-    return uColor0;
+    // Adjust the height (as it can be below zero).
+    height = (height + uMaxTerrainAltitude) * 0.5;
+
+    // Normalize the height.
+    height = height / uMaxTerrainAltitude;
+
+    // Interpolate vertex color.
+    vec3 color = mix(uColor0, uColor1, smoothstep(0.0, 0.2, height));
+    color = mix(color, uColor2, smoothstep(0.2, 0.7, height));
+    color = mix(color, uColor3, smoothstep(0.7, 1.0, height));
+
+    return color;
 }
 
 vec3 ambientLight()

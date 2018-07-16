@@ -6,12 +6,13 @@ module Graphics.View exposing (view)
 import Camera.Model as Camera
 import Composer.Model exposing (Msg(..))
 import Graphics.Internal.Terrain as Terrain
-import Graphics.Model exposing (Model, Cursor(..))
+import Graphics.Model exposing (Cursor(..), Model)
 import Html exposing (Attribute, Html)
 import Html.Attributes as Attr
 import Html.Events as Events
 import Json.Decode as Decode
 import Mouse
+import Settings
 import ToolBox.Model as ToolBox
 import WebGL as GL
 import WebGL.Settings as Settings
@@ -58,7 +59,11 @@ view camera toolBox model =
                     , uOctave2HorizontalWaveLength = toolBox.octave2HorizontalWaveLength
                     , uOctave2VerticalWaveLength = toolBox.octave2VerticalWaveLength
                     , uOctave2Altitude = toolBox.octave2Altitude
+                    , uMaxTerrainAltitude = toFloat Settings.maxTerrainAltitude
                     , uColor0 = toolBox.color0
+                    , uColor1 = toolBox.color1
+                    , uColor2 = toolBox.color2
+                    , uColor3 = toolBox.color3
                     , uAmbientLightColor = toolBox.ambientLightColor
                     , uAmbientLightStrength = toolBox.ambientLightStrength
                     , uSunLightColor = toolBox.sunLightColor

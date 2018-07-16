@@ -1,17 +1,17 @@
 module ToolBox.Update
     exposing
-        ( init
+        ( closeToolBox
+        , init
         , openToolBox
-        , closeToolBox
         , setSliderValue
         )
 
 {-| Module implementing the model manipulating functions for the ToolBox.
 -}
 
-import Settings
-import ToolBox.Model exposing (Model, State(..), Slider(..))
 import Math.Vector3 as Vec3
+import Settings
+import ToolBox.Model exposing (Model, Slider(..), State(..))
 
 
 {-| Initialize the ToolBox.
@@ -29,6 +29,9 @@ init =
     , octave2VerticalWaveLength = Settings.octave2MaxWaveLength
     , octave2Altitude = 0
     , color0 = Vec3.vec3 0.4 0.4 0.4
+    , color1 = Vec3.vec3 0.4 0.4 0.4
+    , color2 = Vec3.vec3 0.4 0.4 0.4
+    , color3 = Vec3.vec3 0.4 0.4 0.4
     , ambientLightColor = Vec3.vec3 1 1 1
     , ambientLightStrength = 0.2
     , sunLightColor = Vec3.vec3 1 1 1
