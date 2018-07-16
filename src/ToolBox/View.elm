@@ -142,11 +142,7 @@ slider slider caption min max value =
                 , Attr.min <| toString min
                 , Attr.max <| toString max
                 , Attr.value <| toString value
-                , Attr.style
-                    [ ( "width", "90%" )
-                    , ( "height", "15px" )
-                    , ( "margin-left", "5%" )
-                    ]
+                , Attr.class "slider"
                 , onSliderChange slider
                 ]
                 []

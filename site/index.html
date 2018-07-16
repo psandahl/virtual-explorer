@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Virtual Explorer</title>
     <style>
       body {
@@ -11,6 +12,34 @@
       }
       canvas {
         display: block;
+      }
+      .slider {
+        -webkit-appearance: none;
+        width: 90%;
+        margin-left: 5%;
+        height: 11px;
+        background: #d3d3d3;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: 0.2s;
+        transition: opacity 0.2s;
+      }
+      .slider:hover {
+        opacity: 1.0;
+      }
+      .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 11px;
+        height: 11px;
+        background: #4caf58;
+        cursor: pointer;
+      }
+      .slider::-moz-range-thumb {
+        width: 11px;
+        height: 11px;
+        background: #4caf58;
+        cursor: pointer;
       }
     </style>
   </head>
