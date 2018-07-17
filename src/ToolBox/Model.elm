@@ -27,6 +27,18 @@ type Slider
     | Octave2HorizontalWaveLength
     | Octave2VerticalWaveLength
     | Octave2Altitude
+    | Color0R
+    | Color0G
+    | Color0B
+    | Color1R
+    | Color1G
+    | Color1B
+    | Color2R
+    | Color2G
+    | Color2B
+    | Color3R
+    | Color3G
+    | Color3B
 
 
 {-| The model.

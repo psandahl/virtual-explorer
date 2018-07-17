@@ -5,13 +5,13 @@ module ToolBox.View exposing (view)
 
 import Char
 import Composer.Model exposing (Msg(..))
-import Html exposing (Html, Attribute)
+import Html exposing (Attribute, Html)
 import Html.Attributes as Attr
 import Html.Events as Events
 import Json.Decode as Decode
 import Math.Vector3 as Vec3 exposing (Vec3)
 import Settings
-import ToolBox.Model exposing (Model, State(..), Slider(..))
+import ToolBox.Model exposing (Model, Slider(..), State(..))
 
 
 {-| The view function. Depending on state either the open button or the tool
@@ -125,10 +125,10 @@ pane model =
               , model.octave2Altitude
               )
             ]
-        , colorSliderGroup "Color0 r/g/b" model.color0
-        , colorSliderGroup "Color1 r/g/b" model.color1
-        , colorSliderGroup "Color2 r/g/b" model.color2
-        , colorSliderGroup "Color3 r/g/b" model.color3
+        , colorSliderGroup "Color0 r/g/b" ( Color0R, Color0G, Color0B ) model.color0
+        , colorSliderGroup "Color1 r/g/b" ( Color1R, Color1G, Color1B ) model.color1
+        , colorSliderGroup "Color2 r/g/b" ( Color2R, Color2G, Color2B ) model.color2
+        , colorSliderGroup "Color3 r/g/b" ( Color3R, Color3G, Color3B ) model.color3
         ]
 
 
@@ -161,15 +161,25 @@ octaveSliderGroup caption sliders =
                         , Attr.max <| toString max
                         , Attr.value <| toString value
                         , Attr.class "slider"
-                        , onOctaveSliderChange slider
+                        , onSliderChange slider
                         ]
                         []
                 )
                 sliders
 
 
-colorSliderGroup : String -> Vec3 -> Html Msg
-colorSliderGroup caption color =
+colorSliderGroup : String -> ( Slider, Slider, Slider ) -> Vec3 -> Html Msg
+colorSliderGroup caption ( s0, s1, s2 ) color =
+    let
+        r =
+            round <| Vec3.getX color * 255
+
+        g =
+            round <| Vec3.getY color * 255
+
+        b =
+            round <| Vec3.getZ color * 255
+    in
     Html.div
         [ Attr.style
             [ ( "width", "95%" )
@@ -179,7 +189,8 @@ colorSliderGroup caption color =
             , ( "border-radius", "5px" )
             ]
         ]
-        [ Html.span
+    <|
+        Html.span
             [ Attr.style
                 [ ( "font-size", "12px" )
                 , ( "font-family", "sans-serif" )
@@ -195,27 +206,39 @@ colorSliderGroup caption color =
                     , ( "float", "right" )
                     , ( "margin-right", "1%" )
                     , ( "border", "1px solid black" )
-                    , ( "background", rgbFromVec color )
+                    , ( "background", rgb r g b )
                     ]
                 ]
                 []
             ]
-        ]
+            :: List.map
+                (\( slider, min, max, value ) ->
+                    Html.input
+                        [ Attr.type_ "range"
+                        , Attr.min <| toString min
+                        , Attr.max <| toString max
+                        , Attr.value <| toString value
+                        , Attr.class "slider"
+                        , onSliderChange slider
+                        ]
+                        []
+                )
+                [ ( s0, 0, 255, r ), ( s1, 0, 255, g ), ( s2, 0, 255, b ) ]
 
 
-rgbFromVec : Vec3 -> String
-rgbFromVec color =
+rgb : Int -> Int -> Int -> String
+rgb r g b =
     "rgb("
-        ++ (toString << round <| Vec3.getX color * 255)
+        ++ toString r
         ++ ","
-        ++ (toString << round <| Vec3.getY color * 255)
+        ++ toString g
         ++ ","
-        ++ (toString << round <| Vec3.getZ color * 255)
+        ++ toString b
         ++ ")"
 
 
-onOctaveSliderChange : Slider -> Attribute Msg
-onOctaveSliderChange slider =
+onSliderChange : Slider -> Attribute Msg
+onSliderChange slider =
     Events.on "input"
         (Decode.map
             (\x ->
