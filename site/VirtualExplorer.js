@@ -13058,8 +13058,8 @@ var _psandahl$virtual_explorer$Graphics_Internal_SkyDome$toVertex = function (_p
 		_2: {aPosition: _p1._2}
 	};
 };
-var _psandahl$virtual_explorer$Graphics_Internal_SkyDome$fragmentShader = {'src': '\nprecision mediump float;\n\nuniform vec3 uSky0;\nuniform vec3 uSky1;\n\nvarying vec3 vPosition;\n\nvoid main()\n{\n    float offset = abs(vPosition.y);\n    gl_FragColor = vec4(mix(uSky0, uSky1, offset), 1.0);\n}\n    '};
-var _psandahl$virtual_explorer$Graphics_Internal_SkyDome$vertexShader = {'src': '\nprecision mediump float;\n\nattribute vec3 aPosition;\n\nuniform mat4 uViewMatrix;\nuniform mat4 uProjectionMatrix;\n\nvarying vec3 vPosition;\n\nvoid main()\n{\n    vPosition = aPosition;\n\n    // Remove translation part of view matrix.\n    mat4 viewMatrix = mat4(uViewMatrix[0], uViewMatrix[1], uViewMatrix[2], vec4(0.0, 0.0, 0.0, 1.0));\n    gl_Position = (uProjectionMatrix * viewMatrix) * vec4(aPosition, 1.0);\n}\n    '};
+var _psandahl$virtual_explorer$Graphics_Internal_SkyDome$fragmentShader = {'src': '\nprecision mediump float;\n\nuniform vec3 uSky0;\nuniform vec3 uSky1;\nuniform vec3 uFog;\n\nvarying vec3 vPosition;\n\nvoid main()\n{\n    float offset = abs(vPosition.y);\n    vec3 skyGradient = mix(uSky0, uSky1, offset);\n    vec3 fogMixed = mix(uFog, skyGradient, smoothstep(0.0, 0.3, offset));\n\n    gl_FragColor = vec4(fogMixed, 1.0);\n}\n    '};
+var _psandahl$virtual_explorer$Graphics_Internal_SkyDome$vertexShader = {'src': '\nprecision mediump float;\n\nattribute vec3 aPosition;\n\nuniform mat4 uViewMatrix;\nuniform mat4 uProjectionMatrix;\n\nvarying vec3 vPosition;\n\nvoid main()\n{\n    vPosition = aPosition;\n\n    // Lower the dome a little bit.\n    mat4 modelMatrix = mat4(1.0);\n    modelMatrix[3][1] = -0.2;\n\n    // Remove translation part of view matrix.\n    mat4 viewMatrix = mat4(uViewMatrix[0], uViewMatrix[1], uViewMatrix[2], vec4(0.0, 0.0, 0.0, 1.0));\n    gl_Position = (uProjectionMatrix * viewMatrix * modelMatrix) * vec4(aPosition, 1.0);\n}\n    '};
 var _psandahl$virtual_explorer$Graphics_Internal_SkyDome$makeMesh = _elm_community$webgl$WebGL$triangles(
 	A2(
 		_elm_lang$core$List$map,
@@ -13314,7 +13314,9 @@ var _psandahl$virtual_explorer$ToolBox_Model$Model = function (a) {
 																	return function (r) {
 																		return function (s) {
 																			return function (t) {
-																				return {state: a, octave0HorizontalWaveLength: b, octave0VerticalWaveLength: c, octave0Altitude: d, octave1HorizontalWaveLength: e, octave1VerticalWaveLength: f, octave1Altitude: g, octave2HorizontalWaveLength: h, octave2VerticalWaveLength: i, octave2Altitude: j, color0: k, color1: l, color2: m, color3: n, sky0: o, sky1: p, ambientLightColor: q, ambientLightStrength: r, sunLightColor: s, sunLightDirection: t};
+																				return function (u) {
+																					return {state: a, octave0HorizontalWaveLength: b, octave0VerticalWaveLength: c, octave0Altitude: d, octave1HorizontalWaveLength: e, octave1VerticalWaveLength: f, octave1Altitude: g, octave2HorizontalWaveLength: h, octave2VerticalWaveLength: i, octave2Altitude: j, color0: k, color1: l, color2: m, color3: n, sky0: o, sky1: p, fog: q, ambientLightColor: r, ambientLightStrength: s, sunLightColor: t, sunLightDirection: u};
+																				};
 																			};
 																		};
 																	};
@@ -13716,6 +13718,7 @@ var _psandahl$virtual_explorer$ToolBox_Update$init = {
 	color3: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 1, 1, 1),
 	sky0: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 246 / 255, 176 / 255, 133 / 255),
 	sky1: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 70 / 255, 106 / 255, 200 / 255),
+	fog: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 0.5, 0.5, 0.5),
 	ambientLightColor: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 1, 1, 1),
 	ambientLightStrength: 0.2,
 	sunLightColor: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 1, 1, 1),
@@ -14137,7 +14140,7 @@ var _psandahl$virtual_explorer$Graphics_View$skyDomeEntity = F3(
 			_psandahl$virtual_explorer$Graphics_Internal_SkyDome$vertexShader,
 			_psandahl$virtual_explorer$Graphics_Internal_SkyDome$fragmentShader,
 			model.skyDomeMesh,
-			{uProjectionMatrix: model.projectionMatrix, uViewMatrix: camera.viewMatrix, uSky0: toolBox.sky0, uSky1: toolBox.sky1});
+			{uProjectionMatrix: model.projectionMatrix, uViewMatrix: camera.viewMatrix, uSky0: toolBox.sky0, uSky1: toolBox.sky1, uFog: toolBox.fog});
 	});
 var _psandahl$virtual_explorer$Graphics_View$view = F3(
 	function (camera, toolBox, model) {

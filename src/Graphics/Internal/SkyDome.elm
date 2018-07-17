@@ -53,9 +53,13 @@ void main()
 {
     vPosition = aPosition;
 
+    // Lower the dome a little bit.
+    mat4 modelMatrix = mat4(1.0);
+    modelMatrix[3][1] = -0.2;
+
     // Remove translation part of view matrix.
     mat4 viewMatrix = mat4(uViewMatrix[0], uViewMatrix[1], uViewMatrix[2], vec4(0.0, 0.0, 0.0, 1.0));
-    gl_Position = (uProjectionMatrix * viewMatrix) * vec4(aPosition, 1.0);
+    gl_Position = (uProjectionMatrix * viewMatrix * modelMatrix) * vec4(aPosition, 1.0);
 }
     |]
 
@@ -67,6 +71,7 @@ fragmentShader :
         { uniforms
             | uSky0 : Vec3
             , uSky1 : Vec3
+            , uFog : Vec3
         }
         { vPosition : Vec3 }
 fragmentShader =
@@ -75,13 +80,17 @@ precision mediump float;
 
 uniform vec3 uSky0;
 uniform vec3 uSky1;
+uniform vec3 uFog;
 
 varying vec3 vPosition;
 
 void main()
 {
     float offset = abs(vPosition.y);
-    gl_FragColor = vec4(mix(uSky0, uSky1, offset), 1.0);
+    vec3 skyGradient = mix(uSky0, uSky1, offset);
+    vec3 fogMixed = mix(uFog, skyGradient, smoothstep(0.0, 0.3, offset));
+
+    gl_FragColor = vec4(fogMixed, 1.0);
 }
     |]
 

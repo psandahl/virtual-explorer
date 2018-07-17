@@ -57,6 +57,7 @@ skyDomeEntity camera toolBox model =
         , uViewMatrix = camera.viewMatrix
         , uSky0 = toolBox.sky0
         , uSky1 = toolBox.sky1
+        , uFog = toolBox.fog
         }
 
 
