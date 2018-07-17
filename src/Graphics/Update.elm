@@ -12,6 +12,7 @@ module Graphics.Update
 import Camera.Model as Camera
 import Graphics.Model exposing (Model, Cursor(..))
 import Settings
+import Graphics.Internal.SkyDome as SkyDome
 import Graphics.Internal.TerrainPager as TerrainPager
 import Graphics.Internal.Terrain as Terrain
 import Math.Matrix4 as Mat4 exposing (Mat4)
@@ -26,6 +27,7 @@ init viewport camera =
     , aspectRatio = getAspectRatio viewport
     , projectionMatrix = makeProjectionMatrix <| getAspectRatio viewport
     , cursor = Default
+    , skyDomeMesh = SkyDome.makeMesh
     , terrainMesh = Terrain.makeMesh
     , terrainPager = TerrainPager.init (getAspectRatio viewport) camera
     }

@@ -3,6 +3,7 @@ module Graphics.Model exposing (Model, Cursor(..))
 {-| Module implementing the model for the graphics view.
 -}
 
+import Graphics.Internal.SkyDome as SkyDome
 import Graphics.Internal.TerrainPager as TerrainPager exposing (TerrainPager)
 import Graphics.Internal.Terrain as Terrain
 import Math.Matrix4 exposing (Mat4)
@@ -26,6 +27,7 @@ type alias Model =
     , aspectRatio : Float
     , projectionMatrix : Mat4
     , cursor : Cursor
+    , skyDomeMesh : Mesh SkyDome.Vertex
     , terrainMesh : Mesh Terrain.Vertex
     , terrainPager : TerrainPager
     }

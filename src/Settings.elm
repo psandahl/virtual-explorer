@@ -28,7 +28,7 @@ fov =
 -}
 nearPlane : Float
 nearPlane =
-    1
+    0.1
 
 
 {-| Far plane distance.
