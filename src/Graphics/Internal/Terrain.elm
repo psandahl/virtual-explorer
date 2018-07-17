@@ -143,6 +143,9 @@ vertexShader :
             , uAmbientLightStrength : Float
             , uSunLightColor : Vec3
             , uSunLightDirection : Vec3
+            , uFog : Vec3
+            , uFogDistance : Float
+            , uCameraPosition : Vec3
         }
         { vColor : Vec3 }
 vertexShader =
@@ -185,6 +188,11 @@ uniform float uAmbientLightStrength;
 
 uniform vec3 uSunLightColor;
 uniform vec3 uSunLightDirection;
+
+// Fog uniforms.
+uniform vec3 uFog;
+uniform float uFogDistance;
+uniform vec3 uCameraPosition;
 
 // The color produced for the vertex.
 varying vec3 vColor;
@@ -249,9 +257,13 @@ void main()
     vec3 normal = normalize(norm0 + norm1 + norm2 + norm3 + norm4 + norm5);
 
     // Step 4. Color the vertex.
-    vColor = vertexColor(currentPosition.y) * (ambientLight() + sunLight(normal));
+    vec3 color = vertexColor(currentPosition.y) * (ambientLight() + sunLight(normal));
 
-    // Step 5. Final transformation.
+    // Step 5. Apply linear fog.
+    float dist = distance(uCameraPosition, currentPosition);
+    vColor = mix(color, uFog, smoothstep(0.0, uFogDistance, dist));
+
+    // Step 6. Final transformation.
     gl_Position = uProjectionMatrix * uViewMatrix * vec4(currentPosition, 1.0);
 }
 

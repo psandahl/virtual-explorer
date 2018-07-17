@@ -35,6 +35,7 @@ init =
     , sky0 = Vec3.vec3 (246 / 255) (176 / 255) (133 / 255)
     , sky1 = Vec3.vec3 (70 / 255) (106 / 255) (200 / 255)
     , fog = Vec3.vec3 0.5 0.5 0.5
+    , fogDistance = Settings.farPlane
     , ambientLightColor = Vec3.vec3 1 1 1
     , ambientLightStrength = 0.2
     , sunLightColor = Vec3.vec3 1 1 1
