@@ -5,8 +5,8 @@ module Graphics.View exposing (view)
 
 import Camera.Model as Camera
 import Composer.Model exposing (Msg(..))
-import Graphics.Internal.Terrain as Terrain
 import Graphics.Internal.SkyDome as SkyDome
+import Graphics.Internal.Terrain as Terrain
 import Graphics.Model exposing (Cursor(..), Model)
 import Html exposing (Attribute, Html)
 import Html.Attributes as Attr
@@ -55,6 +55,8 @@ skyDomeEntity camera toolBox model =
         model.skyDomeMesh
         { uProjectionMatrix = model.projectionMatrix
         , uViewMatrix = camera.viewMatrix
+        , uSky0 = toolBox.sky0
+        , uSky1 = toolBox.sky1
         }
 
 

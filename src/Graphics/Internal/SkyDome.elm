@@ -1,9 +1,9 @@
 module Graphics.Internal.SkyDome
     exposing
         ( Vertex
+        , fragmentShader
         , makeMesh
         , vertexShader
-        , fragmentShader
         )
 
 {-| Implementation of a SkyDome.
@@ -62,16 +62,26 @@ void main()
 
 {-| SkyDome's fragment shader. Doing the coloring.
 -}
-fragmentShader : Shader {} uniforms { vPosition : Vec3 }
+fragmentShader :
+    Shader {}
+        { uniforms
+            | uSky0 : Vec3
+            , uSky1 : Vec3
+        }
+        { vPosition : Vec3 }
 fragmentShader =
     [glsl|
 precision mediump float;
+
+uniform vec3 uSky0;
+uniform vec3 uSky1;
 
 varying vec3 vPosition;
 
 void main()
 {
-    gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+    float offset = abs(vPosition.y);
+    gl_FragColor = vec4(mix(uSky0, uSky1, offset), 1.0);
 }
     |]
 
