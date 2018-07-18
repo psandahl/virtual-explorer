@@ -259,9 +259,9 @@ void main()
     // Step 4. Color the vertex.
     vec3 color = vertexColor(currentPosition.y) * (ambientLight() + sunLight(normal));
 
-    // Step 5. Apply linear fog.
-    float dist = distance(uCameraPosition, currentPosition);
-    vColor = mix(color, uFog, smoothstep(0.0, uFogDistance, dist));
+    // Step 5. Apply fog.
+    float normalizedDistance = min(distance(uCameraPosition, currentPosition) / uFogDistance, 1.0);
+    vColor = mix(color, uFog, pow(normalizedDistance, 3.0));
 
     // Step 6. Final transformation.
     gl_Position = uProjectionMatrix * uViewMatrix * vec4(currentPosition, 1.0);

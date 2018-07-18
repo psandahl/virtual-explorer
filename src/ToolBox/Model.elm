@@ -61,7 +61,6 @@ type alias Model =
     , sky0 : Vec3
     , sky1 : Vec3
     , fog : Vec3
-    , fogDistance : Float
     , ambientLightColor : Vec3
     , ambientLightStrength : Float
     , sunLightColor : Vec3

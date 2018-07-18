@@ -97,7 +97,7 @@ terrainEntities camera toolBox model =
                 , uSunLightColor = toolBox.sunLightColor
                 , uSunLightDirection = toolBox.sunLightDirection
                 , uFog = toolBox.fog
-                , uFogDistance = toolBox.fogDistance
+                , uFogDistance = Settings.farPlane
                 , uCameraPosition = camera.position
                 }
         )
