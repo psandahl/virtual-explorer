@@ -87,14 +87,14 @@ oneTile column row =
         row1 =
             toFloat <| ((row + 1) * (height - 1))
     in
-    { point0 = Vec3.vec3 col0 (toFloat -Settings.maxTerrainAltitude) row0
-    , point1 = Vec3.vec3 col1 (toFloat -Settings.maxTerrainAltitude) row0
-    , point2 = Vec3.vec3 col0 (toFloat -Settings.maxTerrainAltitude) row1
-    , point3 = Vec3.vec3 col1 (toFloat -Settings.maxTerrainAltitude) row1
-    , point4 = Vec3.vec3 col0 (toFloat Settings.maxTerrainAltitude) row0
-    , point5 = Vec3.vec3 col1 (toFloat Settings.maxTerrainAltitude) row0
-    , point6 = Vec3.vec3 col0 (toFloat Settings.maxTerrainAltitude) row1
-    , point7 = Vec3.vec3 col1 (toFloat Settings.maxTerrainAltitude) row1
+    { point0 = Vec3.vec3 col0 -Settings.maxTerrainAltitude row0
+    , point1 = Vec3.vec3 col1 -Settings.maxTerrainAltitude row0
+    , point2 = Vec3.vec3 col0 -Settings.maxTerrainAltitude row1
+    , point3 = Vec3.vec3 col1 -Settings.maxTerrainAltitude row1
+    , point4 = Vec3.vec3 col0 Settings.maxTerrainAltitude row0
+    , point5 = Vec3.vec3 col1 Settings.maxTerrainAltitude row0
+    , point6 = Vec3.vec3 col0 Settings.maxTerrainAltitude row1
+    , point7 = Vec3.vec3 col1 Settings.maxTerrainAltitude row1
     , translationMatrix = Mat4.makeTranslate3 col0 0 row0
     }
 

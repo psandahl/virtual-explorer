@@ -58,7 +58,7 @@ closeToolBox model =
 
 {-| Set the value for the given slider.
 -}
-setSliderValue : Slider -> Int -> Model -> Model
+setSliderValue : Slider -> Float -> Model -> Model
 setSliderValue slider value model =
     case slider of
         Octave0HorizontalWaveLength ->
@@ -89,37 +89,37 @@ setSliderValue slider value model =
             { model | octave2Altitude = value }
 
         Color0R ->
-            { model | color0 = Vec3.setX (toFloat value / 255.0) model.color0 }
+            { model | color0 = Vec3.setX (value / 255.0) model.color0 }
 
         Color0G ->
-            { model | color0 = Vec3.setY (toFloat value / 255.0) model.color0 }
+            { model | color0 = Vec3.setY (value / 255.0) model.color0 }
 
         Color0B ->
-            { model | color0 = Vec3.setZ (toFloat value / 255.0) model.color0 }
+            { model | color0 = Vec3.setZ (value / 255.0) model.color0 }
 
         Color1R ->
-            { model | color1 = Vec3.setX (toFloat value / 255.0) model.color1 }
+            { model | color1 = Vec3.setX (value / 255.0) model.color1 }
 
         Color1G ->
-            { model | color1 = Vec3.setY (toFloat value / 255.0) model.color1 }
+            { model | color1 = Vec3.setY (value / 255.0) model.color1 }
 
         Color1B ->
-            { model | color1 = Vec3.setZ (toFloat value / 255.0) model.color1 }
+            { model | color1 = Vec3.setZ (value / 255.0) model.color1 }
 
         Color2R ->
-            { model | color2 = Vec3.setX (toFloat value / 255.0) model.color2 }
+            { model | color2 = Vec3.setX (value / 255.0) model.color2 }
 
         Color2G ->
-            { model | color2 = Vec3.setY (toFloat value / 255.0) model.color2 }
+            { model | color2 = Vec3.setY (value / 255.0) model.color2 }
 
         Color2B ->
-            { model | color2 = Vec3.setZ (toFloat value / 255.0) model.color2 }
+            { model | color2 = Vec3.setZ (value / 255.0) model.color2 }
 
         Color3R ->
-            { model | color3 = Vec3.setX (toFloat value / 255.0) model.color3 }
+            { model | color3 = Vec3.setX (value / 255.0) model.color3 }
 
         Color3G ->
-            { model | color3 = Vec3.setY (toFloat value / 255.0) model.color3 }
+            { model | color3 = Vec3.setY (value / 255.0) model.color3 }
 
         Color3B ->
-            { model | color3 = Vec3.setZ (toFloat value / 255.0) model.color3 }
+            { model | color3 = Vec3.setZ (value / 255.0) model.color3 }

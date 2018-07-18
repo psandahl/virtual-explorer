@@ -132,7 +132,7 @@ pane model =
         ]
 
 
-octaveSliderGroup : String -> List ( Slider, Int, Int, Int ) -> Html Msg
+octaveSliderGroup : String -> List ( Slider, Float, Float, Float ) -> Html Msg
 octaveSliderGroup caption sliders =
     Html.div
         [ Attr.style
@@ -161,6 +161,7 @@ octaveSliderGroup caption sliders =
                         , Attr.min <| toString min
                         , Attr.max <| toString max
                         , Attr.value <| toString value
+                        , Attr.step "1.0"
                         , Attr.class "slider"
                         , onSliderChange slider
                         ]
@@ -220,6 +221,7 @@ colorSliderGroup caption ( s0, s1, s2 ) color =
                         , Attr.min <| toString min
                         , Attr.max <| toString max
                         , Attr.value <| toString value
+                        , Attr.step "1.0"
                         , Attr.class "slider"
                         , onSliderChange slider
                         ]
@@ -244,8 +246,8 @@ onSliderChange slider =
     Events.on "input"
         (Decode.map
             (\x ->
-                String.toInt x
-                    |> Result.withDefault 0
+                String.toFloat x
+                    |> Result.withDefault 0.0
                     |> ToolBoxSliderChange slider
             )
             Events.targetValue

@@ -149,7 +149,7 @@ defaultPitch =
 -}
 defaultPosition : Vec3
 defaultPosition =
-    Vec3.vec3 0 (toFloat Settings.maxCameraAltitude) 0
+    Vec3.vec3 0 Settings.maxCameraAltitude 0
 
 
 {-| Default up direction.

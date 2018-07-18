@@ -36,5 +36,5 @@ type Msg
     | GraphicsViewMouseReleased Position
     | OpenToolBox
     | CloseToolBox
-    | ToolBoxSliderChange Slider Int
+    | ToolBoxSliderChange Slider Float
     | Nop

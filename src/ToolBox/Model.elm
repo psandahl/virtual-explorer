@@ -45,15 +45,15 @@ type Slider
 -}
 type alias Model =
     { state : State
-    , octave0HorizontalWaveLength : Int
-    , octave0VerticalWaveLength : Int
-    , octave0Altitude : Int
-    , octave1HorizontalWaveLength : Int
-    , octave1VerticalWaveLength : Int
-    , octave1Altitude : Int
-    , octave2HorizontalWaveLength : Int
-    , octave2VerticalWaveLength : Int
-    , octave2Altitude : Int
+    , octave0HorizontalWaveLength : Float
+    , octave0VerticalWaveLength : Float
+    , octave0Altitude : Float
+    , octave1HorizontalWaveLength : Float
+    , octave1VerticalWaveLength : Float
+    , octave1Altitude : Float
+    , octave2HorizontalWaveLength : Float
+    , octave2VerticalWaveLength : Float
+    , octave2Altitude : Float
     , color0 : Vec3
     , color1 : Vec3
     , color2 : Vec3
