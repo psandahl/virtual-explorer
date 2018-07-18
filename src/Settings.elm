@@ -1,16 +1,16 @@
 module Settings
     exposing
-        ( fov
-        , nearPlane
-        , farPlane
-        , octave0MaxWaveLength
-        , octave0MaxAltitude
-        , octave1MaxWaveLength
-        , octave1MaxAltitude
-        , octave2MaxWaveLength
-        , octave2MaxAltitude
-        , maxTerrainAltitude
+        ( farPlane
+        , fov
         , maxCameraAltitude
+        , maxTerrainAltitude
+        , nearPlane
+        , octave0MaxAltitude
+        , octave0MaxWaveLength
+        , octave1MaxAltitude
+        , octave1MaxWaveLength
+        , octave2MaxAltitude
+        , octave2MaxWaveLength
         )
 
 {-| Settings constants.
@@ -35,7 +35,7 @@ nearPlane =
 -}
 farPlane : Float
 farPlane =
-    1000
+    2500
 
 
 {-| Max wave length for octave 0.
@@ -49,7 +49,7 @@ octave0MaxWaveLength =
 -}
 octave0MaxAltitude : Int
 octave0MaxAltitude =
-    100
+    150
 
 
 {-| Max wave length for octave 1.
@@ -91,4 +91,4 @@ maxTerrainAltitude =
 -}
 maxCameraAltitude : Int
 maxCameraAltitude =
-    maxTerrainAltitude + 10
+    maxTerrainAltitude + 50

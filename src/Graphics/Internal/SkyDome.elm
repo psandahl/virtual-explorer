@@ -55,7 +55,7 @@ void main()
 
     // Lower the dome a little bit.
     mat4 modelMatrix = mat4(1.0);
-    modelMatrix[3][1] = -0.2;
+    modelMatrix[3][1] = -0.1;
 
     // Remove translation part of view matrix.
     mat4 viewMatrix = mat4(uViewMatrix[0], uViewMatrix[1], uViewMatrix[2], vec4(0.0, 0.0, 0.0, 1.0));

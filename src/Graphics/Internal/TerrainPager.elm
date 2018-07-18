@@ -52,10 +52,10 @@ init aspectRatio camera =
             List.concat <|
                 List.map
                     (\column ->
-                        List.map (oneTile column) <| List.range -5 4
+                        List.map (oneTile column) <| List.range -10 9
                     )
                 <|
-                    List.range -5 4
+                    List.range -10 9
     in
     { tiles = tiles, translationMatrices = pageFromCamera aspectRatio camera tiles }
 
