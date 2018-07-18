@@ -14267,7 +14267,11 @@ var _psandahl$virtual_explorer$ToolBox_View$colorSliderGroup = F3(
 									_1: {
 										ctor: '::',
 										_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '5px'},
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'line-height', _1: '80%'},
+											_1: {ctor: '[]'}
+										}
 									}
 								}
 							}
@@ -14419,7 +14423,11 @@ var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup = F2(
 									_1: {
 										ctor: '::',
 										_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '5px'},
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'line-height', _1: '80%'},
+											_1: {ctor: '[]'}
+										}
 									}
 								}
 							}

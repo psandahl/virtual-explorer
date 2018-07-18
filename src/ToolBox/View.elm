@@ -141,6 +141,7 @@ octaveSliderGroup caption sliders =
             , ( "margin-left", "1%" )
             , ( "border", "2px solid gray" )
             , ( "border-radius", "5px" )
+            , ( "line-height", "80%" )
             ]
         ]
     <|
@@ -187,6 +188,7 @@ colorSliderGroup caption ( s0, s1, s2 ) color =
             , ( "margin-left", "1%" )
             , ( "border", "2px solid gray" )
             , ( "border-radius", "5px" )
+            , ( "line-height", "80%" )
             ]
         ]
     <|
