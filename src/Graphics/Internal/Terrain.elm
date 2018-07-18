@@ -270,14 +270,10 @@ void main()
 
 float generateHeight(vec3 position)
 {
-    float horizontalDividend0 = uOctave0HorizontalWaveLength;
-    float verticalDividend0 = uOctave0VerticalWaveLength;
-    vec2 inp0 = vec2(position.x / horizontalDividend0, position.z / verticalDividend0);
+    vec2 inp0 = vec2(position.x / uOctave0HorizontalWaveLength, position.z / uOctave0VerticalWaveLength);
     float h0 = snoise(inp0) * uOctave0Altitude;
 
-    float horizontalDividend1 = uOctave1HorizontalWaveLength;
-    float verticalDividend1 = uOctave1VerticalWaveLength;
-    vec2 inp1 = vec2(position.x / horizontalDividend1, position.z / verticalDividend1);
+    vec2 inp1 = vec2(position.x / uOctave1HorizontalWaveLength, position.z / uOctave1VerticalWaveLength);
     float h1 = snoise(inp1) * uOctave1Altitude;
 
     float horizontalDividend2 = uOctave2HorizontalWaveLength;
