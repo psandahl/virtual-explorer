@@ -1,4 +1,10 @@
-module ToolBox.Model exposing (Model, Slider(..), State(..))
+module ToolBox.Model
+    exposing
+        ( Checkbox(..)
+        , Model
+        , Slider(..)
+        , State(..)
+        )
 
 {-| Module implementing the model for the tool box. The tool box have a
 collection of values used for the rendering. The values are adjustable in
@@ -39,6 +45,13 @@ type Slider
     | Color3R
     | Color3G
     | Color3B
+    | FogPower
+
+
+{-| Checkbox id.
+-}
+type Checkbox
+    = UseFog
 
 
 {-| The model.
@@ -60,7 +73,9 @@ type alias Model =
     , color3 : Vec3
     , sky0 : Vec3
     , sky1 : Vec3
+    , useFog : Bool
     , fog : Vec3
+    , fogPower : Float
     , ambientLightColor : Vec3
     , ambientLightStrength : Float
     , sunLightColor : Vec3

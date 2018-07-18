@@ -143,7 +143,9 @@ vertexShader :
             , uAmbientLightStrength : Float
             , uSunLightColor : Vec3
             , uSunLightDirection : Vec3
+            , uUseFog : Bool
             , uFog : Vec3
+            , uFogPower : Float
             , uFogDistance : Float
             , uCameraPosition : Vec3
         }
@@ -190,7 +192,9 @@ uniform vec3 uSunLightColor;
 uniform vec3 uSunLightDirection;
 
 // Fog uniforms.
+uniform bool uUseFog;
 uniform vec3 uFog;
+uniform float uFogPower;
 uniform float uFogDistance;
 uniform vec3 uCameraPosition;
 
@@ -260,8 +264,10 @@ void main()
     vec3 color = vertexColor(currentPosition.y) * (ambientLight() + sunLight(normal));
 
     // Step 5. Apply fog.
-    //float normalizedDistance = min(distance(uCameraPosition, currentPosition) / uFogDistance, 1.0);
-    //vColor = mix(color, uFog, pow(normalizedDistance, 3.0));
+    if (uUseFog) {
+        float normalizedDistance = min(distance(uCameraPosition, currentPosition) / uFogDistance, 1.0);
+        color = mix(color, uFog, pow(normalizedDistance, uFogPower));
+    }
     vColor = color;
 
     // Step 6. Final transformation.
@@ -276,9 +282,7 @@ float generateHeight(vec3 position)
     vec2 inp1 = vec2(position.x / uOctave1HorizontalWaveLength, position.z / uOctave1VerticalWaveLength);
     float h1 = snoise(inp1) * uOctave1Altitude;
 
-    float horizontalDividend2 = uOctave2HorizontalWaveLength;
-    float verticalDividend2 = uOctave2VerticalWaveLength;
-    vec2 inp2 = vec2(position.x / horizontalDividend2, position.z / verticalDividend2);
+    vec2 inp2 = vec2(position.x / uOctave2HorizontalWaveLength, position.z / uOctave2VerticalWaveLength);
     float h2 = snoise(inp2) * uOctave2Altitude;
 
     return h0 + h1 + h2;

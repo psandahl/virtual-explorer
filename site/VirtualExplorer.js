@@ -13111,7 +13111,7 @@ var _psandahl$virtual_explorer$Graphics_Internal_Frustum$Frustum = F6(
 	});
 
 var _psandahl$virtual_explorer$Graphics_Internal_Terrain$fragmentShader = {'src': '\nprecision mediump float;\n\nvarying vec3 vColor;\n\nvoid main()\n{\n    gl_FragColor = vec4(vColor, 1.0);\n}\n    '};
-var _psandahl$virtual_explorer$Graphics_Internal_Terrain$vertexShader = {'src': '\nprecision mediump float;\n\n// Single attribute: the vertex position.\nattribute vec3 aPosition;\n\n// Transformation matrices.\nuniform mat4 uModelMatrix;\nuniform mat4 uViewMatrix;\nuniform mat4 uProjectionMatrix;\n\n// Terrain shaping uniforms.\nuniform vec2 uWorldOffset;\n\nuniform float uOctave0HorizontalWaveLength;\nuniform float uOctave0VerticalWaveLength;\nuniform float uOctave0Altitude;\n\nuniform float uOctave1HorizontalWaveLength;\nuniform float uOctave1VerticalWaveLength;\nuniform float uOctave1Altitude;\n\nuniform float uOctave2HorizontalWaveLength;\nuniform float uOctave2VerticalWaveLength;\nuniform float uOctave2Altitude;\n\n// Color uniforms.\nuniform float uMaxTerrainAltitude;\nuniform vec3 uColor0;\nuniform vec3 uColor1;\nuniform vec3 uColor2;\nuniform vec3 uColor3;\n\n// Lightning uniforms.\nuniform vec3 uAmbientLightColor;\nuniform float uAmbientLightStrength;\n\nuniform vec3 uSunLightColor;\nuniform vec3 uSunLightDirection;\n\n// Fog uniforms.\nuniform vec3 uFog;\nuniform float uFogDistance;\nuniform vec3 uCameraPosition;\n\n// The color produced for the vertex.\nvarying vec3 vColor;\n\n// Generate the height (y) value for the position x, z.\nfloat generateHeight(vec3 position);\n\n// Calculate the vertex color.\nvec3 vertexColor(float height);\n\n// Calculate the ambient light.\nvec3 ambientLight();\n\n// Calculate the sun light.\nvec3 sunLight(vec3 normal);\n\n// Functions for the implementation of simple noise.\nvec3 mod289(vec3 x);\nvec2 mod289(vec2 x);\nvec3 permute(vec3 x);\nfloat snoise(vec2 v);\n\nvoid main()\n{\n    // Step 1. Transform the position to it\'s world coordinates. Needed\n    // for the height value generation.\n    vec3 currentPosition = (uModelMatrix * vec4(aPosition, 1.0)).xyz;\n\n    // Step 2. Convert the world offset to a vec3.\n    vec3 worldOffset = vec3(uWorldOffset.x, 0.0, uWorldOffset.y);\n\n    // Step 3. Calculate heights for the current position as well as for\n    // six neighbour vertices.\n    vec3 v0 = currentPosition + vec3(0.0, 0.0, -1.0);\n    v0.y = generateHeight(v0 + worldOffset);\n\n    vec3 v1 = currentPosition + vec3(1.0, 0.0, -1.0);\n    v1.y = generateHeight(v1 + worldOffset);\n\n    vec3 v2 = currentPosition + vec3(-1.0, 0.0, 0.0);\n    v2.y = generateHeight(v2 + worldOffset);\n\n    vec3 v3 = currentPosition + vec3(1.0, 0.0, 0.0);\n    v3.y = generateHeight(v3 + worldOffset);\n\n    vec3 v4 = currentPosition + vec3(-1.0, 0.0, 1.0);\n    v4.y = generateHeight(v4 + worldOffset);\n\n    vec3 v5 = currentPosition + vec3(0.0, 0.0, 1.0);\n    v5.y = generateHeight(v5 + worldOffset);\n\n    currentPosition.y = generateHeight(currentPosition + worldOffset);\n\n    // Step 3. Calculate smooth normal using the neighbour vertices.\n    vec3 norm0 = normalize(cross(v0 - v2, v0 - currentPosition));\n    vec3 norm1 = normalize(cross(v1 - v0, v1 - currentPosition));\n    vec3 norm2 = normalize(cross(v1 - currentPosition, v1 - v3));\n    vec3 norm3 = normalize(cross(currentPosition - v2, currentPosition - v4));\n    vec3 norm4 = normalize(cross(currentPosition - v4, currentPosition - v5));\n    vec3 norm5 = normalize(cross(v3 - currentPosition, v3 - v5));\n\n    vec3 normal = normalize(norm0 + norm1 + norm2 + norm3 + norm4 + norm5);\n\n    // Step 4. Color the vertex.\n    vec3 color = vertexColor(currentPosition.y) * (ambientLight() + sunLight(normal));\n\n    // Step 5. Apply fog.\n    //float normalizedDistance = min(distance(uCameraPosition, currentPosition) / uFogDistance, 1.0);\n    //vColor = mix(color, uFog, pow(normalizedDistance, 3.0));\n    vColor = color;\n\n    // Step 6. Final transformation.\n    gl_Position = uProjectionMatrix * uViewMatrix * vec4(currentPosition, 1.0);\n}\n\nfloat generateHeight(vec3 position)\n{\n    vec2 inp0 = vec2(position.x / uOctave0HorizontalWaveLength, position.z / uOctave0VerticalWaveLength);\n    float h0 = snoise(inp0) * uOctave0Altitude;\n\n    vec2 inp1 = vec2(position.x / uOctave1HorizontalWaveLength, position.z / uOctave1VerticalWaveLength);\n    float h1 = snoise(inp1) * uOctave1Altitude;\n\n    float horizontalDividend2 = uOctave2HorizontalWaveLength;\n    float verticalDividend2 = uOctave2VerticalWaveLength;\n    vec2 inp2 = vec2(position.x / horizontalDividend2, position.z / verticalDividend2);\n    float h2 = snoise(inp2) * uOctave2Altitude;\n\n    return h0 + h1 + h2;\n}\n\nvec3 vertexColor(float height)\n{\n    // Adjust the height (as it can be below zero).\n    height = (height + uMaxTerrainAltitude) * 0.5;\n\n    // Normalize the height.\n    height = height / uMaxTerrainAltitude;\n\n    // Interpolate vertex color.\n    vec3 color = mix(uColor0, uColor1, smoothstep(0.0, 0.2, height));\n    color = mix(color, uColor2, smoothstep(0.2, 0.7, height));\n    color = mix(color, uColor3, smoothstep(0.7, 1.0, height));\n\n    return color;\n}\n\nvec3 ambientLight()\n{\n    return uAmbientLightColor * uAmbientLightStrength;\n}\n\nvec3 sunLight(vec3 normal)\n{\n    float diffuse = max(dot(normal, uSunLightDirection), 0.0);\n    return uSunLightColor * diffuse;\n}\n\nvec3 mod289(vec3 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec2 mod289(vec2 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec3 permute(vec3 x) {\n  return mod289(((x*34.0)+1.0)*x);\n}\n\nfloat snoise(vec2 v)\n{\n  const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0\n                      0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)\n                     -0.577350269189626,  // -1.0 + 2.0 * C.x\n                      0.024390243902439); // 1.0 / 41.0\n// First corner\n  vec2 i  = floor(v + dot(v, C.yy) );\n  vec2 x0 = v -   i + dot(i, C.xx);\n\n// Other corners\n  vec2 i1;\n  //i1.x = step( x0.y, x0.x ); // x0.x > x0.y ? 1.0 : 0.0\n  //i1.y = 1.0 - i1.x;\n  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);\n  // x0 = x0 - 0.0 + 0.0 * C.xx ;\n  // x1 = x0 - i1 + 1.0 * C.xx ;\n  // x2 = x0 - 1.0 + 2.0 * C.xx ;\n  vec4 x12 = x0.xyxy + C.xxzz;\n  x12.xy -= i1;\n\n// Permutations\n  i = mod289(i); // Avoid truncation effects in permutation\n  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))\n\t\t+ i.x + vec3(0.0, i1.x, 1.0 ));\n\n  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);\n  m = m*m ;\n  m = m*m ;\n\n// Gradients: 41 points uniformly over a line, mapped onto a diamond.\n// The ring size 17*17 = 289 is close to a multiple of 41 (41*7 = 287)\n\n  vec3 x = 2.0 * fract(p * C.www) - 1.0;\n  vec3 h = abs(x) - 0.5;\n  vec3 ox = floor(x + 0.5);\n  vec3 a0 = x - ox;\n\n// Normalise gradients implicitly by scaling m\n// Approximation of: m *= inversesqrt( a0*a0 + h*h );\n  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );\n\n// Compute final noise value at P\n  vec3 g;\n  g.x  = a0.x  * x0.x  + h.x  * x0.y;\n  g.yz = a0.yz * x12.xz + h.yz * x12.yw;\n  return 130.0 * dot(m, g);\n}\n\n    '};
+var _psandahl$virtual_explorer$Graphics_Internal_Terrain$vertexShader = {'src': '\nprecision mediump float;\n\n// Single attribute: the vertex position.\nattribute vec3 aPosition;\n\n// Transformation matrices.\nuniform mat4 uModelMatrix;\nuniform mat4 uViewMatrix;\nuniform mat4 uProjectionMatrix;\n\n// Terrain shaping uniforms.\nuniform vec2 uWorldOffset;\n\nuniform float uOctave0HorizontalWaveLength;\nuniform float uOctave0VerticalWaveLength;\nuniform float uOctave0Altitude;\n\nuniform float uOctave1HorizontalWaveLength;\nuniform float uOctave1VerticalWaveLength;\nuniform float uOctave1Altitude;\n\nuniform float uOctave2HorizontalWaveLength;\nuniform float uOctave2VerticalWaveLength;\nuniform float uOctave2Altitude;\n\n// Color uniforms.\nuniform float uMaxTerrainAltitude;\nuniform vec3 uColor0;\nuniform vec3 uColor1;\nuniform vec3 uColor2;\nuniform vec3 uColor3;\n\n// Lightning uniforms.\nuniform vec3 uAmbientLightColor;\nuniform float uAmbientLightStrength;\n\nuniform vec3 uSunLightColor;\nuniform vec3 uSunLightDirection;\n\n// Fog uniforms.\nuniform bool uUseFog;\nuniform vec3 uFog;\nuniform float uFogPower;\nuniform float uFogDistance;\nuniform vec3 uCameraPosition;\n\n// The color produced for the vertex.\nvarying vec3 vColor;\n\n// Generate the height (y) value for the position x, z.\nfloat generateHeight(vec3 position);\n\n// Calculate the vertex color.\nvec3 vertexColor(float height);\n\n// Calculate the ambient light.\nvec3 ambientLight();\n\n// Calculate the sun light.\nvec3 sunLight(vec3 normal);\n\n// Functions for the implementation of simple noise.\nvec3 mod289(vec3 x);\nvec2 mod289(vec2 x);\nvec3 permute(vec3 x);\nfloat snoise(vec2 v);\n\nvoid main()\n{\n    // Step 1. Transform the position to it\'s world coordinates. Needed\n    // for the height value generation.\n    vec3 currentPosition = (uModelMatrix * vec4(aPosition, 1.0)).xyz;\n\n    // Step 2. Convert the world offset to a vec3.\n    vec3 worldOffset = vec3(uWorldOffset.x, 0.0, uWorldOffset.y);\n\n    // Step 3. Calculate heights for the current position as well as for\n    // six neighbour vertices.\n    vec3 v0 = currentPosition + vec3(0.0, 0.0, -1.0);\n    v0.y = generateHeight(v0 + worldOffset);\n\n    vec3 v1 = currentPosition + vec3(1.0, 0.0, -1.0);\n    v1.y = generateHeight(v1 + worldOffset);\n\n    vec3 v2 = currentPosition + vec3(-1.0, 0.0, 0.0);\n    v2.y = generateHeight(v2 + worldOffset);\n\n    vec3 v3 = currentPosition + vec3(1.0, 0.0, 0.0);\n    v3.y = generateHeight(v3 + worldOffset);\n\n    vec3 v4 = currentPosition + vec3(-1.0, 0.0, 1.0);\n    v4.y = generateHeight(v4 + worldOffset);\n\n    vec3 v5 = currentPosition + vec3(0.0, 0.0, 1.0);\n    v5.y = generateHeight(v5 + worldOffset);\n\n    currentPosition.y = generateHeight(currentPosition + worldOffset);\n\n    // Step 3. Calculate smooth normal using the neighbour vertices.\n    vec3 norm0 = normalize(cross(v0 - v2, v0 - currentPosition));\n    vec3 norm1 = normalize(cross(v1 - v0, v1 - currentPosition));\n    vec3 norm2 = normalize(cross(v1 - currentPosition, v1 - v3));\n    vec3 norm3 = normalize(cross(currentPosition - v2, currentPosition - v4));\n    vec3 norm4 = normalize(cross(currentPosition - v4, currentPosition - v5));\n    vec3 norm5 = normalize(cross(v3 - currentPosition, v3 - v5));\n\n    vec3 normal = normalize(norm0 + norm1 + norm2 + norm3 + norm4 + norm5);\n\n    // Step 4. Color the vertex.\n    vec3 color = vertexColor(currentPosition.y) * (ambientLight() + sunLight(normal));\n\n    // Step 5. Apply fog.\n    if (uUseFog) {\n        float normalizedDistance = min(distance(uCameraPosition, currentPosition) / uFogDistance, 1.0);\n        color = mix(color, uFog, pow(normalizedDistance, uFogPower));\n    }\n    vColor = color;\n\n    // Step 6. Final transformation.\n    gl_Position = uProjectionMatrix * uViewMatrix * vec4(currentPosition, 1.0);\n}\n\nfloat generateHeight(vec3 position)\n{\n    vec2 inp0 = vec2(position.x / uOctave0HorizontalWaveLength, position.z / uOctave0VerticalWaveLength);\n    float h0 = snoise(inp0) * uOctave0Altitude;\n\n    vec2 inp1 = vec2(position.x / uOctave1HorizontalWaveLength, position.z / uOctave1VerticalWaveLength);\n    float h1 = snoise(inp1) * uOctave1Altitude;\n\n    vec2 inp2 = vec2(position.x / uOctave2HorizontalWaveLength, position.z / uOctave2VerticalWaveLength);\n    float h2 = snoise(inp2) * uOctave2Altitude;\n\n    return h0 + h1 + h2;\n}\n\nvec3 vertexColor(float height)\n{\n    // Adjust the height (as it can be below zero).\n    height = (height + uMaxTerrainAltitude) * 0.5;\n\n    // Normalize the height.\n    height = height / uMaxTerrainAltitude;\n\n    // Interpolate vertex color.\n    vec3 color = mix(uColor0, uColor1, smoothstep(0.0, 0.2, height));\n    color = mix(color, uColor2, smoothstep(0.2, 0.7, height));\n    color = mix(color, uColor3, smoothstep(0.7, 1.0, height));\n\n    return color;\n}\n\nvec3 ambientLight()\n{\n    return uAmbientLightColor * uAmbientLightStrength;\n}\n\nvec3 sunLight(vec3 normal)\n{\n    float diffuse = max(dot(normal, uSunLightDirection), 0.0);\n    return uSunLightColor * diffuse;\n}\n\nvec3 mod289(vec3 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec2 mod289(vec2 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec3 permute(vec3 x) {\n  return mod289(((x*34.0)+1.0)*x);\n}\n\nfloat snoise(vec2 v)\n{\n  const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0\n                      0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)\n                     -0.577350269189626,  // -1.0 + 2.0 * C.x\n                      0.024390243902439); // 1.0 / 41.0\n// First corner\n  vec2 i  = floor(v + dot(v, C.yy) );\n  vec2 x0 = v -   i + dot(i, C.xx);\n\n// Other corners\n  vec2 i1;\n  //i1.x = step( x0.y, x0.x ); // x0.x > x0.y ? 1.0 : 0.0\n  //i1.y = 1.0 - i1.x;\n  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);\n  // x0 = x0 - 0.0 + 0.0 * C.xx ;\n  // x1 = x0 - i1 + 1.0 * C.xx ;\n  // x2 = x0 - 1.0 + 2.0 * C.xx ;\n  vec4 x12 = x0.xyxy + C.xxzz;\n  x12.xy -= i1;\n\n// Permutations\n  i = mod289(i); // Avoid truncation effects in permutation\n  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))\n\t\t+ i.x + vec3(0.0, i1.x, 1.0 ));\n\n  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);\n  m = m*m ;\n  m = m*m ;\n\n// Gradients: 41 points uniformly over a line, mapped onto a diamond.\n// The ring size 17*17 = 289 is close to a multiple of 41 (41*7 = 287)\n\n  vec3 x = 2.0 * fract(p * C.www) - 1.0;\n  vec3 h = abs(x) - 0.5;\n  vec3 ox = floor(x + 0.5);\n  vec3 a0 = x - ox;\n\n// Normalise gradients implicitly by scaling m\n// Approximation of: m *= inversesqrt( a0*a0 + h*h );\n  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );\n\n// Compute final noise value at P\n  vec3 g;\n  g.x  = a0.x  * x0.x  + h.x  * x0.y;\n  g.yz = a0.yz * x12.xz + h.yz * x12.yw;\n  return 130.0 * dot(m, g);\n}\n\n    '};
 var _psandahl$virtual_explorer$Graphics_Internal_Terrain$makeIndices = function (_p0) {
 	var _p1 = _p0;
 	var _p2 = _p1._0;
@@ -13279,7 +13279,11 @@ var _psandahl$virtual_explorer$ToolBox_Model$Model = function (a) {
 																		return function (s) {
 																			return function (t) {
 																				return function (u) {
-																					return {state: a, octave0HorizontalWaveLength: b, octave0VerticalWaveLength: c, octave0Altitude: d, octave1HorizontalWaveLength: e, octave1VerticalWaveLength: f, octave1Altitude: g, octave2HorizontalWaveLength: h, octave2VerticalWaveLength: i, octave2Altitude: j, color0: k, color1: l, color2: m, color3: n, sky0: o, sky1: p, fog: q, ambientLightColor: r, ambientLightStrength: s, sunLightColor: t, sunLightDirection: u};
+																					return function (v) {
+																						return function (w) {
+																							return {state: a, octave0HorizontalWaveLength: b, octave0VerticalWaveLength: c, octave0Altitude: d, octave1HorizontalWaveLength: e, octave1VerticalWaveLength: f, octave1Altitude: g, octave2HorizontalWaveLength: h, octave2VerticalWaveLength: i, octave2Altitude: j, color0: k, color1: l, color2: m, color3: n, sky0: o, sky1: p, useFog: q, fog: r, fogPower: s, ambientLightColor: t, ambientLightStrength: u, sunLightColor: v, sunLightDirection: w};
+																						};
+																					};
 																				};
 																			};
 																		};
@@ -13303,6 +13307,7 @@ var _psandahl$virtual_explorer$ToolBox_Model$Model = function (a) {
 };
 var _psandahl$virtual_explorer$ToolBox_Model$Open = {ctor: 'Open'};
 var _psandahl$virtual_explorer$ToolBox_Model$Closed = {ctor: 'Closed'};
+var _psandahl$virtual_explorer$ToolBox_Model$FogPower = {ctor: 'FogPower'};
 var _psandahl$virtual_explorer$ToolBox_Model$Color3B = {ctor: 'Color3B'};
 var _psandahl$virtual_explorer$ToolBox_Model$Color3G = {ctor: 'Color3G'};
 var _psandahl$virtual_explorer$ToolBox_Model$Color3R = {ctor: 'Color3R'};
@@ -13324,12 +13329,16 @@ var _psandahl$virtual_explorer$ToolBox_Model$Octave1HorizontalWaveLength = {ctor
 var _psandahl$virtual_explorer$ToolBox_Model$Octave0Altitude = {ctor: 'Octave0Altitude'};
 var _psandahl$virtual_explorer$ToolBox_Model$Octave0VerticalWaveLength = {ctor: 'Octave0VerticalWaveLength'};
 var _psandahl$virtual_explorer$ToolBox_Model$Octave0HorizontalWaveLength = {ctor: 'Octave0HorizontalWaveLength'};
+var _psandahl$virtual_explorer$ToolBox_Model$UseFog = {ctor: 'UseFog'};
 
 var _psandahl$virtual_explorer$Composer_Model$Model = F7(
 	function (a, b, c, d, e, f, g) {
 		return {graphics: a, coordinate: b, compass: c, camera: d, toolBox: e, ctrlKeyDown: f, trackedMousePosition: g};
 	});
 var _psandahl$virtual_explorer$Composer_Model$Nop = {ctor: 'Nop'};
+var _psandahl$virtual_explorer$Composer_Model$ToolBoxCheckboxToggle = function (a) {
+	return {ctor: 'ToolBoxCheckboxToggle', _0: a};
+};
 var _psandahl$virtual_explorer$Composer_Model$ToolBoxSliderChange = F2(
 	function (a, b) {
 		return {ctor: 'ToolBoxSliderChange', _0: a, _1: b};
@@ -13505,10 +13514,17 @@ var _psandahl$virtual_explorer$Graphics_Update$init = F2(
 		};
 	});
 
+var _psandahl$virtual_explorer$ToolBox_Update$toggleCheckbox = F2(
+	function (checkbox, model) {
+		var _p0 = checkbox;
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{useFog: !model.useFog});
+	});
 var _psandahl$virtual_explorer$ToolBox_Update$setSliderValue = F3(
 	function (slider, value, model) {
-		var _p0 = slider;
-		switch (_p0.ctor) {
+		var _p1 = slider;
+		switch (_p1.ctor) {
 			case 'Octave0HorizontalWaveLength':
 				return _elm_lang$core$Native_Utils.update(
 					model,
@@ -13611,12 +13627,16 @@ var _psandahl$virtual_explorer$ToolBox_Update$setSliderValue = F3(
 					{
 						color3: A2(_elm_community$linear_algebra$Math_Vector3$setY, value / 255.0, model.color3)
 					});
-			default:
+			case 'Color3B':
 				return _elm_lang$core$Native_Utils.update(
 					model,
 					{
 						color3: A2(_elm_community$linear_algebra$Math_Vector3$setZ, value / 255.0, model.color3)
 					});
+			default:
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{fogPower: value});
 		}
 	});
 var _psandahl$virtual_explorer$ToolBox_Update$closeToolBox = function (model) {
@@ -13646,7 +13666,9 @@ var _psandahl$virtual_explorer$ToolBox_Update$init = {
 	color3: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 1, 1, 1),
 	sky0: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 246 / 255, 176 / 255, 133 / 255),
 	sky1: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 70 / 255, 106 / 255, 200 / 255),
+	useFog: false,
 	fog: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 0.5, 0.5, 0.5),
+	fogPower: 1,
 	ambientLightColor: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 1, 1, 1),
 	ambientLightStrength: 0.2,
 	sunLightColor: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 1, 1, 1),
@@ -13903,6 +13925,16 @@ var _psandahl$virtual_explorer$Composer_Update$update = F2(
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			case 'ToolBoxCheckboxToggle':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							toolBox: A2(_psandahl$virtual_explorer$ToolBox_Update$toggleCheckbox, _p2._0, model.toolBox)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			default:
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		}
@@ -14024,7 +14056,7 @@ var _psandahl$virtual_explorer$Graphics_View$terrainEntities = F3(
 					_psandahl$virtual_explorer$Graphics_Internal_Terrain$vertexShader,
 					_psandahl$virtual_explorer$Graphics_Internal_Terrain$fragmentShader,
 					model.terrainMesh,
-					{uProjectionMatrix: model.projectionMatrix, uViewMatrix: camera.viewMatrix, uModelMatrix: tileModelMatrix, uWorldOffset: camera.worldOffset, uOctave0HorizontalWaveLength: toolBox.octave0HorizontalWaveLength, uOctave0VerticalWaveLength: toolBox.octave0VerticalWaveLength, uOctave0Altitude: toolBox.octave0Altitude, uOctave1HorizontalWaveLength: toolBox.octave1HorizontalWaveLength, uOctave1VerticalWaveLength: toolBox.octave1VerticalWaveLength, uOctave1Altitude: toolBox.octave1Altitude, uOctave2HorizontalWaveLength: toolBox.octave2HorizontalWaveLength, uOctave2VerticalWaveLength: toolBox.octave2VerticalWaveLength, uOctave2Altitude: toolBox.octave2Altitude, uMaxTerrainAltitude: _psandahl$virtual_explorer$Settings$maxTerrainAltitude, uColor0: toolBox.color0, uColor1: toolBox.color1, uColor2: toolBox.color2, uColor3: toolBox.color3, uAmbientLightColor: toolBox.ambientLightColor, uAmbientLightStrength: toolBox.ambientLightStrength, uSunLightColor: toolBox.sunLightColor, uSunLightDirection: toolBox.sunLightDirection, uFog: toolBox.fog, uFogDistance: _psandahl$virtual_explorer$Settings$farPlane, uCameraPosition: camera.position});
+					{uProjectionMatrix: model.projectionMatrix, uViewMatrix: camera.viewMatrix, uModelMatrix: tileModelMatrix, uWorldOffset: camera.worldOffset, uOctave0HorizontalWaveLength: toolBox.octave0HorizontalWaveLength, uOctave0VerticalWaveLength: toolBox.octave0VerticalWaveLength, uOctave0Altitude: toolBox.octave0Altitude, uOctave1HorizontalWaveLength: toolBox.octave1HorizontalWaveLength, uOctave1VerticalWaveLength: toolBox.octave1VerticalWaveLength, uOctave1Altitude: toolBox.octave1Altitude, uOctave2HorizontalWaveLength: toolBox.octave2HorizontalWaveLength, uOctave2VerticalWaveLength: toolBox.octave2VerticalWaveLength, uOctave2Altitude: toolBox.octave2Altitude, uMaxTerrainAltitude: _psandahl$virtual_explorer$Settings$maxTerrainAltitude, uColor0: toolBox.color0, uColor1: toolBox.color1, uColor2: toolBox.color2, uColor3: toolBox.color3, uAmbientLightColor: toolBox.ambientLightColor, uAmbientLightStrength: toolBox.ambientLightStrength, uSunLightColor: toolBox.sunLightColor, uSunLightDirection: toolBox.sunLightDirection, uUseFog: toolBox.useFog, uFog: toolBox.fog, uFogPower: toolBox.fogPower, uFogDistance: _psandahl$virtual_explorer$Settings$farPlane, uCameraPosition: camera.position});
 			},
 			model.terrainPager.translationMatrices);
 	});
@@ -14140,6 +14172,168 @@ var _psandahl$virtual_explorer$ToolBox_View$rgb = F3(
 								_elm_lang$core$Basics$toString(b),
 								')'))))));
 	});
+var _psandahl$virtual_explorer$ToolBox_View$fogControlGroup = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'width', _1: '95%'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '5px'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '1%'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'border', _1: '2px solid gray'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '5px'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'line-height', _1: '80%'},
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$span,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$style(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'font-size', _1: '12px'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'font-family', _1: 'sans-serif'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '2.5%'},
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Fog Control'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$p,
+					{ctor: '[]'},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$input,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$type_('checkbox'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$style(
+									{
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '2.5%'},
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$checked(model.useFog),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onClick(
+											_psandahl$virtual_explorer$Composer_Model$ToolBoxCheckboxToggle(_psandahl$virtual_explorer$ToolBox_Model$UseFog)),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$input,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$style(
+									{
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'float', _1: 'right'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'width', _1: '80%'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'margin-right', _1: '2.5%'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '3%'},
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$type_('range'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$min(
+											_elm_lang$core$Basics$toString(1.0)),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$max(
+												_elm_lang$core$Basics$toString(10.0)),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$value(
+													_elm_lang$core$Basics$toString(model.fogPower)),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$step('0.1'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('slider'),
+														_1: {
+															ctor: '::',
+															_0: _psandahl$virtual_explorer$ToolBox_View$onSliderChange(_psandahl$virtual_explorer$ToolBox_Model$FogPower),
+															_1: {ctor: '[]'}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
 var _psandahl$virtual_explorer$ToolBox_View$colorSliderGroup = F3(
 	function (caption, _p0, color) {
 		var _p1 = _p0;
@@ -14602,7 +14796,11 @@ var _psandahl$virtual_explorer$ToolBox_View$pane = function (model) {
 												'Color3 r/g/b',
 												{ctor: '_Tuple3', _0: _psandahl$virtual_explorer$ToolBox_Model$Color3R, _1: _psandahl$virtual_explorer$ToolBox_Model$Color3G, _2: _psandahl$virtual_explorer$ToolBox_Model$Color3B},
 												model.color3),
-											_1: {ctor: '[]'}
+											_1: {
+												ctor: '::',
+												_0: _psandahl$virtual_explorer$ToolBox_View$fogControlGroup(model),
+												_1: {ctor: '[]'}
+											}
 										}
 									}
 								}

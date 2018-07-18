@@ -149,6 +149,9 @@ update msg model =
         ToolBoxSliderChange slider value ->
             ( { model | toolBox = ToolBox.setSliderValue slider value model.toolBox }, Cmd.none )
 
+        ToolBoxCheckboxToggle checkbox ->
+            ( { model | toolBox = ToolBox.toggleCheckbox checkbox model.toolBox }, Cmd.none )
+
         Nop ->
             ( model, Cmd.none )
 

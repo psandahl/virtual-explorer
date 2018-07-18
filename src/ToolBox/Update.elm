@@ -4,6 +4,7 @@ module ToolBox.Update
         , init
         , openToolBox
         , setSliderValue
+        , toggleCheckbox
         )
 
 {-| Module implementing the model manipulating functions for the ToolBox.
@@ -11,7 +12,7 @@ module ToolBox.Update
 
 import Math.Vector3 as Vec3
 import Settings
-import ToolBox.Model exposing (Model, Slider(..), State(..))
+import ToolBox.Model exposing (Checkbox(..), Model, Slider(..), State(..))
 
 
 {-| Initialize the ToolBox.
@@ -34,7 +35,9 @@ init =
     , color3 = Vec3.vec3 1 1 1
     , sky0 = Vec3.vec3 (246 / 255) (176 / 255) (133 / 255)
     , sky1 = Vec3.vec3 (70 / 255) (106 / 255) (200 / 255)
+    , useFog = False
     , fog = Vec3.vec3 0.5 0.5 0.5
+    , fogPower = 1
     , ambientLightColor = Vec3.vec3 1 1 1
     , ambientLightStrength = 0.2
     , sunLightColor = Vec3.vec3 1 1 1
@@ -123,3 +126,15 @@ setSliderValue slider value model =
 
         Color3B ->
             { model | color3 = Vec3.setZ (value / 255.0) model.color3 }
+
+        FogPower ->
+            { model | fogPower = value }
+
+
+{-| Toggle the value for the given checkbox.
+-}
+toggleCheckbox : Checkbox -> Model -> Model
+toggleCheckbox checkbox model =
+    case checkbox of
+        UseFog ->
+            { model | useFog = not model.useFog }

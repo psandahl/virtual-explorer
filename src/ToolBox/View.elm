@@ -11,7 +11,7 @@ import Html.Events as Events
 import Json.Decode as Decode
 import Math.Vector3 as Vec3 exposing (Vec3)
 import Settings
-import ToolBox.Model exposing (Model, Slider(..), State(..))
+import ToolBox.Model exposing (Checkbox(..), Model, Slider(..), State(..))
 
 
 {-| The view function. Depending on state either the open button or the tool
@@ -129,6 +129,7 @@ pane model =
         , colorSliderGroup "Color1 r/g/b" ( Color1R, Color1G, Color1B ) model.color1
         , colorSliderGroup "Color2 r/g/b" ( Color2R, Color2G, Color2B ) model.color2
         , colorSliderGroup "Color3 r/g/b" ( Color3R, Color3G, Color3B ) model.color3
+        , fogControlGroup model
         ]
 
 
@@ -228,6 +229,56 @@ colorSliderGroup caption ( s0, s1, s2 ) color =
                         []
                 )
                 [ ( s0, 0, 255, r ), ( s1, 0, 255, g ), ( s2, 0, 255, b ) ]
+
+
+fogControlGroup : Model -> Html Msg
+fogControlGroup model =
+    Html.div
+        [ Attr.style
+            [ ( "width", "95%" )
+            , ( "margin-top", "5px" )
+            , ( "margin-left", "1%" )
+            , ( "border", "2px solid gray" )
+            , ( "border-radius", "5px" )
+            , ( "line-height", "80%" )
+            ]
+        ]
+        [ Html.span
+            [ Attr.style
+                [ ( "font-size", "12px" )
+                , ( "font-family", "sans-serif" )
+                , ( "color", "white" )
+                , ( "margin-left", "2.5%" )
+                ]
+            ]
+            [ Html.text "Fog Control" ]
+        , Html.p [] []
+        , Html.input
+            [ Attr.type_ "checkbox"
+            , Attr.style
+                [ ( "margin-left", "2.5%" )
+                ]
+            , Attr.checked model.useFog
+            , Events.onClick <| ToolBoxCheckboxToggle UseFog
+            ]
+            []
+        , Html.input
+            [ Attr.style
+                [ ( "float", "right" )
+                , ( "width", "80%" )
+                , ( "margin-right", "2.5%" )
+                , ( "margin-top", "3%" )
+                ]
+            , Attr.type_ "range"
+            , Attr.min <| toString 1.0
+            , Attr.max <| toString 10.0
+            , Attr.value <| toString model.fogPower
+            , Attr.step "0.1"
+            , Attr.class "slider"
+            , onSliderChange FogPower
+            ]
+            []
+        ]
 
 
 rgb : Int -> Int -> Int -> String
