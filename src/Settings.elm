@@ -42,42 +42,42 @@ farPlane =
 -}
 octave0MaxWaveLength : Float
 octave0MaxWaveLength =
-    2048
+    3000
 
 
 {-| Max altitude for octave 0.
 -}
 octave0MaxAltitude : Float
 octave0MaxAltitude =
-    150
+    200
 
 
 {-| Max wave length for octave 1.
 -}
 octave1MaxWaveLength : Float
 octave1MaxWaveLength =
-    256
+    1111
 
 
 {-| Max altitude for octave 1.
 -}
 octave1MaxAltitude : Float
 octave1MaxAltitude =
-    40
+    100
 
 
 {-| Max wave length for octave 2.
 -}
 octave2MaxWaveLength : Float
 octave2MaxWaveLength =
-    64
+    333
 
 
 {-| Max altitude for octave 2.
 -}
 octave2MaxAltitude : Float
 octave2MaxAltitude =
-    10
+    50
 
 
 {-| The maximum terrain altitude.

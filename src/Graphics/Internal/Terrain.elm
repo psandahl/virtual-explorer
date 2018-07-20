@@ -297,9 +297,9 @@ vec3 vertexColor(float height)
     height = height / uMaxTerrainAltitude;
 
     // Interpolate vertex color.
-    vec3 color = mix(uColor0, uColor1, smoothstep(0.0, 0.2, height));
-    color = mix(color, uColor2, smoothstep(0.2, 0.7, height));
-    color = mix(color, uColor3, smoothstep(0.7, 1.0, height));
+    vec3 color = mix(uColor0, uColor1, smoothstep(0.0, 0.4, height));
+    color = mix(color, uColor2, smoothstep(0.4, 0.6, height));
+    color = mix(color, uColor3, smoothstep(0.6, 1.0, height));
 
     return color;
 }
