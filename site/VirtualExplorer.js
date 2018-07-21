@@ -13673,7 +13673,7 @@ var _psandahl$virtual_explorer$ToolBox_Update$init = {
 	ambientLightStrength: 0.2,
 	sunLightColor: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 1, 1, 1),
 	sunLightDirection: _elm_community$linear_algebra$Math_Vector3$normalize(
-		A3(_elm_community$linear_algebra$Math_Vector3$vec3, -1, 1, 0))
+		A3(_elm_community$linear_algebra$Math_Vector3$vec3, -1.5, 1, 0))
 };
 
 var _psandahl$virtual_explorer$Composer_Update$debugLog = F2(
@@ -14022,25 +14022,53 @@ var _psandahl$virtual_explorer$Coordinate_View$view = F2(
 			});
 	});
 
-var _psandahl$virtual_explorer$Graphics_Internal_Sun$makeSunWithFlares = F2(
-	function (viewport, _p0) {
+var _psandahl$virtual_explorer$Graphics_Internal_Sun$midViewport = function (viewport) {
+	return A2(
+		_elm_community$linear_algebra$Math_Vector2$vec2,
+		_elm_lang$core$Basics$toFloat(viewport.width) / 2,
+		_elm_lang$core$Basics$toFloat(viewport.height) / 2);
+};
+var _psandahl$virtual_explorer$Graphics_Internal_Sun$renderImage = F3(
+	function (sunPosition, direction, _p0) {
 		var _p1 = _p0;
-		return {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$style(
-						{
+		var _p3 = _p1._3;
+		var _p2 = _p1._4;
+		var flareVector = A2(
+			_elm_lang$core$Debug$log,
+			'flareVector: ',
+			A2(_elm_community$linear_algebra$Math_Vector2$scale, _p1._1, direction));
+		var position = A2(
+			_elm_lang$core$Debug$log,
+			'position: ',
+			A2(_elm_community$linear_algebra$Math_Vector2$add, sunPosition, flareVector));
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$style(
+					{
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'background-image',
+							_1: A2(
+								_elm_lang$core$Basics_ops['++'],
+								'url(\'',
+								A2(_elm_lang$core$Basics_ops['++'], _p1._0, '\')'))
+						},
+						_1: {
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'background-image', _1: 'url(\'./images/sun.png\')'},
+							_0: {ctor: '_Tuple2', _0: 'background-size', _1: 'cover'},
 							_1: {
 								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'background-size', _1: 'cover'},
+								_0: {ctor: '_Tuple2', _0: 'position', _1: 'absolute'},
 								_1: {
 									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'position', _1: 'absolute'},
+									_0: {
+										ctor: '_Tuple2',
+										_0: 'opacity',
+										_1: _elm_lang$core$Basics$toString(_p1._2)
+									},
 									_1: {
 										ctor: '::',
 										_0: {
@@ -14048,7 +14076,8 @@ var _psandahl$virtual_explorer$Graphics_Internal_Sun$makeSunWithFlares = F2(
 											_0: 'left',
 											_1: A2(
 												_elm_lang$core$Basics_ops['++'],
-												_elm_lang$core$Basics$toString(_p1._0 - 50),
+												_elm_lang$core$Basics$toString(
+													_elm_community$linear_algebra$Math_Vector2$getX(position) - (_elm_lang$core$Basics$toFloat(_p3) / 2)),
 												'px')
 										},
 										_1: {
@@ -14058,15 +14087,30 @@ var _psandahl$virtual_explorer$Graphics_Internal_Sun$makeSunWithFlares = F2(
 												_0: 'top',
 												_1: A2(
 													_elm_lang$core$Basics_ops['++'],
-													_elm_lang$core$Basics$toString(_p1._1 - 50),
+													_elm_lang$core$Basics$toString(
+														_elm_community$linear_algebra$Math_Vector2$getY(position) - (_elm_lang$core$Basics$toFloat(_p2) / 2)),
 													'px')
 											},
 											_1: {
 												ctor: '::',
-												_0: {ctor: '_Tuple2', _0: 'width', _1: '100px'},
+												_0: {
+													ctor: '_Tuple2',
+													_0: 'width',
+													_1: A2(
+														_elm_lang$core$Basics_ops['++'],
+														_elm_lang$core$Basics$toString(_p3),
+														'px')
+												},
 												_1: {
 													ctor: '::',
-													_0: {ctor: '_Tuple2', _0: 'height', _1: '100px'},
+													_0: {
+														ctor: '_Tuple2',
+														_0: 'height',
+														_1: A2(
+															_elm_lang$core$Basics_ops['++'],
+															_elm_lang$core$Basics$toString(_p2),
+															'px')
+													},
 													_1: {
 														ctor: '::',
 														_0: {ctor: '_Tuple2', _0: 'z-index', _1: '1'},
@@ -14078,22 +14122,99 @@ var _psandahl$virtual_explorer$Graphics_Internal_Sun$makeSunWithFlares = F2(
 									}
 								}
 							}
-						}),
-					_1: {ctor: '[]'}
-				},
-				{ctor: '[]'}),
-			_1: {ctor: '[]'}
+						}
+					}),
+				_1: {ctor: '[]'}
+			},
+			{ctor: '[]'});
+	});
+var _psandahl$virtual_explorer$Graphics_Internal_Sun$makeSunWithFlares = F2(
+	function (viewport, _p4) {
+		var _p5 = _p4;
+		var midPosition = A2(
+			_elm_lang$core$Debug$log,
+			'mid: ',
+			_psandahl$virtual_explorer$Graphics_Internal_Sun$midViewport(viewport));
+		var sunPosition = A2(
+			_elm_lang$core$Debug$log,
+			'sun: ',
+			A2(_elm_community$linear_algebra$Math_Vector2$vec2, _p5._0, _p5._1));
+		var sunVector = A2(
+			_elm_lang$core$Debug$log,
+			'sunVec: ',
+			A2(_elm_community$linear_algebra$Math_Vector2$sub, midPosition, sunPosition));
+		var endPosition = A2(
+			_elm_lang$core$Debug$log,
+			'end: ',
+			A2(_elm_community$linear_algebra$Math_Vector2$add, midPosition, sunVector));
+		var distance = A2(
+			_elm_lang$core$Debug$log,
+			'dist: ',
+			_elm_lang$core$Basics$abs(
+				A2(_elm_community$linear_algebra$Math_Vector2$distance, endPosition, sunPosition)));
+		var direction = A2(
+			_elm_lang$core$Debug$log,
+			'direction: ',
+			_elm_community$linear_algebra$Math_Vector2$normalize(
+				A2(_elm_community$linear_algebra$Math_Vector2$sub, endPosition, sunPosition)));
+		return {
+			ctor: '::',
+			_0: A3(
+				_psandahl$virtual_explorer$Graphics_Internal_Sun$renderImage,
+				sunPosition,
+				direction,
+				{ctor: '_Tuple5', _0: './images/sun.png', _1: 0.0, _2: 1.0, _3: 100, _4: 100}),
+			_1: A2(
+				_elm_lang$core$List$map,
+				A2(_psandahl$virtual_explorer$Graphics_Internal_Sun$renderImage, sunPosition, direction),
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple5', _0: './images/tex1.png', _1: 0.1 * distance, _2: 0.15, _3: 100, _4: 100},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple5', _0: './images/tex2.png', _1: 0.2 * distance, _2: 0.15, _3: 200, _4: 200},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple5', _0: './images/tex3.png', _1: 0.3 * distance, _2: 0.15, _3: 100, _4: 100},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple5', _0: './images/tex4.png', _1: 0.4 * distance, _2: 0.15, _3: 300, _4: 300},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple5', _0: './images/tex5.png', _1: 0.5 * distance, _2: 0.15, _3: 100, _4: 100},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple5', _0: './images/tex6.png', _1: 0.6 * distance, _2: 0.15, _3: 200, _4: 200},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple5', _0: './images/tex7.png', _1: 0.7 * distance, _2: 0.15, _3: 200, _4: 200},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple5', _0: './images/tex8.png', _1: 0.9 * distance, _2: 0.15, _3: 200, _4: 200},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple5', _0: './images/tex9.png', _1: distance, _2: 0.15, _3: 100, _4: 100},
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				})
 		};
 	});
 var _psandahl$virtual_explorer$Graphics_Internal_Sun$isVisible = F2(
-	function (viewport, _p2) {
-		var _p3 = _p2;
-		var _p5 = _p3._1;
-		var _p4 = _p3._0;
-		return (_elm_lang$core$Native_Utils.cmp(_p4, 0.0) > -1) && ((_elm_lang$core$Native_Utils.cmp(
-			_p4,
-			_elm_lang$core$Basics$toFloat(viewport.width)) < 0) && ((_elm_lang$core$Native_Utils.cmp(_p5, 0) > -1) && (_elm_lang$core$Native_Utils.cmp(
-			_p5,
+	function (viewport, _p6) {
+		var _p7 = _p6;
+		var _p9 = _p7._1;
+		var _p8 = _p7._0;
+		return (_elm_lang$core$Native_Utils.cmp(_p8, 0.0) > -1) && ((_elm_lang$core$Native_Utils.cmp(
+			_p8,
+			_elm_lang$core$Basics$toFloat(viewport.width)) < 0) && ((_elm_lang$core$Native_Utils.cmp(_p9, 0) > -1) && (_elm_lang$core$Native_Utils.cmp(
+			_p9,
 			_elm_lang$core$Basics$toFloat(viewport.height)) < 0)));
 	});
 var _psandahl$virtual_explorer$Graphics_Internal_Sun$sunWithFlares = F4(
