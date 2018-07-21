@@ -14022,6 +14022,59 @@ var _psandahl$virtual_explorer$Coordinate_View$view = F2(
 			});
 	});
 
+var _psandahl$virtual_explorer$Graphics_Internal_Sun$sunWithFlares = F3(
+	function (projectionMatrix, viewMatrix, sunLightDirection) {
+		return {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$style(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'background-image', _1: 'url(\'./images/sun.png\')'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'background-size', _1: 'cover'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'position', _1: 'absolute'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'left', _1: '150px'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'top', _1: '150px'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'width', _1: '100px'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'height', _1: '100px'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 'z-index', _1: '1'},
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('sun'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {ctor: '[]'}
+		};
+	});
+
 var _psandahl$virtual_explorer$Graphics_View$cursorToString = function (cursor) {
 	var _p0 = cursor;
 	switch (_p0.ctor) {
@@ -14136,55 +14189,7 @@ var _psandahl$virtual_explorer$Graphics_View$view = F3(
 						_0: A3(_psandahl$virtual_explorer$Graphics_View$skyDomeEntity, camera, toolBox, model),
 						_1: A3(_psandahl$virtual_explorer$Graphics_View$terrainEntities, camera, toolBox, model)
 					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$style(
-								{
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'background-image', _1: 'url(\'./images/sun.png\')'},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'background-size', _1: 'cover'},
-										_1: {
-											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'position', _1: 'absolute'},
-											_1: {
-												ctor: '::',
-												_0: {ctor: '_Tuple2', _0: 'left', _1: '150px'},
-												_1: {
-													ctor: '::',
-													_0: {ctor: '_Tuple2', _0: 'top', _1: '150px'},
-													_1: {
-														ctor: '::',
-														_0: {ctor: '_Tuple2', _0: 'width', _1: '100px'},
-														_1: {
-															ctor: '::',
-															_0: {ctor: '_Tuple2', _0: 'height', _1: '100px'},
-															_1: {
-																ctor: '::',
-																_0: {ctor: '_Tuple2', _0: 'z-index', _1: '1'},
-																_1: {ctor: '[]'}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('sun'),
-								_1: {ctor: '[]'}
-							}
-						},
-						{ctor: '[]'}),
-					_1: {ctor: '[]'}
-				}
+				_1: A3(_psandahl$virtual_explorer$Graphics_Internal_Sun$sunWithFlares, model.projectionMatrix, camera.viewMatrix, toolBox.sunLightDirection)
 			});
 	});
 

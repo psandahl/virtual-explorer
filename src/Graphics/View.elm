@@ -6,6 +6,7 @@ module Graphics.View exposing (view)
 import Camera.Model as Camera
 import Composer.Model exposing (Msg(..))
 import Graphics.Internal.SkyDome as SkyDome
+import Graphics.Internal.Sun as Sun
 import Graphics.Internal.Terrain as Terrain
 import Graphics.Model exposing (Cursor(..), Model)
 import Html exposing (Attribute, Html)
@@ -26,7 +27,8 @@ view : Camera.Model -> ToolBox.Model -> Model -> Html Msg
 view camera toolBox model =
     Html.div
         []
-        [ GL.toHtmlWith
+    <|
+        (GL.toHtmlWith
             [ GL.antialias
             , GL.depth 1
             , GL.alpha False
@@ -39,24 +41,11 @@ view camera toolBox model =
                 [ ( "cursor", cursorToString model.cursor )
                 ]
             ]
-          <|
+         <|
             skyDomeEntity camera toolBox model
                 :: terrainEntities camera toolBox model
-        , Html.div
-            [ Attr.style
-                [ ( "background-image", "url('./images/sun.png')" )
-                , ( "background-size", "cover" )
-                , ( "position", "absolute" )
-                , ( "left", "150px" )
-                , ( "top", "150px" )
-                , ( "width", "100px" )
-                , ( "height", "100px" )
-                , ( "z-index", "1" )
-                ]
-            , Attr.class "sun"
-            ]
-            []
-        ]
+        )
+            :: Sun.sunWithFlares model.projectionMatrix camera.viewMatrix toolBox.sunLightDirection
 
 
 {-| Produce the SkyDome entity. Must be rendered first.
