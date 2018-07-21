@@ -45,7 +45,7 @@ view camera toolBox model =
             skyDomeEntity camera toolBox model
                 :: terrainEntities camera toolBox model
         )
-            :: Sun.sunWithFlares model.projectionMatrix camera.viewMatrix toolBox.sunLightDirection
+            :: Sun.sunWithFlares model.viewport model.projectionMatrix camera.viewMatrix toolBox.sunLightDirection
 
 
 {-| Produce the SkyDome entity. Must be rendered first.
