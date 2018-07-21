@@ -24,22 +24,39 @@ import WebGL.Settings.DepthTest as DepthTest
 -}
 view : Camera.Model -> ToolBox.Model -> Model -> Html Msg
 view camera toolBox model =
-    GL.toHtmlWith
-        [ GL.antialias
-        , GL.depth 1
-        , GL.alpha False
-        , GL.clearColor (135.0 / 255.0) (206.0 / 255.0) (235.0 / 255.0) 1
-        ]
-        [ Attr.height model.viewport.height
-        , Attr.width model.viewport.width
-        , onMouseDown
-        , Attr.style
-            [ ( "cursor", cursorToString model.cursor )
+    Html.div
+        []
+        [ GL.toHtmlWith
+            [ GL.antialias
+            , GL.depth 1
+            , GL.alpha False
+            , GL.clearColor (135.0 / 255.0) (206.0 / 255.0) (235.0 / 255.0) 1
             ]
+            [ Attr.height model.viewport.height
+            , Attr.width model.viewport.width
+            , onMouseDown
+            , Attr.style
+                [ ( "cursor", cursorToString model.cursor )
+                ]
+            ]
+          <|
+            skyDomeEntity camera toolBox model
+                :: terrainEntities camera toolBox model
+        , Html.div
+            [ Attr.style
+                [ ( "background-image", "url('./images/sun.png')" )
+                , ( "background-size", "cover" )
+                , ( "position", "absolute" )
+                , ( "left", "150px" )
+                , ( "top", "150px" )
+                , ( "width", "100px" )
+                , ( "height", "100px" )
+                , ( "z-index", "1" )
+                ]
+            , Attr.class "sun"
+            ]
+            []
         ]
-    <|
-        skyDomeEntity camera toolBox model
-            :: terrainEntities camera toolBox model
 
 
 {-| Produce the SkyDome entity. Must be rendered first.
