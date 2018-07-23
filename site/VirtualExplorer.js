@@ -14028,6 +14028,22 @@ var _psandahl$virtual_explorer$Graphics_Internal_Sun$midViewport = function (vie
 		_elm_lang$core$Basics$toFloat(viewport.width) / 2,
 		_elm_lang$core$Basics$toFloat(viewport.height) / 2);
 };
+var _psandahl$virtual_explorer$Graphics_Internal_Sun$sunScreenPosition = F2(
+	function (viewport, ndc) {
+		return A2(
+			_elm_community$linear_algebra$Math_Vector2$vec2,
+			_elm_lang$core$Basics$toFloat(viewport.width) * ((_elm_community$linear_algebra$Math_Vector3$getX(ndc) * 0.5) + 0.5),
+			_elm_lang$core$Basics$toFloat(viewport.height) * (1.0 - ((_elm_community$linear_algebra$Math_Vector3$getY(ndc) * 0.5) + 0.5)));
+	});
+var _psandahl$virtual_explorer$Graphics_Internal_Sun$inVisibleRange = function (x) {
+	return (_elm_lang$core$Native_Utils.cmp(x, -1.0) > -1) && (_elm_lang$core$Native_Utils.cmp(x, 1.0) < 0);
+};
+var _psandahl$virtual_explorer$Graphics_Internal_Sun$isVisible = function (ndc) {
+	return _psandahl$virtual_explorer$Graphics_Internal_Sun$inVisibleRange(
+		_elm_community$linear_algebra$Math_Vector3$getX(ndc)) && (_psandahl$virtual_explorer$Graphics_Internal_Sun$inVisibleRange(
+		_elm_community$linear_algebra$Math_Vector3$getY(ndc)) && _psandahl$virtual_explorer$Graphics_Internal_Sun$inVisibleRange(
+		_elm_community$linear_algebra$Math_Vector3$getZ(ndc)));
+};
 var _psandahl$virtual_explorer$Graphics_Internal_Sun$renderImage = F3(
 	function (sunPosition, direction, _p0) {
 		var _p1 = _p0;
@@ -14129,8 +14145,7 @@ var _psandahl$virtual_explorer$Graphics_Internal_Sun$renderImage = F3(
 			{ctor: '[]'});
 	});
 var _psandahl$virtual_explorer$Graphics_Internal_Sun$makeSunWithFlares = F2(
-	function (viewport, _p4) {
-		var _p5 = _p4;
+	function (viewport, ndc) {
 		var midPosition = A2(
 			_elm_lang$core$Debug$log,
 			'mid: ',
@@ -14138,7 +14153,7 @@ var _psandahl$virtual_explorer$Graphics_Internal_Sun$makeSunWithFlares = F2(
 		var sunPosition = A2(
 			_elm_lang$core$Debug$log,
 			'sun: ',
-			A2(_elm_community$linear_algebra$Math_Vector2$vec2, _p5._0, _p5._1));
+			A2(_psandahl$virtual_explorer$Graphics_Internal_Sun$sunScreenPosition, viewport, ndc));
 		var sunVector = A2(
 			_elm_lang$core$Debug$log,
 			'sunVec: ',
@@ -14206,28 +14221,12 @@ var _psandahl$virtual_explorer$Graphics_Internal_Sun$makeSunWithFlares = F2(
 				})
 		};
 	});
-var _psandahl$virtual_explorer$Graphics_Internal_Sun$isVisible = F2(
-	function (viewport, _p6) {
-		var _p7 = _p6;
-		var _p9 = _p7._1;
-		var _p8 = _p7._0;
-		return (_elm_lang$core$Native_Utils.cmp(_p8, 0.0) > -1) && ((_elm_lang$core$Native_Utils.cmp(
-			_p8,
-			_elm_lang$core$Basics$toFloat(viewport.width)) < 0) && ((_elm_lang$core$Native_Utils.cmp(_p9, 0) > -1) && (_elm_lang$core$Native_Utils.cmp(
-			_p9,
-			_elm_lang$core$Basics$toFloat(viewport.height)) < 0)));
-	});
 var _psandahl$virtual_explorer$Graphics_Internal_Sun$sunWithFlares = F4(
 	function (viewport, projectionMatrix, viewMatrix, sunLightDirection) {
 		var matrices = A2(_elm_community$linear_algebra$Math_Matrix4$mul, projectionMatrix, viewMatrix);
 		var sunPosition = A2(_elm_community$linear_algebra$Math_Vector3$scale, 1000, sunLightDirection);
 		var ndc = A2(_elm_community$linear_algebra$Math_Matrix4$transform, matrices, sunPosition);
-		var screenCoords = {
-			ctor: '_Tuple2',
-			_0: ((_elm_community$linear_algebra$Math_Vector3$getX(ndc) * 0.5) + 0.5) * _elm_lang$core$Basics$toFloat(viewport.width),
-			_1: _elm_lang$core$Basics$toFloat(viewport.height) - (((_elm_community$linear_algebra$Math_Vector3$getY(ndc) * 0.5) + 0.5) * _elm_lang$core$Basics$toFloat(viewport.height))
-		};
-		return A2(_psandahl$virtual_explorer$Graphics_Internal_Sun$isVisible, viewport, screenCoords) ? A2(_psandahl$virtual_explorer$Graphics_Internal_Sun$makeSunWithFlares, viewport, screenCoords) : {ctor: '[]'};
+		return _psandahl$virtual_explorer$Graphics_Internal_Sun$isVisible(ndc) ? A2(_psandahl$virtual_explorer$Graphics_Internal_Sun$makeSunWithFlares, viewport, ndc) : {ctor: '[]'};
 	});
 
 var _psandahl$virtual_explorer$Graphics_View$cursorToString = function (cursor) {

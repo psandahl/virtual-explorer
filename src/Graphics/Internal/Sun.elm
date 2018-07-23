@@ -12,7 +12,9 @@ import Math.Vector3 as Vec3 exposing (Vec3)
 import Window exposing (Size)
 
 
-{-| Projection matrix, view matrix and the sun's direction.
+{-| Render a sun with flares using projection matrix, view matrix and the sun's direction.
+If the sun not is visible on the screen nothing is rendered. Occlusion is not
+considered.
 -}
 sunWithFlares : Size -> Mat4 -> Mat4 -> Vec3 -> List (Html msg)
 sunWithFlares viewport projectionMatrix viewMatrix sunLightDirection =
@@ -25,28 +27,18 @@ sunWithFlares viewport projectionMatrix viewMatrix sunLightDirection =
 
         ndc =
             Mat4.transform matrices sunPosition
-
-        screenCoords =
-            ( (Vec3.getX ndc * 0.5 + 0.5) * toFloat viewport.width
-            , toFloat viewport.height - (Vec3.getY ndc * 0.5 + 0.5) * toFloat viewport.height
-            )
     in
-    if isVisible viewport screenCoords then
-        makeSunWithFlares viewport screenCoords
+    if isVisible ndc then
+        makeSunWithFlares viewport ndc
     else
         []
 
 
-isVisible : Size -> ( Float, Float ) -> Bool
-isVisible viewport ( screenX, screenY ) =
-    screenX >= 0.0 && screenX < toFloat viewport.width && screenY >= 0 && screenY < toFloat viewport.height
-
-
-makeSunWithFlares : Size -> ( Float, Float ) -> List (Html msg)
-makeSunWithFlares viewport ( screenX, screenY ) =
+makeSunWithFlares : Size -> Vec3 -> List (Html msg)
+makeSunWithFlares viewport ndc =
     let
         sunPosition =
-            Debug.log "sun: " <| Vec2.vec2 screenX screenY
+            Debug.log "sun: " <| sunScreenPosition viewport ndc
 
         midPosition =
             Debug.log "mid: " <| midViewport viewport
@@ -102,6 +94,29 @@ renderImage sunPosition direction ( url, distance, opacity, width, height ) =
         []
 
 
+{-| Check if a ndc position is visible on the screen.
+-}
+isVisible : Vec3 -> Bool
+isVisible ndc =
+    inVisibleRange (Vec3.getX ndc)
+        && inVisibleRange (Vec3.getY ndc)
+        && inVisibleRange (Vec3.getZ ndc)
+
+
+inVisibleRange : Float -> Bool
+inVisibleRange x =
+    x >= -1.0 && x < 1.0
+
+
+{-| Convert the ndc position for the sun to a screen coordinate.
+-}
+sunScreenPosition : Size -> Vec3 -> Vec2
+sunScreenPosition viewport ndc =
+    Vec2.vec2 (toFloat viewport.width * (Vec3.getX ndc * 0.5 + 0.5)) (toFloat viewport.height * (1.0 - (Vec3.getY ndc * 0.5 + 0.5)))
+
+
+{-| Get the mid screen coordinate from the viewport size.
+-}
 midViewport : Size -> Vec2
 midViewport viewport =
     Vec2.vec2 (toFloat viewport.width / 2) (toFloat viewport.height / 2)
