@@ -3,7 +3,6 @@ module Graphics.Internal.Sun exposing (sunWithFlares)
 {-| A simple system to render sun with a simple lens flare effect.
 -}
 
-import Debug
 import Html exposing (Html)
 import Html.Attributes as Attr
 import Math.Matrix4 as Mat4 exposing (Mat4)
@@ -38,22 +37,22 @@ makeSunWithFlares : Size -> Vec3 -> List (Html msg)
 makeSunWithFlares viewport ndc =
     let
         sunPosition =
-            Debug.log "sun: " <| sunScreenPosition viewport ndc
+            sunScreenPosition viewport ndc
 
         midPosition =
-            Debug.log "mid: " <| midViewport viewport
+            midViewport viewport
 
         sunVector =
-            Debug.log "sunVec: " <| Vec2.sub midPosition sunPosition
+            Vec2.sub midPosition sunPosition
 
         endPosition =
-            Debug.log "end: " <| Vec2.add midPosition sunVector
+            Vec2.add midPosition sunVector
 
         distance =
-            Debug.log "dist: " <| abs (Vec2.distance endPosition sunPosition)
+            abs (Vec2.distance endPosition sunPosition)
 
         direction =
-            Debug.log "direction: " <| Vec2.normalize <| Vec2.sub endPosition sunPosition
+            Vec2.normalize <| Vec2.sub endPosition sunPosition
     in
     renderImage sunPosition direction ( "./images/sun.png", 0.0, 1.0, 100, 100 )
         :: List.map (renderImage sunPosition direction)
@@ -73,10 +72,10 @@ renderImage : Vec2 -> Vec2 -> ( String, Float, Float, Int, Int ) -> Html msg
 renderImage sunPosition direction ( url, distance, opacity, width, height ) =
     let
         flareVector =
-            Debug.log "flareVector: " <| Vec2.scale distance direction
+            Vec2.scale distance direction
 
         position =
-            Debug.log "position: " <| Vec2.add sunPosition flareVector
+            Vec2.add sunPosition flareVector
     in
     Html.div
         [ Attr.style

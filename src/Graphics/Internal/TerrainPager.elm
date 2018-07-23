@@ -48,14 +48,17 @@ type alias Tile =
 init : Float -> Camera.Model -> TerrainPager
 init aspectRatio camera =
     let
+        tileCount =
+            Settings.tileCount
+
         tiles =
             List.concat <|
                 List.map
                     (\column ->
-                        List.map (oneTile column) <| List.range -10 9
+                        List.map (oneTile column) <| List.range -tileCount (tileCount - 1)
                     )
                 <|
-                    List.range -10 9
+                    List.range -tileCount (tileCount - 1)
     in
     { tiles = tiles, translationMatrices = pageFromCamera aspectRatio camera tiles }
 
@@ -72,6 +75,9 @@ selectFromCamera aspectRatio camera terrainPager =
 oneTile : Int -> Int -> Tile
 oneTile column row =
     let
+        scale =
+            Settings.scaleFactor
+
         ( width, height ) =
             Terrain.dimensions
 
@@ -95,7 +101,8 @@ oneTile column row =
     , point5 = Vec3.vec3 col1 Settings.maxTerrainAltitude row0
     , point6 = Vec3.vec3 col0 Settings.maxTerrainAltitude row1
     , point7 = Vec3.vec3 col1 Settings.maxTerrainAltitude row1
-    , translationMatrix = Mat4.makeTranslate3 col0 0 row0
+    , translationMatrix =
+        Mat4.mul (Mat4.makeTranslate3 (col0 * scale) 0 (row0 * scale)) (Mat4.makeScale3 scale 0 scale)
     }
 
 

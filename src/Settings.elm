@@ -11,10 +11,26 @@ module Settings
         , octave1MaxWaveLength
         , octave2MaxAltitude
         , octave2MaxWaveLength
+        , scaleFactor
+        , tileCount
         )
 
 {-| Settings constants.
 -}
+
+
+{-| Terrain scale factor (how much each base tile (256 x 256) is scaled).
+-}
+scaleFactor : Float
+scaleFactor =
+    6.0
+
+
+{-| The tile count; how many tiles on each side of the camera.
+-}
+tileCount : Int
+tileCount =
+    3
 
 
 {-| Field of view.
@@ -35,7 +51,7 @@ nearPlane =
 -}
 farPlane : Float
 farPlane =
-    2500
+    256.0 * scaleFactor * toFloat tileCount
 
 
 {-| Max wave length for octave 0.
@@ -91,4 +107,4 @@ maxTerrainAltitude =
 -}
 maxCameraAltitude : Float
 maxCameraAltitude =
-    maxTerrainAltitude + 50
+    maxTerrainAltitude + 100

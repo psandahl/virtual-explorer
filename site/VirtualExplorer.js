@@ -12734,11 +12734,13 @@ var _psandahl$virtual_explorer$Settings$octave1MaxAltitude = 100;
 var _psandahl$virtual_explorer$Settings$octave1MaxWaveLength = 1111;
 var _psandahl$virtual_explorer$Settings$octave0MaxAltitude = 200;
 var _psandahl$virtual_explorer$Settings$maxTerrainAltitude = (_psandahl$virtual_explorer$Settings$octave0MaxAltitude + _psandahl$virtual_explorer$Settings$octave1MaxAltitude) + _psandahl$virtual_explorer$Settings$octave2MaxAltitude;
-var _psandahl$virtual_explorer$Settings$maxCameraAltitude = _psandahl$virtual_explorer$Settings$maxTerrainAltitude + 50;
+var _psandahl$virtual_explorer$Settings$maxCameraAltitude = _psandahl$virtual_explorer$Settings$maxTerrainAltitude + 100;
 var _psandahl$virtual_explorer$Settings$octave0MaxWaveLength = 3000;
-var _psandahl$virtual_explorer$Settings$farPlane = 2500;
 var _psandahl$virtual_explorer$Settings$nearPlane = 0.1;
 var _psandahl$virtual_explorer$Settings$fov = 45;
+var _psandahl$virtual_explorer$Settings$tileCount = 3;
+var _psandahl$virtual_explorer$Settings$scaleFactor = 6.0;
+var _psandahl$virtual_explorer$Settings$farPlane = (256.0 * _psandahl$virtual_explorer$Settings$scaleFactor) * _elm_lang$core$Basics$toFloat(_psandahl$virtual_explorer$Settings$tileCount);
 
 var _psandahl$virtual_explorer$Camera_Update$makeViewDirection = F2(
 	function (heading, pitch) {
@@ -13204,6 +13206,7 @@ var _psandahl$virtual_explorer$Graphics_Internal_TerrainPager$oneTile = F2(
 		var col1 = _elm_lang$core$Basics$toFloat((column + 1) * (width - 1));
 		var row0 = _elm_lang$core$Basics$toFloat(row * (height - 1));
 		var row1 = _elm_lang$core$Basics$toFloat((row + 1) * (height - 1));
+		var scale = _psandahl$virtual_explorer$Settings$scaleFactor;
 		return {
 			point0: A3(_elm_community$linear_algebra$Math_Vector3$vec3, col0, 0 - _psandahl$virtual_explorer$Settings$maxTerrainAltitude, row0),
 			point1: A3(_elm_community$linear_algebra$Math_Vector3$vec3, col1, 0 - _psandahl$virtual_explorer$Settings$maxTerrainAltitude, row0),
@@ -13213,7 +13216,10 @@ var _psandahl$virtual_explorer$Graphics_Internal_TerrainPager$oneTile = F2(
 			point5: A3(_elm_community$linear_algebra$Math_Vector3$vec3, col1, _psandahl$virtual_explorer$Settings$maxTerrainAltitude, row0),
 			point6: A3(_elm_community$linear_algebra$Math_Vector3$vec3, col0, _psandahl$virtual_explorer$Settings$maxTerrainAltitude, row1),
 			point7: A3(_elm_community$linear_algebra$Math_Vector3$vec3, col1, _psandahl$virtual_explorer$Settings$maxTerrainAltitude, row1),
-			translationMatrix: A3(_elm_community$linear_algebra$Math_Matrix4$makeTranslate3, col0, 0, row0)
+			translationMatrix: A2(
+				_elm_community$linear_algebra$Math_Matrix4$mul,
+				A3(_elm_community$linear_algebra$Math_Matrix4$makeTranslate3, col0 * scale, 0, row0 * scale),
+				A3(_elm_community$linear_algebra$Math_Matrix4$makeScale3, scale, 0, scale))
 		};
 	});
 var _psandahl$virtual_explorer$Graphics_Internal_TerrainPager$selectFromCamera = F3(
@@ -13226,6 +13232,7 @@ var _psandahl$virtual_explorer$Graphics_Internal_TerrainPager$selectFromCamera =
 	});
 var _psandahl$virtual_explorer$Graphics_Internal_TerrainPager$init = F2(
 	function (aspectRatio, camera) {
+		var tileCount = _psandahl$virtual_explorer$Settings$tileCount;
 		var tiles = _elm_lang$core$List$concat(
 			A2(
 				_elm_lang$core$List$map,
@@ -13233,9 +13240,9 @@ var _psandahl$virtual_explorer$Graphics_Internal_TerrainPager$init = F2(
 					return A2(
 						_elm_lang$core$List$map,
 						_psandahl$virtual_explorer$Graphics_Internal_TerrainPager$oneTile(column),
-						A2(_elm_lang$core$List$range, -10, 9));
+						A2(_elm_lang$core$List$range, 0 - tileCount, tileCount - 1));
 				},
-				A2(_elm_lang$core$List$range, -10, 9)));
+				A2(_elm_lang$core$List$range, 0 - tileCount, tileCount - 1)));
 		return {
 			tiles: tiles,
 			translationMatrices: A3(_psandahl$virtual_explorer$Graphics_Internal_TerrainPager$pageFromCamera, aspectRatio, camera, tiles)
@@ -14049,14 +14056,8 @@ var _psandahl$virtual_explorer$Graphics_Internal_Sun$renderImage = F3(
 		var _p1 = _p0;
 		var _p3 = _p1._3;
 		var _p2 = _p1._4;
-		var flareVector = A2(
-			_elm_lang$core$Debug$log,
-			'flareVector: ',
-			A2(_elm_community$linear_algebra$Math_Vector2$scale, _p1._1, direction));
-		var position = A2(
-			_elm_lang$core$Debug$log,
-			'position: ',
-			A2(_elm_community$linear_algebra$Math_Vector2$add, sunPosition, flareVector));
+		var flareVector = A2(_elm_community$linear_algebra$Math_Vector2$scale, _p1._1, direction);
+		var position = A2(_elm_community$linear_algebra$Math_Vector2$add, sunPosition, flareVector);
 		return A2(
 			_elm_lang$html$Html$div,
 			{
@@ -14146,32 +14147,14 @@ var _psandahl$virtual_explorer$Graphics_Internal_Sun$renderImage = F3(
 	});
 var _psandahl$virtual_explorer$Graphics_Internal_Sun$makeSunWithFlares = F2(
 	function (viewport, ndc) {
-		var midPosition = A2(
-			_elm_lang$core$Debug$log,
-			'mid: ',
-			_psandahl$virtual_explorer$Graphics_Internal_Sun$midViewport(viewport));
-		var sunPosition = A2(
-			_elm_lang$core$Debug$log,
-			'sun: ',
-			A2(_psandahl$virtual_explorer$Graphics_Internal_Sun$sunScreenPosition, viewport, ndc));
-		var sunVector = A2(
-			_elm_lang$core$Debug$log,
-			'sunVec: ',
-			A2(_elm_community$linear_algebra$Math_Vector2$sub, midPosition, sunPosition));
-		var endPosition = A2(
-			_elm_lang$core$Debug$log,
-			'end: ',
-			A2(_elm_community$linear_algebra$Math_Vector2$add, midPosition, sunVector));
-		var distance = A2(
-			_elm_lang$core$Debug$log,
-			'dist: ',
-			_elm_lang$core$Basics$abs(
-				A2(_elm_community$linear_algebra$Math_Vector2$distance, endPosition, sunPosition)));
-		var direction = A2(
-			_elm_lang$core$Debug$log,
-			'direction: ',
-			_elm_community$linear_algebra$Math_Vector2$normalize(
-				A2(_elm_community$linear_algebra$Math_Vector2$sub, endPosition, sunPosition)));
+		var midPosition = _psandahl$virtual_explorer$Graphics_Internal_Sun$midViewport(viewport);
+		var sunPosition = A2(_psandahl$virtual_explorer$Graphics_Internal_Sun$sunScreenPosition, viewport, ndc);
+		var sunVector = A2(_elm_community$linear_algebra$Math_Vector2$sub, midPosition, sunPosition);
+		var endPosition = A2(_elm_community$linear_algebra$Math_Vector2$add, midPosition, sunVector);
+		var distance = _elm_lang$core$Basics$abs(
+			A2(_elm_community$linear_algebra$Math_Vector2$distance, endPosition, sunPosition));
+		var direction = _elm_community$linear_algebra$Math_Vector2$normalize(
+			A2(_elm_community$linear_algebra$Math_Vector2$sub, endPosition, sunPosition));
 		return {
 			ctor: '::',
 			_0: A3(
