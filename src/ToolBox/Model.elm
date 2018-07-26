@@ -3,7 +3,9 @@ module ToolBox.Model
         ( Checkbox(..)
         , Model
         , Slider(..)
+        , SliderChange(..)
         , State(..)
+        , ChangeFunction
         )
 
 {-| Module implementing the model for the tool box. The tool box have a
@@ -19,6 +21,14 @@ import Math.Vector3 exposing (Vec3)
 type State
     = Closed
     | Open
+
+
+type alias ChangeFunction =
+    Model -> Float -> Model
+
+
+type SliderChange
+    = Change ChangeFunction
 
 
 {-| Slider id.

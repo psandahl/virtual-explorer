@@ -25,16 +25,16 @@ init =
         camera =
             Camera.init defaultViewport
     in
-    ( { graphics = Graphics.init defaultViewport camera
-      , coordinate = Coordinate.init defaultViewport
-      , compass = Compass.init defaultViewport
-      , camera = camera
-      , toolBox = ToolBox.init
-      , ctrlKeyDown = False
-      , trackedMousePosition = Nothing
-      }
-    , Task.perform SetViewport Window.size
-    )
+        ( { graphics = Graphics.init defaultViewport camera
+          , coordinate = Coordinate.init defaultViewport
+          , compass = Compass.init defaultViewport
+          , camera = camera
+          , toolBox = ToolBox.init
+          , ctrlKeyDown = False
+          , trackedMousePosition = Nothing
+          }
+        , Task.perform SetViewport Window.size
+        )
 
 
 {-| The main update function for the complete application.
@@ -87,15 +87,15 @@ update msg model =
                                 camera =
                                     Camera.mouseRotateCamera from to model.camera
                             in
-                            ( { model
-                                | trackedMousePosition = Just to
-                                , camera = camera
-                                , graphics =
-                                    Graphics.pageTiles camera <|
-                                        Graphics.setCursor (cursorType model.ctrlKeyDown <| Just to) model.graphics
-                              }
-                            , Cmd.none
-                            )
+                                ( { model
+                                    | trackedMousePosition = Just to
+                                    , camera = camera
+                                    , graphics =
+                                        Graphics.pageTiles camera <|
+                                            Graphics.setCursor (cursorType model.ctrlKeyDown <| Just to) model.graphics
+                                  }
+                                , Cmd.none
+                                )
 
                         False ->
                             ( { model
@@ -118,15 +118,15 @@ update msg model =
                                 camera =
                                     Camera.mouseRotateCamera from to model.camera
                             in
-                            ( { model
-                                | trackedMousePosition = Nothing
-                                , camera = camera
-                                , graphics =
-                                    Graphics.pageTiles camera <|
-                                        Graphics.setCursor (cursorType model.ctrlKeyDown Nothing) model.graphics
-                              }
-                            , Cmd.none
-                            )
+                                ( { model
+                                    | trackedMousePosition = Nothing
+                                    , camera = camera
+                                    , graphics =
+                                        Graphics.pageTiles camera <|
+                                            Graphics.setCursor (cursorType model.ctrlKeyDown Nothing) model.graphics
+                                  }
+                                , Cmd.none
+                                )
 
                         False ->
                             ( { model
@@ -148,6 +148,9 @@ update msg model =
 
         ToolBoxSliderChange slider value ->
             ( { model | toolBox = ToolBox.setSliderValue slider value model.toolBox }, Cmd.none )
+
+        ToolBoxSliderChange2 sliderChange value ->
+            ( { model | toolBox = ToolBox.setSliderValue2 sliderChange value model.toolBox }, Cmd.none )
 
         ToolBoxCheckboxToggle checkbox ->
             ( { model | toolBox = ToolBox.toggleCheckbox checkbox model.toolBox }, Cmd.none )
@@ -172,13 +175,13 @@ subscriptions model =
             , Mouse.ups GraphicsViewMouseReleased
             ]
     in
-    Sub.batch <|
-        case model.trackedMousePosition of
-            Just _ ->
-                baseSubscriptions ++ mouseSubscriptions
+        Sub.batch <|
+            case model.trackedMousePosition of
+                Just _ ->
+                    baseSubscriptions ++ mouseSubscriptions
 
-            Nothing ->
-                baseSubscriptions
+                Nothing ->
+                    baseSubscriptions
 
 
 keyDownHandler : KeyCode -> Msg
@@ -225,4 +228,4 @@ debugLog str model =
         dgb =
             Debug.log str
     in
-    ( model, Cmd.none )
+        ( model, Cmd.none )

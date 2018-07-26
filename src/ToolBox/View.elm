@@ -11,7 +11,15 @@ import Html.Events as Events
 import Json.Decode as Decode
 import Math.Vector3 as Vec3 exposing (Vec3)
 import Settings
-import ToolBox.Model exposing (Checkbox(..), Model, Slider(..), State(..))
+import ToolBox.Model
+    exposing
+        ( Checkbox(..)
+        , Model
+        , Slider(..)
+        , SliderChange(..)
+        , State(..)
+        , ChangeFunction
+        )
 
 
 {-| The view function. Depending on state either the open button or the tool
@@ -125,10 +133,30 @@ pane model =
               , model.octave2Altitude
               )
             ]
-        , colorSliderGroup "Color0 r/g/b" ( Color0R, Color0G, Color0B ) model.color0
-        , colorSliderGroup "Color1 r/g/b" ( Color1R, Color1G, Color1B ) model.color1
-        , colorSliderGroup "Color2 r/g/b" ( Color2R, Color2G, Color2B ) model.color2
-        , colorSliderGroup "Color3 r/g/b" ( Color3R, Color3G, Color3B ) model.color3
+        , colorSliderGroup2 "Color0 r/g/b"
+            ( (\model value -> { model | color0 = Vec3.setX (value / 255.0) model.color0 })
+            , (\model value -> { model | color0 = Vec3.setY (value / 255.0) model.color0 })
+            , (\model value -> { model | color0 = Vec3.setZ (value / 255.0) model.color0 })
+            )
+            model.color0
+        , colorSliderGroup2 "Color1 r/g/b"
+            ( (\model value -> { model | color1 = Vec3.setX (value / 255.0) model.color1 })
+            , (\model value -> { model | color1 = Vec3.setY (value / 255.0) model.color1 })
+            , (\model value -> { model | color1 = Vec3.setZ (value / 255.0) model.color1 })
+            )
+            model.color1
+        , colorSliderGroup2 "Color2 r/g/b"
+            ( (\model value -> { model | color2 = Vec3.setX (value / 255.0) model.color2 })
+            , (\model value -> { model | color2 = Vec3.setY (value / 255.0) model.color2 })
+            , (\model value -> { model | color2 = Vec3.setZ (value / 255.0) model.color2 })
+            )
+            model.color2
+        , colorSliderGroup2 "Color3 r/g/b"
+            ( (\model value -> { model | color3 = Vec3.setX (value / 255.0) model.color3 })
+            , (\model value -> { model | color3 = Vec3.setY (value / 255.0) model.color3 })
+            , (\model value -> { model | color3 = Vec3.setZ (value / 255.0) model.color3 })
+            )
+            model.color3
         , fogControlGroup model
         ]
 
@@ -171,6 +199,66 @@ octaveSliderGroup caption sliders =
                 sliders
 
 
+colorSliderGroup2 : String -> ( ChangeFunction, ChangeFunction, ChangeFunction ) -> Vec3 -> Html Msg
+colorSliderGroup2 caption ( g0, g1, g2 ) color =
+    let
+        r =
+            round <| Vec3.getX color * 255
+
+        g =
+            round <| Vec3.getY color * 255
+
+        b =
+            round <| Vec3.getZ color * 255
+    in
+        Html.div
+            [ Attr.style
+                [ ( "width", "95%" )
+                , ( "margin-top", "5px" )
+                , ( "margin-left", "1%" )
+                , ( "border", "2px solid gray" )
+                , ( "border-radius", "5px" )
+                , ( "line-height", "80%" )
+                ]
+            ]
+        <|
+            Html.span
+                [ Attr.style
+                    [ ( "font-size", "12px" )
+                    , ( "font-family", "sans-serif" )
+                    , ( "color", "white" )
+                    , ( "margin-left", "2.5%" )
+                    ]
+                ]
+                [ Html.text caption
+                , Html.div
+                    [ Attr.style
+                        [ ( "width", "40%" )
+                        , ( "height", "15px" )
+                        , ( "float", "right" )
+                        , ( "margin-right", "1%" )
+                        , ( "border", "1px solid black" )
+                        , ( "background", rgb r g b )
+                        ]
+                    ]
+                    []
+                ]
+                :: List.map
+                    (\( changeFunction, min, max, value ) ->
+                        Html.input
+                            [ Attr.type_ "range"
+                            , Attr.min <| toString min
+                            , Attr.max <| toString max
+                            , Attr.value <| toString value
+                            , Attr.step "1.0"
+                            , Attr.class "slider"
+                            , onSliderChange2 <| Change changeFunction
+                            ]
+                            []
+                    )
+                    [ ( g0, 0, 255, r ), ( g1, 0, 255, g ), ( g2, 0, 255, b ) ]
+
+
 colorSliderGroup : String -> ( Slider, Slider, Slider ) -> Vec3 -> Html Msg
 colorSliderGroup caption ( s0, s1, s2 ) color =
     let
@@ -183,52 +271,52 @@ colorSliderGroup caption ( s0, s1, s2 ) color =
         b =
             round <| Vec3.getZ color * 255
     in
-    Html.div
-        [ Attr.style
-            [ ( "width", "95%" )
-            , ( "margin-top", "5px" )
-            , ( "margin-left", "1%" )
-            , ( "border", "2px solid gray" )
-            , ( "border-radius", "5px" )
-            , ( "line-height", "80%" )
-            ]
-        ]
-    <|
-        Html.span
+        Html.div
             [ Attr.style
-                [ ( "font-size", "12px" )
-                , ( "font-family", "sans-serif" )
-                , ( "color", "white" )
-                , ( "margin-left", "2.5%" )
+                [ ( "width", "95%" )
+                , ( "margin-top", "5px" )
+                , ( "margin-left", "1%" )
+                , ( "border", "2px solid gray" )
+                , ( "border-radius", "5px" )
+                , ( "line-height", "80%" )
                 ]
             ]
-            [ Html.text caption
-            , Html.div
+        <|
+            Html.span
                 [ Attr.style
-                    [ ( "width", "40%" )
-                    , ( "height", "15px" )
-                    , ( "float", "right" )
-                    , ( "margin-right", "1%" )
-                    , ( "border", "1px solid black" )
-                    , ( "background", rgb r g b )
+                    [ ( "font-size", "12px" )
+                    , ( "font-family", "sans-serif" )
+                    , ( "color", "white" )
+                    , ( "margin-left", "2.5%" )
                     ]
                 ]
-                []
-            ]
-            :: List.map
-                (\( slider, min, max, value ) ->
-                    Html.input
-                        [ Attr.type_ "range"
-                        , Attr.min <| toString min
-                        , Attr.max <| toString max
-                        , Attr.value <| toString value
-                        , Attr.step "1.0"
-                        , Attr.class "slider"
-                        , onSliderChange slider
+                [ Html.text caption
+                , Html.div
+                    [ Attr.style
+                        [ ( "width", "40%" )
+                        , ( "height", "15px" )
+                        , ( "float", "right" )
+                        , ( "margin-right", "1%" )
+                        , ( "border", "1px solid black" )
+                        , ( "background", rgb r g b )
                         ]
-                        []
-                )
-                [ ( s0, 0, 255, r ), ( s1, 0, 255, g ), ( s2, 0, 255, b ) ]
+                    ]
+                    []
+                ]
+                :: List.map
+                    (\( slider, min, max, value ) ->
+                        Html.input
+                            [ Attr.type_ "range"
+                            , Attr.min <| toString min
+                            , Attr.max <| toString max
+                            , Attr.value <| toString value
+                            , Attr.step "1.0"
+                            , Attr.class "slider"
+                            , onSliderChange slider
+                            ]
+                            []
+                    )
+                    [ ( s0, 0, 255, r ), ( s1, 0, 255, g ), ( s2, 0, 255, b ) ]
 
 
 fogControlGroup : Model -> Html Msg
@@ -290,6 +378,19 @@ rgb r g b =
         ++ ","
         ++ toString b
         ++ ")"
+
+
+onSliderChange2 : SliderChange -> Attribute Msg
+onSliderChange2 sliderChange =
+    Events.on "input"
+        (Decode.map
+            (\x ->
+                String.toFloat x
+                    |> Result.withDefault 0.0
+                    |> ToolBoxSliderChange2 sliderChange
+            )
+            Events.targetValue
+        )
 
 
 onSliderChange : Slider -> Attribute Msg
