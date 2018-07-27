@@ -8,7 +8,7 @@ import Compass.Model as Compass
 import Coordinate.Model as Coordinate
 import Graphics.Model as Graphics
 import Mouse exposing (Position)
-import ToolBox.Model as ToolBox exposing (Checkbox, Slider, SliderChange)
+import ToolBox.Model as ToolBox exposing (Checkbox, SliderChange)
 import Window exposing (Size)
 
 
@@ -36,7 +36,6 @@ type Msg
     | GraphicsViewMouseReleased Position
     | OpenToolBox
     | CloseToolBox
-    | ToolBoxSliderChange Slider Float
-    | ToolBoxSliderChange2 SliderChange Float
+    | ToolBoxSliderChange SliderChange Float
     | ToolBoxCheckboxToggle Checkbox
     | Nop

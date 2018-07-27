@@ -3,7 +3,6 @@ module ToolBox.Model
         ( ChangeFunction
         , Checkbox(..)
         , Model
-        , Slider(..)
         , SliderChange(..)
         , State(..)
         )
@@ -29,12 +28,6 @@ type alias ChangeFunction =
 
 type SliderChange
     = Change ChangeFunction
-
-
-{-| Slider id.
--}
-type Slider
-    = FogPower
 
 
 {-| Checkbox id.

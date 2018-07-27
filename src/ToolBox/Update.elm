@@ -4,7 +4,6 @@ module ToolBox.Update
         , init
         , openToolBox
         , setSliderValue
-        , setSliderValue2
         , toggleCheckbox
         )
 
@@ -13,7 +12,7 @@ module ToolBox.Update
 
 import Math.Vector3 as Vec3
 import Settings
-import ToolBox.Model exposing (Checkbox(..), Model, Slider(..), SliderChange(..), State(..))
+import ToolBox.Model exposing (Checkbox(..), Model, SliderChange(..), State(..))
 
 
 {-| Initialize the ToolBox.
@@ -54,20 +53,13 @@ closeToolBox model =
     { model | state = Closed }
 
 
-setSliderValue2 : SliderChange -> Float -> Model -> Model
-setSliderValue2 change value model =
+{-| Set the value for the given slider.
+-}
+setSliderValue : SliderChange -> Float -> Model -> Model
+setSliderValue change value model =
     case change of
         Change g ->
             g model value
-
-
-{-| Set the value for the given slider.
--}
-setSliderValue : Slider -> Float -> Model -> Model
-setSliderValue slider value model =
-    case slider of
-        FogPower ->
-            { model | fogPower = value }
 
 
 {-| Toggle the value for the given checkbox.

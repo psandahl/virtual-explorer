@@ -13305,7 +13305,6 @@ var _psandahl$virtual_explorer$ToolBox_Model$Closed = {ctor: 'Closed'};
 var _psandahl$virtual_explorer$ToolBox_Model$Change = function (a) {
 	return {ctor: 'Change', _0: a};
 };
-var _psandahl$virtual_explorer$ToolBox_Model$FogPower = {ctor: 'FogPower'};
 var _psandahl$virtual_explorer$ToolBox_Model$UseFog = {ctor: 'UseFog'};
 
 var _psandahl$virtual_explorer$Composer_Model$Model = F7(
@@ -13316,10 +13315,6 @@ var _psandahl$virtual_explorer$Composer_Model$Nop = {ctor: 'Nop'};
 var _psandahl$virtual_explorer$Composer_Model$ToolBoxCheckboxToggle = function (a) {
 	return {ctor: 'ToolBoxCheckboxToggle', _0: a};
 };
-var _psandahl$virtual_explorer$Composer_Model$ToolBoxSliderChange2 = F2(
-	function (a, b) {
-		return {ctor: 'ToolBoxSliderChange2', _0: a, _1: b};
-	});
 var _psandahl$virtual_explorer$Composer_Model$ToolBoxSliderChange = F2(
 	function (a, b) {
 		return {ctor: 'ToolBoxSliderChange', _0: a, _1: b};
@@ -13503,16 +13498,9 @@ var _psandahl$virtual_explorer$ToolBox_Update$toggleCheckbox = F2(
 			{useFog: !model.useFog});
 	});
 var _psandahl$virtual_explorer$ToolBox_Update$setSliderValue = F3(
-	function (slider, value, model) {
-		var _p1 = slider;
-		return _elm_lang$core$Native_Utils.update(
-			model,
-			{fogPower: value});
-	});
-var _psandahl$virtual_explorer$ToolBox_Update$setSliderValue2 = F3(
 	function (change, value, model) {
-		var _p2 = change;
-		return A2(_p2._0, model, value);
+		var _p1 = change;
+		return A2(_p1._0, model, value);
 	});
 var _psandahl$virtual_explorer$ToolBox_Update$closeToolBox = function (model) {
 	return _elm_lang$core$Native_Utils.update(
@@ -13791,16 +13779,6 @@ var _psandahl$virtual_explorer$Composer_Update$update = F2(
 						model,
 						{
 							toolBox: A3(_psandahl$virtual_explorer$ToolBox_Update$setSliderValue, _p2._0, _p2._1, model.toolBox)
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'ToolBoxSliderChange2':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							toolBox: A3(_psandahl$virtual_explorer$ToolBox_Update$setSliderValue2, _p2._0, _p2._1, model.toolBox)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -14202,7 +14180,7 @@ var _psandahl$virtual_explorer$Graphics_View$view = F3(
 			});
 	});
 
-var _psandahl$virtual_explorer$ToolBox_View$onSliderChange = function (slider) {
+var _psandahl$virtual_explorer$ToolBox_View$onSliderChange = function (sliderChange) {
 	return A2(
 		_elm_lang$html$Html_Events$on,
 		'input',
@@ -14211,23 +14189,6 @@ var _psandahl$virtual_explorer$ToolBox_View$onSliderChange = function (slider) {
 			function (x) {
 				return A2(
 					_psandahl$virtual_explorer$Composer_Model$ToolBoxSliderChange,
-					slider,
-					A2(
-						_elm_lang$core$Result$withDefault,
-						0.0,
-						_elm_lang$core$String$toFloat(x)));
-			},
-			_elm_lang$html$Html_Events$targetValue));
-};
-var _psandahl$virtual_explorer$ToolBox_View$onSliderChange2 = function (sliderChange) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'input',
-		A2(
-			_elm_lang$core$Json_Decode$map,
-			function (x) {
-				return A2(
-					_psandahl$virtual_explorer$Composer_Model$ToolBoxSliderChange2,
 					sliderChange,
 					A2(
 						_elm_lang$core$Result$withDefault,
@@ -14403,7 +14364,14 @@ var _psandahl$virtual_explorer$ToolBox_View$fogControlGroup = function (model) {
 														_0: _elm_lang$html$Html_Attributes$class('slider'),
 														_1: {
 															ctor: '::',
-															_0: _psandahl$virtual_explorer$ToolBox_View$onSliderChange(_psandahl$virtual_explorer$ToolBox_Model$FogPower),
+															_0: _psandahl$virtual_explorer$ToolBox_View$onSliderChange(
+																_psandahl$virtual_explorer$ToolBox_Model$Change(
+																	F2(
+																		function (model, value) {
+																			return _elm_lang$core$Native_Utils.update(
+																				model,
+																				{fogPower: value});
+																		}))),
 															_1: {ctor: '[]'}
 														}
 													}
@@ -14561,7 +14529,8 @@ var _psandahl$virtual_explorer$ToolBox_View$colorSliderGroup = F3(
 													_0: _elm_lang$html$Html_Attributes$class('slider'),
 													_1: {
 														ctor: '::',
-														_0: _psandahl$virtual_explorer$ToolBox_View$onSliderChange(_p3._0),
+														_0: _psandahl$virtual_explorer$ToolBox_View$onSliderChange(
+															_psandahl$virtual_explorer$ToolBox_Model$Change(_p3._0)),
 														_1: {ctor: '[]'}
 													}
 												}
@@ -14587,177 +14556,9 @@ var _psandahl$virtual_explorer$ToolBox_View$colorSliderGroup = F3(
 					})
 			});
 	});
-var _psandahl$virtual_explorer$ToolBox_View$colorSliderGroup2 = F3(
-	function (caption, _p4, color) {
+var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup = F3(
+	function (caption, _p4, values) {
 		var _p5 = _p4;
-		var b = _elm_lang$core$Basics$round(
-			_elm_community$linear_algebra$Math_Vector3$getZ(color) * 255);
-		var g = _elm_lang$core$Basics$round(
-			_elm_community$linear_algebra$Math_Vector3$getY(color) * 255);
-		var r = _elm_lang$core$Basics$round(
-			_elm_community$linear_algebra$Math_Vector3$getX(color) * 255);
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$style(
-					{
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'width', _1: '95%'},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '5px'},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '1%'},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'border', _1: '2px solid gray'},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '5px'},
-										_1: {
-											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'line-height', _1: '80%'},
-											_1: {ctor: '[]'}
-										}
-									}
-								}
-							}
-						}
-					}),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$span,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$style(
-							{
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'font-size', _1: '12px'},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'font-family', _1: 'sans-serif'},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
-										_1: {
-											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '2.5%'},
-											_1: {ctor: '[]'}
-										}
-									}
-								}
-							}),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(caption),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$style(
-										{
-											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'width', _1: '40%'},
-											_1: {
-												ctor: '::',
-												_0: {ctor: '_Tuple2', _0: 'height', _1: '15px'},
-												_1: {
-													ctor: '::',
-													_0: {ctor: '_Tuple2', _0: 'float', _1: 'right'},
-													_1: {
-														ctor: '::',
-														_0: {ctor: '_Tuple2', _0: 'margin-right', _1: '1%'},
-														_1: {
-															ctor: '::',
-															_0: {ctor: '_Tuple2', _0: 'border', _1: '1px solid black'},
-															_1: {
-																ctor: '::',
-																_0: {
-																	ctor: '_Tuple2',
-																	_0: 'background',
-																	_1: A3(_psandahl$virtual_explorer$ToolBox_View$rgb, r, g, b)
-																},
-																_1: {ctor: '[]'}
-															}
-														}
-													}
-												}
-											}
-										}),
-									_1: {ctor: '[]'}
-								},
-								{ctor: '[]'}),
-							_1: {ctor: '[]'}
-						}
-					}),
-				_1: A2(
-					_elm_lang$core$List$map,
-					function (_p6) {
-						var _p7 = _p6;
-						return A2(
-							_elm_lang$html$Html$input,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$type_('range'),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$min(
-										_elm_lang$core$Basics$toString(_p7._1)),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$max(
-											_elm_lang$core$Basics$toString(_p7._2)),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$value(
-												_elm_lang$core$Basics$toString(_p7._3)),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$step('1.0'),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('slider'),
-													_1: {
-														ctor: '::',
-														_0: _psandahl$virtual_explorer$ToolBox_View$onSliderChange2(
-															_psandahl$virtual_explorer$ToolBox_Model$Change(_p7._0)),
-														_1: {ctor: '[]'}
-													}
-												}
-											}
-										}
-									}
-								}
-							},
-							{ctor: '[]'});
-					},
-					{
-						ctor: '::',
-						_0: {ctor: '_Tuple4', _0: _p5._0, _1: 0, _2: 255, _3: r},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple4', _0: _p5._1, _1: 0, _2: 255, _3: g},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple4', _0: _p5._2, _1: 0, _2: 255, _3: b},
-								_1: {ctor: '[]'}
-							}
-						}
-					})
-			});
-	});
-var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup2 = F3(
-	function (caption, _p8, values) {
-		var _p9 = _p8;
 		var altitude = _elm_community$linear_algebra$Math_Vector3$getZ(values);
 		var vertical = _elm_community$linear_algebra$Math_Vector3$getY(values);
 		var horizontal = _elm_community$linear_algebra$Math_Vector3$getX(values);
@@ -14826,8 +14627,8 @@ var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup2 = F3(
 					}),
 				_1: A2(
 					_elm_lang$core$List$map,
-					function (_p10) {
-						var _p11 = _p10;
+					function (_p6) {
+						var _p7 = _p6;
 						return A2(
 							_elm_lang$html$Html$input,
 							{
@@ -14836,15 +14637,15 @@ var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup2 = F3(
 								_1: {
 									ctor: '::',
 									_0: _elm_lang$html$Html_Attributes$min(
-										_elm_lang$core$Basics$toString(_p11._1)),
+										_elm_lang$core$Basics$toString(_p7._1)),
 									_1: {
 										ctor: '::',
 										_0: _elm_lang$html$Html_Attributes$max(
-											_elm_lang$core$Basics$toString(_p11._2)),
+											_elm_lang$core$Basics$toString(_p7._2)),
 										_1: {
 											ctor: '::',
 											_0: _elm_lang$html$Html_Attributes$value(
-												_elm_lang$core$Basics$toString(_p11._3)),
+												_elm_lang$core$Basics$toString(_p7._3)),
 											_1: {
 												ctor: '::',
 												_0: _elm_lang$html$Html_Attributes$step('1.0'),
@@ -14853,8 +14654,8 @@ var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup2 = F3(
 													_0: _elm_lang$html$Html_Attributes$class('slider'),
 													_1: {
 														ctor: '::',
-														_0: _psandahl$virtual_explorer$ToolBox_View$onSliderChange2(
-															_psandahl$virtual_explorer$ToolBox_Model$Change(_p11._0)),
+														_0: _psandahl$virtual_explorer$ToolBox_View$onSliderChange(
+															_psandahl$virtual_explorer$ToolBox_Model$Change(_p7._0)),
 														_1: {ctor: '[]'}
 													}
 												}
@@ -14867,125 +14668,17 @@ var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup2 = F3(
 					},
 					{
 						ctor: '::',
-						_0: {ctor: '_Tuple4', _0: _p9._0._0, _1: _p9._0._1, _2: _p9._0._2, _3: horizontal},
+						_0: {ctor: '_Tuple4', _0: _p5._0._0, _1: _p5._0._1, _2: _p5._0._2, _3: horizontal},
 						_1: {
 							ctor: '::',
-							_0: {ctor: '_Tuple4', _0: _p9._1._0, _1: _p9._1._1, _2: _p9._1._2, _3: vertical},
+							_0: {ctor: '_Tuple4', _0: _p5._1._0, _1: _p5._1._1, _2: _p5._1._2, _3: vertical},
 							_1: {
 								ctor: '::',
-								_0: {ctor: '_Tuple4', _0: _p9._2._0, _1: _p9._2._1, _2: _p9._2._2, _3: altitude},
+								_0: {ctor: '_Tuple4', _0: _p5._2._0, _1: _p5._2._1, _2: _p5._2._2, _3: altitude},
 								_1: {ctor: '[]'}
 							}
 						}
 					})
-			});
-	});
-var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup = F2(
-	function (caption, sliders) {
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$style(
-					{
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'width', _1: '95%'},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '5px'},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '1%'},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'border', _1: '2px solid gray'},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '5px'},
-										_1: {
-											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'line-height', _1: '80%'},
-											_1: {ctor: '[]'}
-										}
-									}
-								}
-							}
-						}
-					}),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$span,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$style(
-							{
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'font-size', _1: '12px'},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'font-family', _1: 'sans-serif'},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
-										_1: {
-											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '2.5%'},
-											_1: {ctor: '[]'}
-										}
-									}
-								}
-							}),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(caption),
-						_1: {ctor: '[]'}
-					}),
-				_1: A2(
-					_elm_lang$core$List$map,
-					function (_p12) {
-						var _p13 = _p12;
-						return A2(
-							_elm_lang$html$Html$input,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$type_('range'),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$min(
-										_elm_lang$core$Basics$toString(_p13._1)),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$max(
-											_elm_lang$core$Basics$toString(_p13._2)),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$value(
-												_elm_lang$core$Basics$toString(_p13._3)),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$step('1.0'),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('slider'),
-													_1: {
-														ctor: '::',
-														_0: _psandahl$virtual_explorer$ToolBox_View$onSliderChange(_p13._0),
-														_1: {ctor: '[]'}
-													}
-												}
-											}
-										}
-									}
-								}
-							},
-							{ctor: '[]'});
-					},
-					sliders)
 			});
 	});
 var _psandahl$virtual_explorer$ToolBox_View$pane = function (model) {
@@ -15096,7 +14789,7 @@ var _psandahl$virtual_explorer$ToolBox_View$pane = function (model) {
 				_1: {
 					ctor: '::',
 					_0: A3(
-						_psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup2,
+						_psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup,
 						'Octave0 horizontal/vertical/altitude',
 						{
 							ctor: '_Tuple3',
@@ -15144,7 +14837,7 @@ var _psandahl$virtual_explorer$ToolBox_View$pane = function (model) {
 					_1: {
 						ctor: '::',
 						_0: A3(
-							_psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup2,
+							_psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup,
 							'Octave0 horizontal/vertical/altitude',
 							{
 								ctor: '_Tuple3',
@@ -15192,7 +14885,7 @@ var _psandahl$virtual_explorer$ToolBox_View$pane = function (model) {
 						_1: {
 							ctor: '::',
 							_0: A3(
-								_psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup2,
+								_psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup,
 								'Octave0 horizontal/vertical/altitude',
 								{
 									ctor: '_Tuple3',
@@ -15240,7 +14933,7 @@ var _psandahl$virtual_explorer$ToolBox_View$pane = function (model) {
 							_1: {
 								ctor: '::',
 								_0: A3(
-									_psandahl$virtual_explorer$ToolBox_View$colorSliderGroup2,
+									_psandahl$virtual_explorer$ToolBox_View$colorSliderGroup,
 									'Color0 r/g/b',
 									{
 										ctor: '_Tuple3',
@@ -15273,7 +14966,7 @@ var _psandahl$virtual_explorer$ToolBox_View$pane = function (model) {
 								_1: {
 									ctor: '::',
 									_0: A3(
-										_psandahl$virtual_explorer$ToolBox_View$colorSliderGroup2,
+										_psandahl$virtual_explorer$ToolBox_View$colorSliderGroup,
 										'Color1 r/g/b',
 										{
 											ctor: '_Tuple3',
@@ -15306,7 +14999,7 @@ var _psandahl$virtual_explorer$ToolBox_View$pane = function (model) {
 									_1: {
 										ctor: '::',
 										_0: A3(
-											_psandahl$virtual_explorer$ToolBox_View$colorSliderGroup2,
+											_psandahl$virtual_explorer$ToolBox_View$colorSliderGroup,
 											'Color2 r/g/b',
 											{
 												ctor: '_Tuple3',
@@ -15339,7 +15032,7 @@ var _psandahl$virtual_explorer$ToolBox_View$pane = function (model) {
 										_1: {
 											ctor: '::',
 											_0: A3(
-												_psandahl$virtual_explorer$ToolBox_View$colorSliderGroup2,
+												_psandahl$virtual_explorer$ToolBox_View$colorSliderGroup,
 												'Color3 r/g/b',
 												{
 													ctor: '_Tuple3',
