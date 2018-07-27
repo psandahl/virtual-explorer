@@ -199,6 +199,25 @@ octaveSliderGroup caption sliders =
                 sliders
 
 
+octaveSliderGroup2 :
+    String
+    -> ( ( ChangeFunction, Float, Float ), ( ChangeFunction, Float, Float ), ( ChangeFunction, Float, Float ) )
+    -> Vec3
+    -> Html Msg
+octaveSliderGroup2 caption ( s0, s1, s2 ) values =
+    let
+        horizontal =
+            Vec3.getX values
+
+        vertical =
+            Vec3.getY values
+
+        altitude =
+            Vec3.getZ values
+    in
+        []
+
+
 colorSliderGroup2 : String -> ( ChangeFunction, ChangeFunction, ChangeFunction ) -> Vec3 -> Html Msg
 colorSliderGroup2 caption ( g0, g1, g2 ) color =
     let
