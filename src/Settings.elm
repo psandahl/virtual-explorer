@@ -13,13 +13,14 @@ module Settings
         , octave2MaxWaveLength
         , scaleFactor
         , tileCount
+        , verticeCount
         )
 
 {-| Settings constants.
 -}
 
 
-{-| Terrain scale factor (how much each base tile (256 x 256) is scaled).
+{-| Terrain scale factor (how much each base tile (verticeCount x verticeCount) is scaled).
 -}
 scaleFactor : Float
 scaleFactor =
@@ -31,6 +32,13 @@ scaleFactor =
 tileCount : Int
 tileCount =
     3
+
+
+{-| The number of vertices per side for a tile.
+-}
+verticeCount : Int
+verticeCount =
+    256
 
 
 {-| Field of view.
@@ -51,7 +59,7 @@ nearPlane =
 -}
 farPlane : Float
 farPlane =
-    256.0 * scaleFactor * toFloat tileCount
+    toFloat verticeCount * scaleFactor * toFloat tileCount
 
 
 {-| Max wave length for octave 0.

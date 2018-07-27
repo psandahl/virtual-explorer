@@ -24,6 +24,7 @@ recursion.
 import Math.Matrix4 exposing (Mat4)
 import Math.Vector2 exposing (Vec2)
 import Math.Vector3 as Vec3 exposing (Vec3)
+import Settings
 import WebGL as GL exposing (Mesh, Shader)
 
 
@@ -52,7 +53,7 @@ makeMesh =
 -}
 dimensions : ( Int, Int )
 dimensions =
-    ( 256, 256 )
+    ( Settings.verticeCount, Settings.verticeCount )
 
 
 {-| Make vertices for the given dimensions.

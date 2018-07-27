@@ -12738,9 +12738,10 @@ var _psandahl$virtual_explorer$Settings$maxCameraAltitude = _psandahl$virtual_ex
 var _psandahl$virtual_explorer$Settings$octave0MaxWaveLength = 3000;
 var _psandahl$virtual_explorer$Settings$nearPlane = 0.1;
 var _psandahl$virtual_explorer$Settings$fov = 45;
+var _psandahl$virtual_explorer$Settings$verticeCount = 256;
 var _psandahl$virtual_explorer$Settings$tileCount = 3;
 var _psandahl$virtual_explorer$Settings$scaleFactor = 6.0;
-var _psandahl$virtual_explorer$Settings$farPlane = (256.0 * _psandahl$virtual_explorer$Settings$scaleFactor) * _elm_lang$core$Basics$toFloat(_psandahl$virtual_explorer$Settings$tileCount);
+var _psandahl$virtual_explorer$Settings$farPlane = (_elm_lang$core$Basics$toFloat(_psandahl$virtual_explorer$Settings$verticeCount) * _psandahl$virtual_explorer$Settings$scaleFactor) * _elm_lang$core$Basics$toFloat(_psandahl$virtual_explorer$Settings$tileCount);
 
 var _psandahl$virtual_explorer$Camera_Update$makeViewDirection = F2(
 	function (heading, pitch) {
@@ -13161,7 +13162,7 @@ var _psandahl$virtual_explorer$Graphics_Internal_Terrain$makeVertices = function
 		},
 		A2(_elm_lang$core$List$range, 0, _p4._1 - 1));
 };
-var _psandahl$virtual_explorer$Graphics_Internal_Terrain$dimensions = {ctor: '_Tuple2', _0: 256, _1: 256};
+var _psandahl$virtual_explorer$Graphics_Internal_Terrain$dimensions = {ctor: '_Tuple2', _0: _psandahl$virtual_explorer$Settings$verticeCount, _1: _psandahl$virtual_explorer$Settings$verticeCount};
 var _psandahl$virtual_explorer$Graphics_Internal_Terrain$makeMesh = function () {
 	var indices = _psandahl$virtual_explorer$Graphics_Internal_Terrain$makeIndices(_psandahl$virtual_explorer$Graphics_Internal_Terrain$dimensions);
 	var vertices = _psandahl$virtual_explorer$Graphics_Internal_Terrain$makeVertices(_psandahl$virtual_explorer$Graphics_Internal_Terrain$dimensions);
