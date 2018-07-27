@@ -125,15 +125,9 @@ vertexShader :
             , uViewMatrix : Mat4
             , uProjectionMatrix : Mat4
             , uWorldOffset : Vec2
-            , uOctave0HorizontalWaveLength : Float
-            , uOctave0VerticalWaveLength : Float
-            , uOctave0Altitude : Float
-            , uOctave1HorizontalWaveLength : Float
-            , uOctave1VerticalWaveLength : Float
-            , uOctave1Altitude : Float
-            , uOctave2HorizontalWaveLength : Float
-            , uOctave2VerticalWaveLength : Float
-            , uOctave2Altitude : Float
+            , uOctave0 : Vec3
+            , uOctave1 : Vec3
+            , uOctave2 : Vec3
             , uMaxTerrainAltitude : Float
             , uColor0 : Vec3
             , uColor1 : Vec3
@@ -165,17 +159,9 @@ uniform mat4 uProjectionMatrix;
 // Terrain shaping uniforms.
 uniform vec2 uWorldOffset;
 
-uniform float uOctave0HorizontalWaveLength;
-uniform float uOctave0VerticalWaveLength;
-uniform float uOctave0Altitude;
-
-uniform float uOctave1HorizontalWaveLength;
-uniform float uOctave1VerticalWaveLength;
-uniform float uOctave1Altitude;
-
-uniform float uOctave2HorizontalWaveLength;
-uniform float uOctave2VerticalWaveLength;
-uniform float uOctave2Altitude;
+uniform vec3 uOctave0;
+uniform vec3 uOctave1;
+uniform vec3 uOctave2;
 
 // Color uniforms.
 uniform float uMaxTerrainAltitude;
@@ -276,14 +262,14 @@ void main()
 
 float generateHeight(vec3 position)
 {
-    vec2 inp0 = vec2(position.x / uOctave0HorizontalWaveLength, position.z / uOctave0VerticalWaveLength);
-    float h0 = snoise(inp0) * uOctave0Altitude;
+    vec2 inp0 = vec2(position.x / uOctave0.x, position.z / uOctave0.y);
+    float h0 = snoise(inp0) * uOctave0.z;
 
-    vec2 inp1 = vec2(position.x / uOctave1HorizontalWaveLength, position.z / uOctave1VerticalWaveLength);
-    float h1 = snoise(inp1) * uOctave1Altitude;
+    vec2 inp1 = vec2(position.x / uOctave1.x, position.z / uOctave1.y);
+    float h1 = snoise(inp1) * uOctave1.z;
 
-    vec2 inp2 = vec2(position.x / uOctave2HorizontalWaveLength, position.z / uOctave2VerticalWaveLength);
-    float h2 = snoise(inp2) * uOctave2Altitude;
+    vec2 inp2 = vec2(position.x / uOctave2.x, position.z / uOctave2.y);
+    float h2 = snoise(inp2) * uOctave2.z;
 
     return h0 + h1 + h2;
 }

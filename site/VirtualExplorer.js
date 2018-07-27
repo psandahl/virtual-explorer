@@ -5351,923 +5351,6 @@ var _elm_community$linear_algebra$Math_Vector2$getX = _elm_community$linear_alge
 var _elm_community$linear_algebra$Math_Vector2$vec2 = _elm_community$linear_algebra$Native_Math_Vector2.vec2;
 var _elm_community$linear_algebra$Math_Vector2$Vec2 = {ctor: 'Vec2'};
 
-var _elm_lang$core$Dict$foldr = F3(
-	function (f, acc, t) {
-		foldr:
-		while (true) {
-			var _p0 = t;
-			if (_p0.ctor === 'RBEmpty_elm_builtin') {
-				return acc;
-			} else {
-				var _v1 = f,
-					_v2 = A3(
-					f,
-					_p0._1,
-					_p0._2,
-					A3(_elm_lang$core$Dict$foldr, f, acc, _p0._4)),
-					_v3 = _p0._3;
-				f = _v1;
-				acc = _v2;
-				t = _v3;
-				continue foldr;
-			}
-		}
-	});
-var _elm_lang$core$Dict$keys = function (dict) {
-	return A3(
-		_elm_lang$core$Dict$foldr,
-		F3(
-			function (key, value, keyList) {
-				return {ctor: '::', _0: key, _1: keyList};
-			}),
-		{ctor: '[]'},
-		dict);
-};
-var _elm_lang$core$Dict$values = function (dict) {
-	return A3(
-		_elm_lang$core$Dict$foldr,
-		F3(
-			function (key, value, valueList) {
-				return {ctor: '::', _0: value, _1: valueList};
-			}),
-		{ctor: '[]'},
-		dict);
-};
-var _elm_lang$core$Dict$toList = function (dict) {
-	return A3(
-		_elm_lang$core$Dict$foldr,
-		F3(
-			function (key, value, list) {
-				return {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: key, _1: value},
-					_1: list
-				};
-			}),
-		{ctor: '[]'},
-		dict);
-};
-var _elm_lang$core$Dict$foldl = F3(
-	function (f, acc, dict) {
-		foldl:
-		while (true) {
-			var _p1 = dict;
-			if (_p1.ctor === 'RBEmpty_elm_builtin') {
-				return acc;
-			} else {
-				var _v5 = f,
-					_v6 = A3(
-					f,
-					_p1._1,
-					_p1._2,
-					A3(_elm_lang$core$Dict$foldl, f, acc, _p1._3)),
-					_v7 = _p1._4;
-				f = _v5;
-				acc = _v6;
-				dict = _v7;
-				continue foldl;
-			}
-		}
-	});
-var _elm_lang$core$Dict$merge = F6(
-	function (leftStep, bothStep, rightStep, leftDict, rightDict, initialResult) {
-		var stepState = F3(
-			function (rKey, rValue, _p2) {
-				stepState:
-				while (true) {
-					var _p3 = _p2;
-					var _p9 = _p3._1;
-					var _p8 = _p3._0;
-					var _p4 = _p8;
-					if (_p4.ctor === '[]') {
-						return {
-							ctor: '_Tuple2',
-							_0: _p8,
-							_1: A3(rightStep, rKey, rValue, _p9)
-						};
-					} else {
-						var _p7 = _p4._1;
-						var _p6 = _p4._0._1;
-						var _p5 = _p4._0._0;
-						if (_elm_lang$core$Native_Utils.cmp(_p5, rKey) < 0) {
-							var _v10 = rKey,
-								_v11 = rValue,
-								_v12 = {
-								ctor: '_Tuple2',
-								_0: _p7,
-								_1: A3(leftStep, _p5, _p6, _p9)
-							};
-							rKey = _v10;
-							rValue = _v11;
-							_p2 = _v12;
-							continue stepState;
-						} else {
-							if (_elm_lang$core$Native_Utils.cmp(_p5, rKey) > 0) {
-								return {
-									ctor: '_Tuple2',
-									_0: _p8,
-									_1: A3(rightStep, rKey, rValue, _p9)
-								};
-							} else {
-								return {
-									ctor: '_Tuple2',
-									_0: _p7,
-									_1: A4(bothStep, _p5, _p6, rValue, _p9)
-								};
-							}
-						}
-					}
-				}
-			});
-		var _p10 = A3(
-			_elm_lang$core$Dict$foldl,
-			stepState,
-			{
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Dict$toList(leftDict),
-				_1: initialResult
-			},
-			rightDict);
-		var leftovers = _p10._0;
-		var intermediateResult = _p10._1;
-		return A3(
-			_elm_lang$core$List$foldl,
-			F2(
-				function (_p11, result) {
-					var _p12 = _p11;
-					return A3(leftStep, _p12._0, _p12._1, result);
-				}),
-			intermediateResult,
-			leftovers);
-	});
-var _elm_lang$core$Dict$reportRemBug = F4(
-	function (msg, c, lgot, rgot) {
-		return _elm_lang$core$Native_Debug.crash(
-			_elm_lang$core$String$concat(
-				{
-					ctor: '::',
-					_0: 'Internal red-black tree invariant violated, expected ',
-					_1: {
-						ctor: '::',
-						_0: msg,
-						_1: {
-							ctor: '::',
-							_0: ' and got ',
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$core$Basics$toString(c),
-								_1: {
-									ctor: '::',
-									_0: '/',
-									_1: {
-										ctor: '::',
-										_0: lgot,
-										_1: {
-											ctor: '::',
-											_0: '/',
-											_1: {
-												ctor: '::',
-												_0: rgot,
-												_1: {
-													ctor: '::',
-													_0: '\nPlease report this bug to <https://github.com/elm-lang/core/issues>',
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}));
-	});
-var _elm_lang$core$Dict$isBBlack = function (dict) {
-	var _p13 = dict;
-	_v14_2:
-	do {
-		if (_p13.ctor === 'RBNode_elm_builtin') {
-			if (_p13._0.ctor === 'BBlack') {
-				return true;
-			} else {
-				break _v14_2;
-			}
-		} else {
-			if (_p13._0.ctor === 'LBBlack') {
-				return true;
-			} else {
-				break _v14_2;
-			}
-		}
-	} while(false);
-	return false;
-};
-var _elm_lang$core$Dict$sizeHelp = F2(
-	function (n, dict) {
-		sizeHelp:
-		while (true) {
-			var _p14 = dict;
-			if (_p14.ctor === 'RBEmpty_elm_builtin') {
-				return n;
-			} else {
-				var _v16 = A2(_elm_lang$core$Dict$sizeHelp, n + 1, _p14._4),
-					_v17 = _p14._3;
-				n = _v16;
-				dict = _v17;
-				continue sizeHelp;
-			}
-		}
-	});
-var _elm_lang$core$Dict$size = function (dict) {
-	return A2(_elm_lang$core$Dict$sizeHelp, 0, dict);
-};
-var _elm_lang$core$Dict$get = F2(
-	function (targetKey, dict) {
-		get:
-		while (true) {
-			var _p15 = dict;
-			if (_p15.ctor === 'RBEmpty_elm_builtin') {
-				return _elm_lang$core$Maybe$Nothing;
-			} else {
-				var _p16 = A2(_elm_lang$core$Basics$compare, targetKey, _p15._1);
-				switch (_p16.ctor) {
-					case 'LT':
-						var _v20 = targetKey,
-							_v21 = _p15._3;
-						targetKey = _v20;
-						dict = _v21;
-						continue get;
-					case 'EQ':
-						return _elm_lang$core$Maybe$Just(_p15._2);
-					default:
-						var _v22 = targetKey,
-							_v23 = _p15._4;
-						targetKey = _v22;
-						dict = _v23;
-						continue get;
-				}
-			}
-		}
-	});
-var _elm_lang$core$Dict$member = F2(
-	function (key, dict) {
-		var _p17 = A2(_elm_lang$core$Dict$get, key, dict);
-		if (_p17.ctor === 'Just') {
-			return true;
-		} else {
-			return false;
-		}
-	});
-var _elm_lang$core$Dict$maxWithDefault = F3(
-	function (k, v, r) {
-		maxWithDefault:
-		while (true) {
-			var _p18 = r;
-			if (_p18.ctor === 'RBEmpty_elm_builtin') {
-				return {ctor: '_Tuple2', _0: k, _1: v};
-			} else {
-				var _v26 = _p18._1,
-					_v27 = _p18._2,
-					_v28 = _p18._4;
-				k = _v26;
-				v = _v27;
-				r = _v28;
-				continue maxWithDefault;
-			}
-		}
-	});
-var _elm_lang$core$Dict$NBlack = {ctor: 'NBlack'};
-var _elm_lang$core$Dict$BBlack = {ctor: 'BBlack'};
-var _elm_lang$core$Dict$Black = {ctor: 'Black'};
-var _elm_lang$core$Dict$blackish = function (t) {
-	var _p19 = t;
-	if (_p19.ctor === 'RBNode_elm_builtin') {
-		var _p20 = _p19._0;
-		return _elm_lang$core$Native_Utils.eq(_p20, _elm_lang$core$Dict$Black) || _elm_lang$core$Native_Utils.eq(_p20, _elm_lang$core$Dict$BBlack);
-	} else {
-		return true;
-	}
-};
-var _elm_lang$core$Dict$Red = {ctor: 'Red'};
-var _elm_lang$core$Dict$moreBlack = function (color) {
-	var _p21 = color;
-	switch (_p21.ctor) {
-		case 'Black':
-			return _elm_lang$core$Dict$BBlack;
-		case 'Red':
-			return _elm_lang$core$Dict$Black;
-		case 'NBlack':
-			return _elm_lang$core$Dict$Red;
-		default:
-			return _elm_lang$core$Native_Debug.crash('Can\'t make a double black node more black!');
-	}
-};
-var _elm_lang$core$Dict$lessBlack = function (color) {
-	var _p22 = color;
-	switch (_p22.ctor) {
-		case 'BBlack':
-			return _elm_lang$core$Dict$Black;
-		case 'Black':
-			return _elm_lang$core$Dict$Red;
-		case 'Red':
-			return _elm_lang$core$Dict$NBlack;
-		default:
-			return _elm_lang$core$Native_Debug.crash('Can\'t make a negative black node less black!');
-	}
-};
-var _elm_lang$core$Dict$LBBlack = {ctor: 'LBBlack'};
-var _elm_lang$core$Dict$LBlack = {ctor: 'LBlack'};
-var _elm_lang$core$Dict$RBEmpty_elm_builtin = function (a) {
-	return {ctor: 'RBEmpty_elm_builtin', _0: a};
-};
-var _elm_lang$core$Dict$empty = _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
-var _elm_lang$core$Dict$isEmpty = function (dict) {
-	return _elm_lang$core$Native_Utils.eq(dict, _elm_lang$core$Dict$empty);
-};
-var _elm_lang$core$Dict$RBNode_elm_builtin = F5(
-	function (a, b, c, d, e) {
-		return {ctor: 'RBNode_elm_builtin', _0: a, _1: b, _2: c, _3: d, _4: e};
-	});
-var _elm_lang$core$Dict$ensureBlackRoot = function (dict) {
-	var _p23 = dict;
-	if ((_p23.ctor === 'RBNode_elm_builtin') && (_p23._0.ctor === 'Red')) {
-		return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p23._1, _p23._2, _p23._3, _p23._4);
-	} else {
-		return dict;
-	}
-};
-var _elm_lang$core$Dict$lessBlackTree = function (dict) {
-	var _p24 = dict;
-	if (_p24.ctor === 'RBNode_elm_builtin') {
-		return A5(
-			_elm_lang$core$Dict$RBNode_elm_builtin,
-			_elm_lang$core$Dict$lessBlack(_p24._0),
-			_p24._1,
-			_p24._2,
-			_p24._3,
-			_p24._4);
-	} else {
-		return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
-	}
-};
-var _elm_lang$core$Dict$balancedTree = function (col) {
-	return function (xk) {
-		return function (xv) {
-			return function (yk) {
-				return function (yv) {
-					return function (zk) {
-						return function (zv) {
-							return function (a) {
-								return function (b) {
-									return function (c) {
-										return function (d) {
-											return A5(
-												_elm_lang$core$Dict$RBNode_elm_builtin,
-												_elm_lang$core$Dict$lessBlack(col),
-												yk,
-												yv,
-												A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, xk, xv, a, b),
-												A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, zk, zv, c, d));
-										};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
-	};
-};
-var _elm_lang$core$Dict$blacken = function (t) {
-	var _p25 = t;
-	if (_p25.ctor === 'RBEmpty_elm_builtin') {
-		return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
-	} else {
-		return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p25._1, _p25._2, _p25._3, _p25._4);
-	}
-};
-var _elm_lang$core$Dict$redden = function (t) {
-	var _p26 = t;
-	if (_p26.ctor === 'RBEmpty_elm_builtin') {
-		return _elm_lang$core$Native_Debug.crash('can\'t make a Leaf red');
-	} else {
-		return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Red, _p26._1, _p26._2, _p26._3, _p26._4);
-	}
-};
-var _elm_lang$core$Dict$balanceHelp = function (tree) {
-	var _p27 = tree;
-	_v36_6:
-	do {
-		_v36_5:
-		do {
-			_v36_4:
-			do {
-				_v36_3:
-				do {
-					_v36_2:
-					do {
-						_v36_1:
-						do {
-							_v36_0:
-							do {
-								if (_p27.ctor === 'RBNode_elm_builtin') {
-									if (_p27._3.ctor === 'RBNode_elm_builtin') {
-										if (_p27._4.ctor === 'RBNode_elm_builtin') {
-											switch (_p27._3._0.ctor) {
-												case 'Red':
-													switch (_p27._4._0.ctor) {
-														case 'Red':
-															if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
-																break _v36_0;
-															} else {
-																if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
-																	break _v36_1;
-																} else {
-																	if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
-																		break _v36_2;
-																	} else {
-																		if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
-																			break _v36_3;
-																		} else {
-																			break _v36_6;
-																		}
-																	}
-																}
-															}
-														case 'NBlack':
-															if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
-																break _v36_0;
-															} else {
-																if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
-																	break _v36_1;
-																} else {
-																	if (((((_p27._0.ctor === 'BBlack') && (_p27._4._3.ctor === 'RBNode_elm_builtin')) && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
-																		break _v36_4;
-																	} else {
-																		break _v36_6;
-																	}
-																}
-															}
-														default:
-															if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
-																break _v36_0;
-															} else {
-																if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
-																	break _v36_1;
-																} else {
-																	break _v36_6;
-																}
-															}
-													}
-												case 'NBlack':
-													switch (_p27._4._0.ctor) {
-														case 'Red':
-															if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
-																break _v36_2;
-															} else {
-																if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
-																	break _v36_3;
-																} else {
-																	if (((((_p27._0.ctor === 'BBlack') && (_p27._3._3.ctor === 'RBNode_elm_builtin')) && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
-																		break _v36_5;
-																	} else {
-																		break _v36_6;
-																	}
-																}
-															}
-														case 'NBlack':
-															if (_p27._0.ctor === 'BBlack') {
-																if ((((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
-																	break _v36_4;
-																} else {
-																	if ((((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
-																		break _v36_5;
-																	} else {
-																		break _v36_6;
-																	}
-																}
-															} else {
-																break _v36_6;
-															}
-														default:
-															if (((((_p27._0.ctor === 'BBlack') && (_p27._3._3.ctor === 'RBNode_elm_builtin')) && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
-																break _v36_5;
-															} else {
-																break _v36_6;
-															}
-													}
-												default:
-													switch (_p27._4._0.ctor) {
-														case 'Red':
-															if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
-																break _v36_2;
-															} else {
-																if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
-																	break _v36_3;
-																} else {
-																	break _v36_6;
-																}
-															}
-														case 'NBlack':
-															if (((((_p27._0.ctor === 'BBlack') && (_p27._4._3.ctor === 'RBNode_elm_builtin')) && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
-																break _v36_4;
-															} else {
-																break _v36_6;
-															}
-														default:
-															break _v36_6;
-													}
-											}
-										} else {
-											switch (_p27._3._0.ctor) {
-												case 'Red':
-													if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
-														break _v36_0;
-													} else {
-														if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
-															break _v36_1;
-														} else {
-															break _v36_6;
-														}
-													}
-												case 'NBlack':
-													if (((((_p27._0.ctor === 'BBlack') && (_p27._3._3.ctor === 'RBNode_elm_builtin')) && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
-														break _v36_5;
-													} else {
-														break _v36_6;
-													}
-												default:
-													break _v36_6;
-											}
-										}
-									} else {
-										if (_p27._4.ctor === 'RBNode_elm_builtin') {
-											switch (_p27._4._0.ctor) {
-												case 'Red':
-													if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
-														break _v36_2;
-													} else {
-														if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
-															break _v36_3;
-														} else {
-															break _v36_6;
-														}
-													}
-												case 'NBlack':
-													if (((((_p27._0.ctor === 'BBlack') && (_p27._4._3.ctor === 'RBNode_elm_builtin')) && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
-														break _v36_4;
-													} else {
-														break _v36_6;
-													}
-												default:
-													break _v36_6;
-											}
-										} else {
-											break _v36_6;
-										}
-									}
-								} else {
-									break _v36_6;
-								}
-							} while(false);
-							return _elm_lang$core$Dict$balancedTree(_p27._0)(_p27._3._3._1)(_p27._3._3._2)(_p27._3._1)(_p27._3._2)(_p27._1)(_p27._2)(_p27._3._3._3)(_p27._3._3._4)(_p27._3._4)(_p27._4);
-						} while(false);
-						return _elm_lang$core$Dict$balancedTree(_p27._0)(_p27._3._1)(_p27._3._2)(_p27._3._4._1)(_p27._3._4._2)(_p27._1)(_p27._2)(_p27._3._3)(_p27._3._4._3)(_p27._3._4._4)(_p27._4);
-					} while(false);
-					return _elm_lang$core$Dict$balancedTree(_p27._0)(_p27._1)(_p27._2)(_p27._4._3._1)(_p27._4._3._2)(_p27._4._1)(_p27._4._2)(_p27._3)(_p27._4._3._3)(_p27._4._3._4)(_p27._4._4);
-				} while(false);
-				return _elm_lang$core$Dict$balancedTree(_p27._0)(_p27._1)(_p27._2)(_p27._4._1)(_p27._4._2)(_p27._4._4._1)(_p27._4._4._2)(_p27._3)(_p27._4._3)(_p27._4._4._3)(_p27._4._4._4);
-			} while(false);
-			return A5(
-				_elm_lang$core$Dict$RBNode_elm_builtin,
-				_elm_lang$core$Dict$Black,
-				_p27._4._3._1,
-				_p27._4._3._2,
-				A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p27._1, _p27._2, _p27._3, _p27._4._3._3),
-				A5(
-					_elm_lang$core$Dict$balance,
-					_elm_lang$core$Dict$Black,
-					_p27._4._1,
-					_p27._4._2,
-					_p27._4._3._4,
-					_elm_lang$core$Dict$redden(_p27._4._4)));
-		} while(false);
-		return A5(
-			_elm_lang$core$Dict$RBNode_elm_builtin,
-			_elm_lang$core$Dict$Black,
-			_p27._3._4._1,
-			_p27._3._4._2,
-			A5(
-				_elm_lang$core$Dict$balance,
-				_elm_lang$core$Dict$Black,
-				_p27._3._1,
-				_p27._3._2,
-				_elm_lang$core$Dict$redden(_p27._3._3),
-				_p27._3._4._3),
-			A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p27._1, _p27._2, _p27._3._4._4, _p27._4));
-	} while(false);
-	return tree;
-};
-var _elm_lang$core$Dict$balance = F5(
-	function (c, k, v, l, r) {
-		var tree = A5(_elm_lang$core$Dict$RBNode_elm_builtin, c, k, v, l, r);
-		return _elm_lang$core$Dict$blackish(tree) ? _elm_lang$core$Dict$balanceHelp(tree) : tree;
-	});
-var _elm_lang$core$Dict$bubble = F5(
-	function (c, k, v, l, r) {
-		return (_elm_lang$core$Dict$isBBlack(l) || _elm_lang$core$Dict$isBBlack(r)) ? A5(
-			_elm_lang$core$Dict$balance,
-			_elm_lang$core$Dict$moreBlack(c),
-			k,
-			v,
-			_elm_lang$core$Dict$lessBlackTree(l),
-			_elm_lang$core$Dict$lessBlackTree(r)) : A5(_elm_lang$core$Dict$RBNode_elm_builtin, c, k, v, l, r);
-	});
-var _elm_lang$core$Dict$removeMax = F5(
-	function (c, k, v, l, r) {
-		var _p28 = r;
-		if (_p28.ctor === 'RBEmpty_elm_builtin') {
-			return A3(_elm_lang$core$Dict$rem, c, l, r);
-		} else {
-			return A5(
-				_elm_lang$core$Dict$bubble,
-				c,
-				k,
-				v,
-				l,
-				A5(_elm_lang$core$Dict$removeMax, _p28._0, _p28._1, _p28._2, _p28._3, _p28._4));
-		}
-	});
-var _elm_lang$core$Dict$rem = F3(
-	function (color, left, right) {
-		var _p29 = {ctor: '_Tuple2', _0: left, _1: right};
-		if (_p29._0.ctor === 'RBEmpty_elm_builtin') {
-			if (_p29._1.ctor === 'RBEmpty_elm_builtin') {
-				var _p30 = color;
-				switch (_p30.ctor) {
-					case 'Red':
-						return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
-					case 'Black':
-						return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBBlack);
-					default:
-						return _elm_lang$core$Native_Debug.crash('cannot have bblack or nblack nodes at this point');
-				}
-			} else {
-				var _p33 = _p29._1._0;
-				var _p32 = _p29._0._0;
-				var _p31 = {ctor: '_Tuple3', _0: color, _1: _p32, _2: _p33};
-				if ((((_p31.ctor === '_Tuple3') && (_p31._0.ctor === 'Black')) && (_p31._1.ctor === 'LBlack')) && (_p31._2.ctor === 'Red')) {
-					return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p29._1._1, _p29._1._2, _p29._1._3, _p29._1._4);
-				} else {
-					return A4(
-						_elm_lang$core$Dict$reportRemBug,
-						'Black/LBlack/Red',
-						color,
-						_elm_lang$core$Basics$toString(_p32),
-						_elm_lang$core$Basics$toString(_p33));
-				}
-			}
-		} else {
-			if (_p29._1.ctor === 'RBEmpty_elm_builtin') {
-				var _p36 = _p29._1._0;
-				var _p35 = _p29._0._0;
-				var _p34 = {ctor: '_Tuple3', _0: color, _1: _p35, _2: _p36};
-				if ((((_p34.ctor === '_Tuple3') && (_p34._0.ctor === 'Black')) && (_p34._1.ctor === 'Red')) && (_p34._2.ctor === 'LBlack')) {
-					return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p29._0._1, _p29._0._2, _p29._0._3, _p29._0._4);
-				} else {
-					return A4(
-						_elm_lang$core$Dict$reportRemBug,
-						'Black/Red/LBlack',
-						color,
-						_elm_lang$core$Basics$toString(_p35),
-						_elm_lang$core$Basics$toString(_p36));
-				}
-			} else {
-				var _p40 = _p29._0._2;
-				var _p39 = _p29._0._4;
-				var _p38 = _p29._0._1;
-				var newLeft = A5(_elm_lang$core$Dict$removeMax, _p29._0._0, _p38, _p40, _p29._0._3, _p39);
-				var _p37 = A3(_elm_lang$core$Dict$maxWithDefault, _p38, _p40, _p39);
-				var k = _p37._0;
-				var v = _p37._1;
-				return A5(_elm_lang$core$Dict$bubble, color, k, v, newLeft, right);
-			}
-		}
-	});
-var _elm_lang$core$Dict$map = F2(
-	function (f, dict) {
-		var _p41 = dict;
-		if (_p41.ctor === 'RBEmpty_elm_builtin') {
-			return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
-		} else {
-			var _p42 = _p41._1;
-			return A5(
-				_elm_lang$core$Dict$RBNode_elm_builtin,
-				_p41._0,
-				_p42,
-				A2(f, _p42, _p41._2),
-				A2(_elm_lang$core$Dict$map, f, _p41._3),
-				A2(_elm_lang$core$Dict$map, f, _p41._4));
-		}
-	});
-var _elm_lang$core$Dict$Same = {ctor: 'Same'};
-var _elm_lang$core$Dict$Remove = {ctor: 'Remove'};
-var _elm_lang$core$Dict$Insert = {ctor: 'Insert'};
-var _elm_lang$core$Dict$update = F3(
-	function (k, alter, dict) {
-		var up = function (dict) {
-			var _p43 = dict;
-			if (_p43.ctor === 'RBEmpty_elm_builtin') {
-				var _p44 = alter(_elm_lang$core$Maybe$Nothing);
-				if (_p44.ctor === 'Nothing') {
-					return {ctor: '_Tuple2', _0: _elm_lang$core$Dict$Same, _1: _elm_lang$core$Dict$empty};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Dict$Insert,
-						_1: A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Red, k, _p44._0, _elm_lang$core$Dict$empty, _elm_lang$core$Dict$empty)
-					};
-				}
-			} else {
-				var _p55 = _p43._2;
-				var _p54 = _p43._4;
-				var _p53 = _p43._3;
-				var _p52 = _p43._1;
-				var _p51 = _p43._0;
-				var _p45 = A2(_elm_lang$core$Basics$compare, k, _p52);
-				switch (_p45.ctor) {
-					case 'EQ':
-						var _p46 = alter(
-							_elm_lang$core$Maybe$Just(_p55));
-						if (_p46.ctor === 'Nothing') {
-							return {
-								ctor: '_Tuple2',
-								_0: _elm_lang$core$Dict$Remove,
-								_1: A3(_elm_lang$core$Dict$rem, _p51, _p53, _p54)
-							};
-						} else {
-							return {
-								ctor: '_Tuple2',
-								_0: _elm_lang$core$Dict$Same,
-								_1: A5(_elm_lang$core$Dict$RBNode_elm_builtin, _p51, _p52, _p46._0, _p53, _p54)
-							};
-						}
-					case 'LT':
-						var _p47 = up(_p53);
-						var flag = _p47._0;
-						var newLeft = _p47._1;
-						var _p48 = flag;
-						switch (_p48.ctor) {
-							case 'Same':
-								return {
-									ctor: '_Tuple2',
-									_0: _elm_lang$core$Dict$Same,
-									_1: A5(_elm_lang$core$Dict$RBNode_elm_builtin, _p51, _p52, _p55, newLeft, _p54)
-								};
-							case 'Insert':
-								return {
-									ctor: '_Tuple2',
-									_0: _elm_lang$core$Dict$Insert,
-									_1: A5(_elm_lang$core$Dict$balance, _p51, _p52, _p55, newLeft, _p54)
-								};
-							default:
-								return {
-									ctor: '_Tuple2',
-									_0: _elm_lang$core$Dict$Remove,
-									_1: A5(_elm_lang$core$Dict$bubble, _p51, _p52, _p55, newLeft, _p54)
-								};
-						}
-					default:
-						var _p49 = up(_p54);
-						var flag = _p49._0;
-						var newRight = _p49._1;
-						var _p50 = flag;
-						switch (_p50.ctor) {
-							case 'Same':
-								return {
-									ctor: '_Tuple2',
-									_0: _elm_lang$core$Dict$Same,
-									_1: A5(_elm_lang$core$Dict$RBNode_elm_builtin, _p51, _p52, _p55, _p53, newRight)
-								};
-							case 'Insert':
-								return {
-									ctor: '_Tuple2',
-									_0: _elm_lang$core$Dict$Insert,
-									_1: A5(_elm_lang$core$Dict$balance, _p51, _p52, _p55, _p53, newRight)
-								};
-							default:
-								return {
-									ctor: '_Tuple2',
-									_0: _elm_lang$core$Dict$Remove,
-									_1: A5(_elm_lang$core$Dict$bubble, _p51, _p52, _p55, _p53, newRight)
-								};
-						}
-				}
-			}
-		};
-		var _p56 = up(dict);
-		var flag = _p56._0;
-		var updatedDict = _p56._1;
-		var _p57 = flag;
-		switch (_p57.ctor) {
-			case 'Same':
-				return updatedDict;
-			case 'Insert':
-				return _elm_lang$core$Dict$ensureBlackRoot(updatedDict);
-			default:
-				return _elm_lang$core$Dict$blacken(updatedDict);
-		}
-	});
-var _elm_lang$core$Dict$insert = F3(
-	function (key, value, dict) {
-		return A3(
-			_elm_lang$core$Dict$update,
-			key,
-			_elm_lang$core$Basics$always(
-				_elm_lang$core$Maybe$Just(value)),
-			dict);
-	});
-var _elm_lang$core$Dict$singleton = F2(
-	function (key, value) {
-		return A3(_elm_lang$core$Dict$insert, key, value, _elm_lang$core$Dict$empty);
-	});
-var _elm_lang$core$Dict$union = F2(
-	function (t1, t2) {
-		return A3(_elm_lang$core$Dict$foldl, _elm_lang$core$Dict$insert, t2, t1);
-	});
-var _elm_lang$core$Dict$filter = F2(
-	function (predicate, dictionary) {
-		var add = F3(
-			function (key, value, dict) {
-				return A2(predicate, key, value) ? A3(_elm_lang$core$Dict$insert, key, value, dict) : dict;
-			});
-		return A3(_elm_lang$core$Dict$foldl, add, _elm_lang$core$Dict$empty, dictionary);
-	});
-var _elm_lang$core$Dict$intersect = F2(
-	function (t1, t2) {
-		return A2(
-			_elm_lang$core$Dict$filter,
-			F2(
-				function (k, _p58) {
-					return A2(_elm_lang$core$Dict$member, k, t2);
-				}),
-			t1);
-	});
-var _elm_lang$core$Dict$partition = F2(
-	function (predicate, dict) {
-		var add = F3(
-			function (key, value, _p59) {
-				var _p60 = _p59;
-				var _p62 = _p60._1;
-				var _p61 = _p60._0;
-				return A2(predicate, key, value) ? {
-					ctor: '_Tuple2',
-					_0: A3(_elm_lang$core$Dict$insert, key, value, _p61),
-					_1: _p62
-				} : {
-					ctor: '_Tuple2',
-					_0: _p61,
-					_1: A3(_elm_lang$core$Dict$insert, key, value, _p62)
-				};
-			});
-		return A3(
-			_elm_lang$core$Dict$foldl,
-			add,
-			{ctor: '_Tuple2', _0: _elm_lang$core$Dict$empty, _1: _elm_lang$core$Dict$empty},
-			dict);
-	});
-var _elm_lang$core$Dict$fromList = function (assocs) {
-	return A3(
-		_elm_lang$core$List$foldl,
-		F2(
-			function (_p63, dict) {
-				var _p64 = _p63;
-				return A3(_elm_lang$core$Dict$insert, _p64._0, _p64._1, dict);
-			}),
-		_elm_lang$core$Dict$empty,
-		assocs);
-};
-var _elm_lang$core$Dict$remove = F2(
-	function (key, dict) {
-		return A3(
-			_elm_lang$core$Dict$update,
-			key,
-			_elm_lang$core$Basics$always(_elm_lang$core$Maybe$Nothing),
-			dict);
-	});
-var _elm_lang$core$Dict$diff = F2(
-	function (t1, t2) {
-		return A3(
-			_elm_lang$core$Dict$foldl,
-			F3(
-				function (k, v, t) {
-					return A2(_elm_lang$core$Dict$remove, k, t);
-				}),
-			t1,
-			t2);
-	});
-
 // eslint-disable-next-line no-unused-vars, camelcase
 var _elm_community$webgl$Native_WebGL = function () {
 
@@ -7946,6 +7029,923 @@ var _elm_lang$core$Array$repeat = F2(
 			_elm_lang$core$Basics$always(e));
 	});
 var _elm_lang$core$Array$Array = {ctor: 'Array'};
+
+var _elm_lang$core$Dict$foldr = F3(
+	function (f, acc, t) {
+		foldr:
+		while (true) {
+			var _p0 = t;
+			if (_p0.ctor === 'RBEmpty_elm_builtin') {
+				return acc;
+			} else {
+				var _v1 = f,
+					_v2 = A3(
+					f,
+					_p0._1,
+					_p0._2,
+					A3(_elm_lang$core$Dict$foldr, f, acc, _p0._4)),
+					_v3 = _p0._3;
+				f = _v1;
+				acc = _v2;
+				t = _v3;
+				continue foldr;
+			}
+		}
+	});
+var _elm_lang$core$Dict$keys = function (dict) {
+	return A3(
+		_elm_lang$core$Dict$foldr,
+		F3(
+			function (key, value, keyList) {
+				return {ctor: '::', _0: key, _1: keyList};
+			}),
+		{ctor: '[]'},
+		dict);
+};
+var _elm_lang$core$Dict$values = function (dict) {
+	return A3(
+		_elm_lang$core$Dict$foldr,
+		F3(
+			function (key, value, valueList) {
+				return {ctor: '::', _0: value, _1: valueList};
+			}),
+		{ctor: '[]'},
+		dict);
+};
+var _elm_lang$core$Dict$toList = function (dict) {
+	return A3(
+		_elm_lang$core$Dict$foldr,
+		F3(
+			function (key, value, list) {
+				return {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: key, _1: value},
+					_1: list
+				};
+			}),
+		{ctor: '[]'},
+		dict);
+};
+var _elm_lang$core$Dict$foldl = F3(
+	function (f, acc, dict) {
+		foldl:
+		while (true) {
+			var _p1 = dict;
+			if (_p1.ctor === 'RBEmpty_elm_builtin') {
+				return acc;
+			} else {
+				var _v5 = f,
+					_v6 = A3(
+					f,
+					_p1._1,
+					_p1._2,
+					A3(_elm_lang$core$Dict$foldl, f, acc, _p1._3)),
+					_v7 = _p1._4;
+				f = _v5;
+				acc = _v6;
+				dict = _v7;
+				continue foldl;
+			}
+		}
+	});
+var _elm_lang$core$Dict$merge = F6(
+	function (leftStep, bothStep, rightStep, leftDict, rightDict, initialResult) {
+		var stepState = F3(
+			function (rKey, rValue, _p2) {
+				stepState:
+				while (true) {
+					var _p3 = _p2;
+					var _p9 = _p3._1;
+					var _p8 = _p3._0;
+					var _p4 = _p8;
+					if (_p4.ctor === '[]') {
+						return {
+							ctor: '_Tuple2',
+							_0: _p8,
+							_1: A3(rightStep, rKey, rValue, _p9)
+						};
+					} else {
+						var _p7 = _p4._1;
+						var _p6 = _p4._0._1;
+						var _p5 = _p4._0._0;
+						if (_elm_lang$core$Native_Utils.cmp(_p5, rKey) < 0) {
+							var _v10 = rKey,
+								_v11 = rValue,
+								_v12 = {
+								ctor: '_Tuple2',
+								_0: _p7,
+								_1: A3(leftStep, _p5, _p6, _p9)
+							};
+							rKey = _v10;
+							rValue = _v11;
+							_p2 = _v12;
+							continue stepState;
+						} else {
+							if (_elm_lang$core$Native_Utils.cmp(_p5, rKey) > 0) {
+								return {
+									ctor: '_Tuple2',
+									_0: _p8,
+									_1: A3(rightStep, rKey, rValue, _p9)
+								};
+							} else {
+								return {
+									ctor: '_Tuple2',
+									_0: _p7,
+									_1: A4(bothStep, _p5, _p6, rValue, _p9)
+								};
+							}
+						}
+					}
+				}
+			});
+		var _p10 = A3(
+			_elm_lang$core$Dict$foldl,
+			stepState,
+			{
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Dict$toList(leftDict),
+				_1: initialResult
+			},
+			rightDict);
+		var leftovers = _p10._0;
+		var intermediateResult = _p10._1;
+		return A3(
+			_elm_lang$core$List$foldl,
+			F2(
+				function (_p11, result) {
+					var _p12 = _p11;
+					return A3(leftStep, _p12._0, _p12._1, result);
+				}),
+			intermediateResult,
+			leftovers);
+	});
+var _elm_lang$core$Dict$reportRemBug = F4(
+	function (msg, c, lgot, rgot) {
+		return _elm_lang$core$Native_Debug.crash(
+			_elm_lang$core$String$concat(
+				{
+					ctor: '::',
+					_0: 'Internal red-black tree invariant violated, expected ',
+					_1: {
+						ctor: '::',
+						_0: msg,
+						_1: {
+							ctor: '::',
+							_0: ' and got ',
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$core$Basics$toString(c),
+								_1: {
+									ctor: '::',
+									_0: '/',
+									_1: {
+										ctor: '::',
+										_0: lgot,
+										_1: {
+											ctor: '::',
+											_0: '/',
+											_1: {
+												ctor: '::',
+												_0: rgot,
+												_1: {
+													ctor: '::',
+													_0: '\nPlease report this bug to <https://github.com/elm-lang/core/issues>',
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}));
+	});
+var _elm_lang$core$Dict$isBBlack = function (dict) {
+	var _p13 = dict;
+	_v14_2:
+	do {
+		if (_p13.ctor === 'RBNode_elm_builtin') {
+			if (_p13._0.ctor === 'BBlack') {
+				return true;
+			} else {
+				break _v14_2;
+			}
+		} else {
+			if (_p13._0.ctor === 'LBBlack') {
+				return true;
+			} else {
+				break _v14_2;
+			}
+		}
+	} while(false);
+	return false;
+};
+var _elm_lang$core$Dict$sizeHelp = F2(
+	function (n, dict) {
+		sizeHelp:
+		while (true) {
+			var _p14 = dict;
+			if (_p14.ctor === 'RBEmpty_elm_builtin') {
+				return n;
+			} else {
+				var _v16 = A2(_elm_lang$core$Dict$sizeHelp, n + 1, _p14._4),
+					_v17 = _p14._3;
+				n = _v16;
+				dict = _v17;
+				continue sizeHelp;
+			}
+		}
+	});
+var _elm_lang$core$Dict$size = function (dict) {
+	return A2(_elm_lang$core$Dict$sizeHelp, 0, dict);
+};
+var _elm_lang$core$Dict$get = F2(
+	function (targetKey, dict) {
+		get:
+		while (true) {
+			var _p15 = dict;
+			if (_p15.ctor === 'RBEmpty_elm_builtin') {
+				return _elm_lang$core$Maybe$Nothing;
+			} else {
+				var _p16 = A2(_elm_lang$core$Basics$compare, targetKey, _p15._1);
+				switch (_p16.ctor) {
+					case 'LT':
+						var _v20 = targetKey,
+							_v21 = _p15._3;
+						targetKey = _v20;
+						dict = _v21;
+						continue get;
+					case 'EQ':
+						return _elm_lang$core$Maybe$Just(_p15._2);
+					default:
+						var _v22 = targetKey,
+							_v23 = _p15._4;
+						targetKey = _v22;
+						dict = _v23;
+						continue get;
+				}
+			}
+		}
+	});
+var _elm_lang$core$Dict$member = F2(
+	function (key, dict) {
+		var _p17 = A2(_elm_lang$core$Dict$get, key, dict);
+		if (_p17.ctor === 'Just') {
+			return true;
+		} else {
+			return false;
+		}
+	});
+var _elm_lang$core$Dict$maxWithDefault = F3(
+	function (k, v, r) {
+		maxWithDefault:
+		while (true) {
+			var _p18 = r;
+			if (_p18.ctor === 'RBEmpty_elm_builtin') {
+				return {ctor: '_Tuple2', _0: k, _1: v};
+			} else {
+				var _v26 = _p18._1,
+					_v27 = _p18._2,
+					_v28 = _p18._4;
+				k = _v26;
+				v = _v27;
+				r = _v28;
+				continue maxWithDefault;
+			}
+		}
+	});
+var _elm_lang$core$Dict$NBlack = {ctor: 'NBlack'};
+var _elm_lang$core$Dict$BBlack = {ctor: 'BBlack'};
+var _elm_lang$core$Dict$Black = {ctor: 'Black'};
+var _elm_lang$core$Dict$blackish = function (t) {
+	var _p19 = t;
+	if (_p19.ctor === 'RBNode_elm_builtin') {
+		var _p20 = _p19._0;
+		return _elm_lang$core$Native_Utils.eq(_p20, _elm_lang$core$Dict$Black) || _elm_lang$core$Native_Utils.eq(_p20, _elm_lang$core$Dict$BBlack);
+	} else {
+		return true;
+	}
+};
+var _elm_lang$core$Dict$Red = {ctor: 'Red'};
+var _elm_lang$core$Dict$moreBlack = function (color) {
+	var _p21 = color;
+	switch (_p21.ctor) {
+		case 'Black':
+			return _elm_lang$core$Dict$BBlack;
+		case 'Red':
+			return _elm_lang$core$Dict$Black;
+		case 'NBlack':
+			return _elm_lang$core$Dict$Red;
+		default:
+			return _elm_lang$core$Native_Debug.crash('Can\'t make a double black node more black!');
+	}
+};
+var _elm_lang$core$Dict$lessBlack = function (color) {
+	var _p22 = color;
+	switch (_p22.ctor) {
+		case 'BBlack':
+			return _elm_lang$core$Dict$Black;
+		case 'Black':
+			return _elm_lang$core$Dict$Red;
+		case 'Red':
+			return _elm_lang$core$Dict$NBlack;
+		default:
+			return _elm_lang$core$Native_Debug.crash('Can\'t make a negative black node less black!');
+	}
+};
+var _elm_lang$core$Dict$LBBlack = {ctor: 'LBBlack'};
+var _elm_lang$core$Dict$LBlack = {ctor: 'LBlack'};
+var _elm_lang$core$Dict$RBEmpty_elm_builtin = function (a) {
+	return {ctor: 'RBEmpty_elm_builtin', _0: a};
+};
+var _elm_lang$core$Dict$empty = _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
+var _elm_lang$core$Dict$isEmpty = function (dict) {
+	return _elm_lang$core$Native_Utils.eq(dict, _elm_lang$core$Dict$empty);
+};
+var _elm_lang$core$Dict$RBNode_elm_builtin = F5(
+	function (a, b, c, d, e) {
+		return {ctor: 'RBNode_elm_builtin', _0: a, _1: b, _2: c, _3: d, _4: e};
+	});
+var _elm_lang$core$Dict$ensureBlackRoot = function (dict) {
+	var _p23 = dict;
+	if ((_p23.ctor === 'RBNode_elm_builtin') && (_p23._0.ctor === 'Red')) {
+		return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p23._1, _p23._2, _p23._3, _p23._4);
+	} else {
+		return dict;
+	}
+};
+var _elm_lang$core$Dict$lessBlackTree = function (dict) {
+	var _p24 = dict;
+	if (_p24.ctor === 'RBNode_elm_builtin') {
+		return A5(
+			_elm_lang$core$Dict$RBNode_elm_builtin,
+			_elm_lang$core$Dict$lessBlack(_p24._0),
+			_p24._1,
+			_p24._2,
+			_p24._3,
+			_p24._4);
+	} else {
+		return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
+	}
+};
+var _elm_lang$core$Dict$balancedTree = function (col) {
+	return function (xk) {
+		return function (xv) {
+			return function (yk) {
+				return function (yv) {
+					return function (zk) {
+						return function (zv) {
+							return function (a) {
+								return function (b) {
+									return function (c) {
+										return function (d) {
+											return A5(
+												_elm_lang$core$Dict$RBNode_elm_builtin,
+												_elm_lang$core$Dict$lessBlack(col),
+												yk,
+												yv,
+												A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, xk, xv, a, b),
+												A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, zk, zv, c, d));
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _elm_lang$core$Dict$blacken = function (t) {
+	var _p25 = t;
+	if (_p25.ctor === 'RBEmpty_elm_builtin') {
+		return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
+	} else {
+		return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p25._1, _p25._2, _p25._3, _p25._4);
+	}
+};
+var _elm_lang$core$Dict$redden = function (t) {
+	var _p26 = t;
+	if (_p26.ctor === 'RBEmpty_elm_builtin') {
+		return _elm_lang$core$Native_Debug.crash('can\'t make a Leaf red');
+	} else {
+		return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Red, _p26._1, _p26._2, _p26._3, _p26._4);
+	}
+};
+var _elm_lang$core$Dict$balanceHelp = function (tree) {
+	var _p27 = tree;
+	_v36_6:
+	do {
+		_v36_5:
+		do {
+			_v36_4:
+			do {
+				_v36_3:
+				do {
+					_v36_2:
+					do {
+						_v36_1:
+						do {
+							_v36_0:
+							do {
+								if (_p27.ctor === 'RBNode_elm_builtin') {
+									if (_p27._3.ctor === 'RBNode_elm_builtin') {
+										if (_p27._4.ctor === 'RBNode_elm_builtin') {
+											switch (_p27._3._0.ctor) {
+												case 'Red':
+													switch (_p27._4._0.ctor) {
+														case 'Red':
+															if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
+																break _v36_0;
+															} else {
+																if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
+																	break _v36_1;
+																} else {
+																	if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
+																		break _v36_2;
+																	} else {
+																		if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
+																			break _v36_3;
+																		} else {
+																			break _v36_6;
+																		}
+																	}
+																}
+															}
+														case 'NBlack':
+															if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
+																break _v36_0;
+															} else {
+																if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
+																	break _v36_1;
+																} else {
+																	if (((((_p27._0.ctor === 'BBlack') && (_p27._4._3.ctor === 'RBNode_elm_builtin')) && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
+																		break _v36_4;
+																	} else {
+																		break _v36_6;
+																	}
+																}
+															}
+														default:
+															if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
+																break _v36_0;
+															} else {
+																if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
+																	break _v36_1;
+																} else {
+																	break _v36_6;
+																}
+															}
+													}
+												case 'NBlack':
+													switch (_p27._4._0.ctor) {
+														case 'Red':
+															if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
+																break _v36_2;
+															} else {
+																if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
+																	break _v36_3;
+																} else {
+																	if (((((_p27._0.ctor === 'BBlack') && (_p27._3._3.ctor === 'RBNode_elm_builtin')) && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
+																		break _v36_5;
+																	} else {
+																		break _v36_6;
+																	}
+																}
+															}
+														case 'NBlack':
+															if (_p27._0.ctor === 'BBlack') {
+																if ((((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
+																	break _v36_4;
+																} else {
+																	if ((((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
+																		break _v36_5;
+																	} else {
+																		break _v36_6;
+																	}
+																}
+															} else {
+																break _v36_6;
+															}
+														default:
+															if (((((_p27._0.ctor === 'BBlack') && (_p27._3._3.ctor === 'RBNode_elm_builtin')) && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
+																break _v36_5;
+															} else {
+																break _v36_6;
+															}
+													}
+												default:
+													switch (_p27._4._0.ctor) {
+														case 'Red':
+															if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
+																break _v36_2;
+															} else {
+																if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
+																	break _v36_3;
+																} else {
+																	break _v36_6;
+																}
+															}
+														case 'NBlack':
+															if (((((_p27._0.ctor === 'BBlack') && (_p27._4._3.ctor === 'RBNode_elm_builtin')) && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
+																break _v36_4;
+															} else {
+																break _v36_6;
+															}
+														default:
+															break _v36_6;
+													}
+											}
+										} else {
+											switch (_p27._3._0.ctor) {
+												case 'Red':
+													if ((_p27._3._3.ctor === 'RBNode_elm_builtin') && (_p27._3._3._0.ctor === 'Red')) {
+														break _v36_0;
+													} else {
+														if ((_p27._3._4.ctor === 'RBNode_elm_builtin') && (_p27._3._4._0.ctor === 'Red')) {
+															break _v36_1;
+														} else {
+															break _v36_6;
+														}
+													}
+												case 'NBlack':
+													if (((((_p27._0.ctor === 'BBlack') && (_p27._3._3.ctor === 'RBNode_elm_builtin')) && (_p27._3._3._0.ctor === 'Black')) && (_p27._3._4.ctor === 'RBNode_elm_builtin')) && (_p27._3._4._0.ctor === 'Black')) {
+														break _v36_5;
+													} else {
+														break _v36_6;
+													}
+												default:
+													break _v36_6;
+											}
+										}
+									} else {
+										if (_p27._4.ctor === 'RBNode_elm_builtin') {
+											switch (_p27._4._0.ctor) {
+												case 'Red':
+													if ((_p27._4._3.ctor === 'RBNode_elm_builtin') && (_p27._4._3._0.ctor === 'Red')) {
+														break _v36_2;
+													} else {
+														if ((_p27._4._4.ctor === 'RBNode_elm_builtin') && (_p27._4._4._0.ctor === 'Red')) {
+															break _v36_3;
+														} else {
+															break _v36_6;
+														}
+													}
+												case 'NBlack':
+													if (((((_p27._0.ctor === 'BBlack') && (_p27._4._3.ctor === 'RBNode_elm_builtin')) && (_p27._4._3._0.ctor === 'Black')) && (_p27._4._4.ctor === 'RBNode_elm_builtin')) && (_p27._4._4._0.ctor === 'Black')) {
+														break _v36_4;
+													} else {
+														break _v36_6;
+													}
+												default:
+													break _v36_6;
+											}
+										} else {
+											break _v36_6;
+										}
+									}
+								} else {
+									break _v36_6;
+								}
+							} while(false);
+							return _elm_lang$core$Dict$balancedTree(_p27._0)(_p27._3._3._1)(_p27._3._3._2)(_p27._3._1)(_p27._3._2)(_p27._1)(_p27._2)(_p27._3._3._3)(_p27._3._3._4)(_p27._3._4)(_p27._4);
+						} while(false);
+						return _elm_lang$core$Dict$balancedTree(_p27._0)(_p27._3._1)(_p27._3._2)(_p27._3._4._1)(_p27._3._4._2)(_p27._1)(_p27._2)(_p27._3._3)(_p27._3._4._3)(_p27._3._4._4)(_p27._4);
+					} while(false);
+					return _elm_lang$core$Dict$balancedTree(_p27._0)(_p27._1)(_p27._2)(_p27._4._3._1)(_p27._4._3._2)(_p27._4._1)(_p27._4._2)(_p27._3)(_p27._4._3._3)(_p27._4._3._4)(_p27._4._4);
+				} while(false);
+				return _elm_lang$core$Dict$balancedTree(_p27._0)(_p27._1)(_p27._2)(_p27._4._1)(_p27._4._2)(_p27._4._4._1)(_p27._4._4._2)(_p27._3)(_p27._4._3)(_p27._4._4._3)(_p27._4._4._4);
+			} while(false);
+			return A5(
+				_elm_lang$core$Dict$RBNode_elm_builtin,
+				_elm_lang$core$Dict$Black,
+				_p27._4._3._1,
+				_p27._4._3._2,
+				A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p27._1, _p27._2, _p27._3, _p27._4._3._3),
+				A5(
+					_elm_lang$core$Dict$balance,
+					_elm_lang$core$Dict$Black,
+					_p27._4._1,
+					_p27._4._2,
+					_p27._4._3._4,
+					_elm_lang$core$Dict$redden(_p27._4._4)));
+		} while(false);
+		return A5(
+			_elm_lang$core$Dict$RBNode_elm_builtin,
+			_elm_lang$core$Dict$Black,
+			_p27._3._4._1,
+			_p27._3._4._2,
+			A5(
+				_elm_lang$core$Dict$balance,
+				_elm_lang$core$Dict$Black,
+				_p27._3._1,
+				_p27._3._2,
+				_elm_lang$core$Dict$redden(_p27._3._3),
+				_p27._3._4._3),
+			A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p27._1, _p27._2, _p27._3._4._4, _p27._4));
+	} while(false);
+	return tree;
+};
+var _elm_lang$core$Dict$balance = F5(
+	function (c, k, v, l, r) {
+		var tree = A5(_elm_lang$core$Dict$RBNode_elm_builtin, c, k, v, l, r);
+		return _elm_lang$core$Dict$blackish(tree) ? _elm_lang$core$Dict$balanceHelp(tree) : tree;
+	});
+var _elm_lang$core$Dict$bubble = F5(
+	function (c, k, v, l, r) {
+		return (_elm_lang$core$Dict$isBBlack(l) || _elm_lang$core$Dict$isBBlack(r)) ? A5(
+			_elm_lang$core$Dict$balance,
+			_elm_lang$core$Dict$moreBlack(c),
+			k,
+			v,
+			_elm_lang$core$Dict$lessBlackTree(l),
+			_elm_lang$core$Dict$lessBlackTree(r)) : A5(_elm_lang$core$Dict$RBNode_elm_builtin, c, k, v, l, r);
+	});
+var _elm_lang$core$Dict$removeMax = F5(
+	function (c, k, v, l, r) {
+		var _p28 = r;
+		if (_p28.ctor === 'RBEmpty_elm_builtin') {
+			return A3(_elm_lang$core$Dict$rem, c, l, r);
+		} else {
+			return A5(
+				_elm_lang$core$Dict$bubble,
+				c,
+				k,
+				v,
+				l,
+				A5(_elm_lang$core$Dict$removeMax, _p28._0, _p28._1, _p28._2, _p28._3, _p28._4));
+		}
+	});
+var _elm_lang$core$Dict$rem = F3(
+	function (color, left, right) {
+		var _p29 = {ctor: '_Tuple2', _0: left, _1: right};
+		if (_p29._0.ctor === 'RBEmpty_elm_builtin') {
+			if (_p29._1.ctor === 'RBEmpty_elm_builtin') {
+				var _p30 = color;
+				switch (_p30.ctor) {
+					case 'Red':
+						return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
+					case 'Black':
+						return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBBlack);
+					default:
+						return _elm_lang$core$Native_Debug.crash('cannot have bblack or nblack nodes at this point');
+				}
+			} else {
+				var _p33 = _p29._1._0;
+				var _p32 = _p29._0._0;
+				var _p31 = {ctor: '_Tuple3', _0: color, _1: _p32, _2: _p33};
+				if ((((_p31.ctor === '_Tuple3') && (_p31._0.ctor === 'Black')) && (_p31._1.ctor === 'LBlack')) && (_p31._2.ctor === 'Red')) {
+					return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p29._1._1, _p29._1._2, _p29._1._3, _p29._1._4);
+				} else {
+					return A4(
+						_elm_lang$core$Dict$reportRemBug,
+						'Black/LBlack/Red',
+						color,
+						_elm_lang$core$Basics$toString(_p32),
+						_elm_lang$core$Basics$toString(_p33));
+				}
+			}
+		} else {
+			if (_p29._1.ctor === 'RBEmpty_elm_builtin') {
+				var _p36 = _p29._1._0;
+				var _p35 = _p29._0._0;
+				var _p34 = {ctor: '_Tuple3', _0: color, _1: _p35, _2: _p36};
+				if ((((_p34.ctor === '_Tuple3') && (_p34._0.ctor === 'Black')) && (_p34._1.ctor === 'Red')) && (_p34._2.ctor === 'LBlack')) {
+					return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p29._0._1, _p29._0._2, _p29._0._3, _p29._0._4);
+				} else {
+					return A4(
+						_elm_lang$core$Dict$reportRemBug,
+						'Black/Red/LBlack',
+						color,
+						_elm_lang$core$Basics$toString(_p35),
+						_elm_lang$core$Basics$toString(_p36));
+				}
+			} else {
+				var _p40 = _p29._0._2;
+				var _p39 = _p29._0._4;
+				var _p38 = _p29._0._1;
+				var newLeft = A5(_elm_lang$core$Dict$removeMax, _p29._0._0, _p38, _p40, _p29._0._3, _p39);
+				var _p37 = A3(_elm_lang$core$Dict$maxWithDefault, _p38, _p40, _p39);
+				var k = _p37._0;
+				var v = _p37._1;
+				return A5(_elm_lang$core$Dict$bubble, color, k, v, newLeft, right);
+			}
+		}
+	});
+var _elm_lang$core$Dict$map = F2(
+	function (f, dict) {
+		var _p41 = dict;
+		if (_p41.ctor === 'RBEmpty_elm_builtin') {
+			return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
+		} else {
+			var _p42 = _p41._1;
+			return A5(
+				_elm_lang$core$Dict$RBNode_elm_builtin,
+				_p41._0,
+				_p42,
+				A2(f, _p42, _p41._2),
+				A2(_elm_lang$core$Dict$map, f, _p41._3),
+				A2(_elm_lang$core$Dict$map, f, _p41._4));
+		}
+	});
+var _elm_lang$core$Dict$Same = {ctor: 'Same'};
+var _elm_lang$core$Dict$Remove = {ctor: 'Remove'};
+var _elm_lang$core$Dict$Insert = {ctor: 'Insert'};
+var _elm_lang$core$Dict$update = F3(
+	function (k, alter, dict) {
+		var up = function (dict) {
+			var _p43 = dict;
+			if (_p43.ctor === 'RBEmpty_elm_builtin') {
+				var _p44 = alter(_elm_lang$core$Maybe$Nothing);
+				if (_p44.ctor === 'Nothing') {
+					return {ctor: '_Tuple2', _0: _elm_lang$core$Dict$Same, _1: _elm_lang$core$Dict$empty};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Dict$Insert,
+						_1: A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Red, k, _p44._0, _elm_lang$core$Dict$empty, _elm_lang$core$Dict$empty)
+					};
+				}
+			} else {
+				var _p55 = _p43._2;
+				var _p54 = _p43._4;
+				var _p53 = _p43._3;
+				var _p52 = _p43._1;
+				var _p51 = _p43._0;
+				var _p45 = A2(_elm_lang$core$Basics$compare, k, _p52);
+				switch (_p45.ctor) {
+					case 'EQ':
+						var _p46 = alter(
+							_elm_lang$core$Maybe$Just(_p55));
+						if (_p46.ctor === 'Nothing') {
+							return {
+								ctor: '_Tuple2',
+								_0: _elm_lang$core$Dict$Remove,
+								_1: A3(_elm_lang$core$Dict$rem, _p51, _p53, _p54)
+							};
+						} else {
+							return {
+								ctor: '_Tuple2',
+								_0: _elm_lang$core$Dict$Same,
+								_1: A5(_elm_lang$core$Dict$RBNode_elm_builtin, _p51, _p52, _p46._0, _p53, _p54)
+							};
+						}
+					case 'LT':
+						var _p47 = up(_p53);
+						var flag = _p47._0;
+						var newLeft = _p47._1;
+						var _p48 = flag;
+						switch (_p48.ctor) {
+							case 'Same':
+								return {
+									ctor: '_Tuple2',
+									_0: _elm_lang$core$Dict$Same,
+									_1: A5(_elm_lang$core$Dict$RBNode_elm_builtin, _p51, _p52, _p55, newLeft, _p54)
+								};
+							case 'Insert':
+								return {
+									ctor: '_Tuple2',
+									_0: _elm_lang$core$Dict$Insert,
+									_1: A5(_elm_lang$core$Dict$balance, _p51, _p52, _p55, newLeft, _p54)
+								};
+							default:
+								return {
+									ctor: '_Tuple2',
+									_0: _elm_lang$core$Dict$Remove,
+									_1: A5(_elm_lang$core$Dict$bubble, _p51, _p52, _p55, newLeft, _p54)
+								};
+						}
+					default:
+						var _p49 = up(_p54);
+						var flag = _p49._0;
+						var newRight = _p49._1;
+						var _p50 = flag;
+						switch (_p50.ctor) {
+							case 'Same':
+								return {
+									ctor: '_Tuple2',
+									_0: _elm_lang$core$Dict$Same,
+									_1: A5(_elm_lang$core$Dict$RBNode_elm_builtin, _p51, _p52, _p55, _p53, newRight)
+								};
+							case 'Insert':
+								return {
+									ctor: '_Tuple2',
+									_0: _elm_lang$core$Dict$Insert,
+									_1: A5(_elm_lang$core$Dict$balance, _p51, _p52, _p55, _p53, newRight)
+								};
+							default:
+								return {
+									ctor: '_Tuple2',
+									_0: _elm_lang$core$Dict$Remove,
+									_1: A5(_elm_lang$core$Dict$bubble, _p51, _p52, _p55, _p53, newRight)
+								};
+						}
+				}
+			}
+		};
+		var _p56 = up(dict);
+		var flag = _p56._0;
+		var updatedDict = _p56._1;
+		var _p57 = flag;
+		switch (_p57.ctor) {
+			case 'Same':
+				return updatedDict;
+			case 'Insert':
+				return _elm_lang$core$Dict$ensureBlackRoot(updatedDict);
+			default:
+				return _elm_lang$core$Dict$blacken(updatedDict);
+		}
+	});
+var _elm_lang$core$Dict$insert = F3(
+	function (key, value, dict) {
+		return A3(
+			_elm_lang$core$Dict$update,
+			key,
+			_elm_lang$core$Basics$always(
+				_elm_lang$core$Maybe$Just(value)),
+			dict);
+	});
+var _elm_lang$core$Dict$singleton = F2(
+	function (key, value) {
+		return A3(_elm_lang$core$Dict$insert, key, value, _elm_lang$core$Dict$empty);
+	});
+var _elm_lang$core$Dict$union = F2(
+	function (t1, t2) {
+		return A3(_elm_lang$core$Dict$foldl, _elm_lang$core$Dict$insert, t2, t1);
+	});
+var _elm_lang$core$Dict$filter = F2(
+	function (predicate, dictionary) {
+		var add = F3(
+			function (key, value, dict) {
+				return A2(predicate, key, value) ? A3(_elm_lang$core$Dict$insert, key, value, dict) : dict;
+			});
+		return A3(_elm_lang$core$Dict$foldl, add, _elm_lang$core$Dict$empty, dictionary);
+	});
+var _elm_lang$core$Dict$intersect = F2(
+	function (t1, t2) {
+		return A2(
+			_elm_lang$core$Dict$filter,
+			F2(
+				function (k, _p58) {
+					return A2(_elm_lang$core$Dict$member, k, t2);
+				}),
+			t1);
+	});
+var _elm_lang$core$Dict$partition = F2(
+	function (predicate, dict) {
+		var add = F3(
+			function (key, value, _p59) {
+				var _p60 = _p59;
+				var _p62 = _p60._1;
+				var _p61 = _p60._0;
+				return A2(predicate, key, value) ? {
+					ctor: '_Tuple2',
+					_0: A3(_elm_lang$core$Dict$insert, key, value, _p61),
+					_1: _p62
+				} : {
+					ctor: '_Tuple2',
+					_0: _p61,
+					_1: A3(_elm_lang$core$Dict$insert, key, value, _p62)
+				};
+			});
+		return A3(
+			_elm_lang$core$Dict$foldl,
+			add,
+			{ctor: '_Tuple2', _0: _elm_lang$core$Dict$empty, _1: _elm_lang$core$Dict$empty},
+			dict);
+	});
+var _elm_lang$core$Dict$fromList = function (assocs) {
+	return A3(
+		_elm_lang$core$List$foldl,
+		F2(
+			function (_p63, dict) {
+				var _p64 = _p63;
+				return A3(_elm_lang$core$Dict$insert, _p64._0, _p64._1, dict);
+			}),
+		_elm_lang$core$Dict$empty,
+		assocs);
+};
+var _elm_lang$core$Dict$remove = F2(
+	function (key, dict) {
+		return A3(
+			_elm_lang$core$Dict$update,
+			key,
+			_elm_lang$core$Basics$always(_elm_lang$core$Maybe$Nothing),
+			dict);
+	});
+var _elm_lang$core$Dict$diff = F2(
+	function (t1, t2) {
+		return A3(
+			_elm_lang$core$Dict$foldl,
+			F3(
+				function (k, v, t) {
+					return A2(_elm_lang$core$Dict$remove, k, t);
+				}),
+			t1,
+			t2);
+	});
 
 //import Maybe, Native.Array, Native.List, Native.Utils, Result //
 
@@ -13113,7 +13113,7 @@ var _psandahl$virtual_explorer$Graphics_Internal_Frustum$Frustum = F6(
 	});
 
 var _psandahl$virtual_explorer$Graphics_Internal_Terrain$fragmentShader = {'src': '\nprecision mediump float;\n\nvarying vec3 vColor;\n\nvoid main()\n{\n    gl_FragColor = vec4(vColor, 1.0);\n}\n    '};
-var _psandahl$virtual_explorer$Graphics_Internal_Terrain$vertexShader = {'src': '\nprecision mediump float;\n\n// Single attribute: the vertex position.\nattribute vec3 aPosition;\n\n// Transformation matrices.\nuniform mat4 uModelMatrix;\nuniform mat4 uViewMatrix;\nuniform mat4 uProjectionMatrix;\n\n// Terrain shaping uniforms.\nuniform vec2 uWorldOffset;\n\nuniform float uOctave0HorizontalWaveLength;\nuniform float uOctave0VerticalWaveLength;\nuniform float uOctave0Altitude;\n\nuniform float uOctave1HorizontalWaveLength;\nuniform float uOctave1VerticalWaveLength;\nuniform float uOctave1Altitude;\n\nuniform float uOctave2HorizontalWaveLength;\nuniform float uOctave2VerticalWaveLength;\nuniform float uOctave2Altitude;\n\n// Color uniforms.\nuniform float uMaxTerrainAltitude;\nuniform vec3 uColor0;\nuniform vec3 uColor1;\nuniform vec3 uColor2;\nuniform vec3 uColor3;\n\n// Lightning uniforms.\nuniform vec3 uAmbientLightColor;\nuniform float uAmbientLightStrength;\n\nuniform vec3 uSunLightColor;\nuniform vec3 uSunLightDirection;\n\n// Fog uniforms.\nuniform bool uUseFog;\nuniform vec3 uFog;\nuniform float uFogPower;\nuniform float uFogDistance;\nuniform vec3 uCameraPosition;\n\n// The color produced for the vertex.\nvarying vec3 vColor;\n\n// Generate the height (y) value for the position x, z.\nfloat generateHeight(vec3 position);\n\n// Calculate the vertex color.\nvec3 vertexColor(float height);\n\n// Calculate the ambient light.\nvec3 ambientLight();\n\n// Calculate the sun light.\nvec3 sunLight(vec3 normal);\n\n// Functions for the implementation of simple noise.\nvec3 mod289(vec3 x);\nvec2 mod289(vec2 x);\nvec3 permute(vec3 x);\nfloat snoise(vec2 v);\n\nvoid main()\n{\n    // Step 1. Transform the position to it\'s world coordinates. Needed\n    // for the height value generation.\n    vec3 currentPosition = (uModelMatrix * vec4(aPosition, 1.0)).xyz;\n\n    // Step 2. Convert the world offset to a vec3.\n    vec3 worldOffset = vec3(uWorldOffset.x, 0.0, uWorldOffset.y);\n\n    // Step 3. Calculate heights for the current position as well as for\n    // six neighbour vertices.\n    vec3 v0 = currentPosition + vec3(0.0, 0.0, -1.0);\n    v0.y = generateHeight(v0 + worldOffset);\n\n    vec3 v1 = currentPosition + vec3(1.0, 0.0, -1.0);\n    v1.y = generateHeight(v1 + worldOffset);\n\n    vec3 v2 = currentPosition + vec3(-1.0, 0.0, 0.0);\n    v2.y = generateHeight(v2 + worldOffset);\n\n    vec3 v3 = currentPosition + vec3(1.0, 0.0, 0.0);\n    v3.y = generateHeight(v3 + worldOffset);\n\n    vec3 v4 = currentPosition + vec3(-1.0, 0.0, 1.0);\n    v4.y = generateHeight(v4 + worldOffset);\n\n    vec3 v5 = currentPosition + vec3(0.0, 0.0, 1.0);\n    v5.y = generateHeight(v5 + worldOffset);\n\n    currentPosition.y = generateHeight(currentPosition + worldOffset);\n\n    // Step 3. Calculate smooth normal using the neighbour vertices.\n    vec3 norm0 = normalize(cross(v0 - v2, v0 - currentPosition));\n    vec3 norm1 = normalize(cross(v1 - v0, v1 - currentPosition));\n    vec3 norm2 = normalize(cross(v1 - currentPosition, v1 - v3));\n    vec3 norm3 = normalize(cross(currentPosition - v2, currentPosition - v4));\n    vec3 norm4 = normalize(cross(currentPosition - v4, currentPosition - v5));\n    vec3 norm5 = normalize(cross(v3 - currentPosition, v3 - v5));\n\n    vec3 normal = normalize(norm0 + norm1 + norm2 + norm3 + norm4 + norm5);\n\n    // Step 4. Color the vertex.\n    vec3 color = vertexColor(currentPosition.y) * (ambientLight() + sunLight(normal));\n\n    // Step 5. Apply fog.\n    if (uUseFog) {\n        float normalizedDistance = min(distance(uCameraPosition, currentPosition) / uFogDistance, 1.0);\n        color = mix(color, uFog, pow(normalizedDistance, uFogPower));\n    }\n    vColor = color;\n\n    // Step 6. Final transformation.\n    gl_Position = uProjectionMatrix * uViewMatrix * vec4(currentPosition, 1.0);\n}\n\nfloat generateHeight(vec3 position)\n{\n    vec2 inp0 = vec2(position.x / uOctave0HorizontalWaveLength, position.z / uOctave0VerticalWaveLength);\n    float h0 = snoise(inp0) * uOctave0Altitude;\n\n    vec2 inp1 = vec2(position.x / uOctave1HorizontalWaveLength, position.z / uOctave1VerticalWaveLength);\n    float h1 = snoise(inp1) * uOctave1Altitude;\n\n    vec2 inp2 = vec2(position.x / uOctave2HorizontalWaveLength, position.z / uOctave2VerticalWaveLength);\n    float h2 = snoise(inp2) * uOctave2Altitude;\n\n    return h0 + h1 + h2;\n}\n\nvec3 vertexColor(float height)\n{\n    // Adjust the height (as it can be below zero).\n    height = (height + uMaxTerrainAltitude) * 0.5;\n\n    // Normalize the height.\n    height = height / uMaxTerrainAltitude;\n\n    // Interpolate vertex color.\n    vec3 color = mix(uColor0, uColor1, smoothstep(0.0, 0.4, height));\n    color = mix(color, uColor2, smoothstep(0.4, 0.6, height));\n    color = mix(color, uColor3, smoothstep(0.6, 1.0, height));\n\n    return color;\n}\n\nvec3 ambientLight()\n{\n    return uAmbientLightColor * uAmbientLightStrength;\n}\n\nvec3 sunLight(vec3 normal)\n{\n    float diffuse = max(dot(normal, uSunLightDirection), 0.0);\n    return uSunLightColor * diffuse;\n}\n\nvec3 mod289(vec3 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec2 mod289(vec2 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec3 permute(vec3 x) {\n  return mod289(((x*34.0)+1.0)*x);\n}\n\nfloat snoise(vec2 v)\n{\n  const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0\n                      0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)\n                     -0.577350269189626,  // -1.0 + 2.0 * C.x\n                      0.024390243902439); // 1.0 / 41.0\n// First corner\n  vec2 i  = floor(v + dot(v, C.yy) );\n  vec2 x0 = v -   i + dot(i, C.xx);\n\n// Other corners\n  vec2 i1;\n  //i1.x = step( x0.y, x0.x ); // x0.x > x0.y ? 1.0 : 0.0\n  //i1.y = 1.0 - i1.x;\n  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);\n  // x0 = x0 - 0.0 + 0.0 * C.xx ;\n  // x1 = x0 - i1 + 1.0 * C.xx ;\n  // x2 = x0 - 1.0 + 2.0 * C.xx ;\n  vec4 x12 = x0.xyxy + C.xxzz;\n  x12.xy -= i1;\n\n// Permutations\n  i = mod289(i); // Avoid truncation effects in permutation\n  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))\n\t\t+ i.x + vec3(0.0, i1.x, 1.0 ));\n\n  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);\n  m = m*m ;\n  m = m*m ;\n\n// Gradients: 41 points uniformly over a line, mapped onto a diamond.\n// The ring size 17*17 = 289 is close to a multiple of 41 (41*7 = 287)\n\n  vec3 x = 2.0 * fract(p * C.www) - 1.0;\n  vec3 h = abs(x) - 0.5;\n  vec3 ox = floor(x + 0.5);\n  vec3 a0 = x - ox;\n\n// Normalise gradients implicitly by scaling m\n// Approximation of: m *= inversesqrt( a0*a0 + h*h );\n  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );\n\n// Compute final noise value at P\n  vec3 g;\n  g.x  = a0.x  * x0.x  + h.x  * x0.y;\n  g.yz = a0.yz * x12.xz + h.yz * x12.yw;\n  return 130.0 * dot(m, g);\n}\n\n    '};
+var _psandahl$virtual_explorer$Graphics_Internal_Terrain$vertexShader = {'src': '\nprecision mediump float;\n\n// Single attribute: the vertex position.\nattribute vec3 aPosition;\n\n// Transformation matrices.\nuniform mat4 uModelMatrix;\nuniform mat4 uViewMatrix;\nuniform mat4 uProjectionMatrix;\n\n// Terrain shaping uniforms.\nuniform vec2 uWorldOffset;\n\nuniform vec3 uOctave0;\nuniform vec3 uOctave1;\nuniform vec3 uOctave2;\n\n// Color uniforms.\nuniform float uMaxTerrainAltitude;\nuniform vec3 uColor0;\nuniform vec3 uColor1;\nuniform vec3 uColor2;\nuniform vec3 uColor3;\n\n// Lightning uniforms.\nuniform vec3 uAmbientLightColor;\nuniform float uAmbientLightStrength;\n\nuniform vec3 uSunLightColor;\nuniform vec3 uSunLightDirection;\n\n// Fog uniforms.\nuniform bool uUseFog;\nuniform vec3 uFog;\nuniform float uFogPower;\nuniform float uFogDistance;\nuniform vec3 uCameraPosition;\n\n// The color produced for the vertex.\nvarying vec3 vColor;\n\n// Generate the height (y) value for the position x, z.\nfloat generateHeight(vec3 position);\n\n// Calculate the vertex color.\nvec3 vertexColor(float height);\n\n// Calculate the ambient light.\nvec3 ambientLight();\n\n// Calculate the sun light.\nvec3 sunLight(vec3 normal);\n\n// Functions for the implementation of simple noise.\nvec3 mod289(vec3 x);\nvec2 mod289(vec2 x);\nvec3 permute(vec3 x);\nfloat snoise(vec2 v);\n\nvoid main()\n{\n    // Step 1. Transform the position to it\'s world coordinates. Needed\n    // for the height value generation.\n    vec3 currentPosition = (uModelMatrix * vec4(aPosition, 1.0)).xyz;\n\n    // Step 2. Convert the world offset to a vec3.\n    vec3 worldOffset = vec3(uWorldOffset.x, 0.0, uWorldOffset.y);\n\n    // Step 3. Calculate heights for the current position as well as for\n    // six neighbour vertices.\n    vec3 v0 = currentPosition + vec3(0.0, 0.0, -1.0);\n    v0.y = generateHeight(v0 + worldOffset);\n\n    vec3 v1 = currentPosition + vec3(1.0, 0.0, -1.0);\n    v1.y = generateHeight(v1 + worldOffset);\n\n    vec3 v2 = currentPosition + vec3(-1.0, 0.0, 0.0);\n    v2.y = generateHeight(v2 + worldOffset);\n\n    vec3 v3 = currentPosition + vec3(1.0, 0.0, 0.0);\n    v3.y = generateHeight(v3 + worldOffset);\n\n    vec3 v4 = currentPosition + vec3(-1.0, 0.0, 1.0);\n    v4.y = generateHeight(v4 + worldOffset);\n\n    vec3 v5 = currentPosition + vec3(0.0, 0.0, 1.0);\n    v5.y = generateHeight(v5 + worldOffset);\n\n    currentPosition.y = generateHeight(currentPosition + worldOffset);\n\n    // Step 3. Calculate smooth normal using the neighbour vertices.\n    vec3 norm0 = normalize(cross(v0 - v2, v0 - currentPosition));\n    vec3 norm1 = normalize(cross(v1 - v0, v1 - currentPosition));\n    vec3 norm2 = normalize(cross(v1 - currentPosition, v1 - v3));\n    vec3 norm3 = normalize(cross(currentPosition - v2, currentPosition - v4));\n    vec3 norm4 = normalize(cross(currentPosition - v4, currentPosition - v5));\n    vec3 norm5 = normalize(cross(v3 - currentPosition, v3 - v5));\n\n    vec3 normal = normalize(norm0 + norm1 + norm2 + norm3 + norm4 + norm5);\n\n    // Step 4. Color the vertex.\n    vec3 color = vertexColor(currentPosition.y) * (ambientLight() + sunLight(normal));\n\n    // Step 5. Apply fog.\n    if (uUseFog) {\n        float normalizedDistance = min(distance(uCameraPosition, currentPosition) / uFogDistance, 1.0);\n        color = mix(color, uFog, pow(normalizedDistance, uFogPower));\n    }\n    vColor = color;\n\n    // Step 6. Final transformation.\n    gl_Position = uProjectionMatrix * uViewMatrix * vec4(currentPosition, 1.0);\n}\n\nfloat generateHeight(vec3 position)\n{\n    vec2 inp0 = vec2(position.x / uOctave0.x, position.z / uOctave0.y);\n    float h0 = snoise(inp0) * uOctave0.z;\n\n    vec2 inp1 = vec2(position.x / uOctave1.x, position.z / uOctave1.y);\n    float h1 = snoise(inp1) * uOctave1.z;\n\n    vec2 inp2 = vec2(position.x / uOctave2.x, position.z / uOctave2.y);\n    float h2 = snoise(inp2) * uOctave2.z;\n\n    return h0 + h1 + h2;\n}\n\nvec3 vertexColor(float height)\n{\n    // Adjust the height (as it can be below zero).\n    height = (height + uMaxTerrainAltitude) * 0.5;\n\n    // Normalize the height.\n    height = height / uMaxTerrainAltitude;\n\n    // Interpolate vertex color.\n    vec3 color = mix(uColor0, uColor1, smoothstep(0.0, 0.4, height));\n    color = mix(color, uColor2, smoothstep(0.4, 0.6, height));\n    color = mix(color, uColor3, smoothstep(0.6, 1.0, height));\n\n    return color;\n}\n\nvec3 ambientLight()\n{\n    return uAmbientLightColor * uAmbientLightStrength;\n}\n\nvec3 sunLight(vec3 normal)\n{\n    float diffuse = max(dot(normal, uSunLightDirection), 0.0);\n    return uSunLightColor * diffuse;\n}\n\nvec3 mod289(vec3 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec2 mod289(vec2 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec3 permute(vec3 x) {\n  return mod289(((x*34.0)+1.0)*x);\n}\n\nfloat snoise(vec2 v)\n{\n  const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0\n                      0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)\n                     -0.577350269189626,  // -1.0 + 2.0 * C.x\n                      0.024390243902439); // 1.0 / 41.0\n// First corner\n  vec2 i  = floor(v + dot(v, C.yy) );\n  vec2 x0 = v -   i + dot(i, C.xx);\n\n// Other corners\n  vec2 i1;\n  //i1.x = step( x0.y, x0.x ); // x0.x > x0.y ? 1.0 : 0.0\n  //i1.y = 1.0 - i1.x;\n  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);\n  // x0 = x0 - 0.0 + 0.0 * C.xx ;\n  // x1 = x0 - i1 + 1.0 * C.xx ;\n  // x2 = x0 - 1.0 + 2.0 * C.xx ;\n  vec4 x12 = x0.xyxy + C.xxzz;\n  x12.xy -= i1;\n\n// Permutations\n  i = mod289(i); // Avoid truncation effects in permutation\n  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))\n\t\t+ i.x + vec3(0.0, i1.x, 1.0 ));\n\n  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);\n  m = m*m ;\n  m = m*m ;\n\n// Gradients: 41 points uniformly over a line, mapped onto a diamond.\n// The ring size 17*17 = 289 is close to a multiple of 41 (41*7 = 287)\n\n  vec3 x = 2.0 * fract(p * C.www) - 1.0;\n  vec3 h = abs(x) - 0.5;\n  vec3 ox = floor(x + 0.5);\n  vec3 a0 = x - ox;\n\n// Normalise gradients implicitly by scaling m\n// Approximation of: m *= inversesqrt( a0*a0 + h*h );\n  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );\n\n// Compute final noise value at P\n  vec3 g;\n  g.x  = a0.x  * x0.x  + h.x  * x0.y;\n  g.yz = a0.yz * x12.xz + h.yz * x12.yw;\n  return 130.0 * dot(m, g);\n}\n\n    '};
 var _psandahl$virtual_explorer$Graphics_Internal_Terrain$makeIndices = function (_p0) {
 	var _p1 = _p0;
 	var _p2 = _p1._0;
@@ -13282,19 +13282,7 @@ var _psandahl$virtual_explorer$ToolBox_Model$Model = function (a) {
 														return function (o) {
 															return function (p) {
 																return function (q) {
-																	return function (r) {
-																		return function (s) {
-																			return function (t) {
-																				return function (u) {
-																					return function (v) {
-																						return function (w) {
-																							return {state: a, octave0HorizontalWaveLength: b, octave0VerticalWaveLength: c, octave0Altitude: d, octave1HorizontalWaveLength: e, octave1VerticalWaveLength: f, octave1Altitude: g, octave2HorizontalWaveLength: h, octave2VerticalWaveLength: i, octave2Altitude: j, color0: k, color1: l, color2: m, color3: n, sky0: o, sky1: p, useFog: q, fog: r, fogPower: s, ambientLightColor: t, ambientLightStrength: u, sunLightColor: v, sunLightDirection: w};
-																						};
-																					};
-																				};
-																			};
-																		};
-																	};
+																	return {state: a, octave0: b, octave1: c, octave2: d, color0: e, color1: f, color2: g, color3: h, sky0: i, sky1: j, useFog: k, fog: l, fogPower: m, ambientLightColor: n, ambientLightStrength: o, sunLightColor: p, sunLightDirection: q};
 																};
 															};
 														};
@@ -13318,27 +13306,6 @@ var _psandahl$virtual_explorer$ToolBox_Model$Change = function (a) {
 	return {ctor: 'Change', _0: a};
 };
 var _psandahl$virtual_explorer$ToolBox_Model$FogPower = {ctor: 'FogPower'};
-var _psandahl$virtual_explorer$ToolBox_Model$Color3B = {ctor: 'Color3B'};
-var _psandahl$virtual_explorer$ToolBox_Model$Color3G = {ctor: 'Color3G'};
-var _psandahl$virtual_explorer$ToolBox_Model$Color3R = {ctor: 'Color3R'};
-var _psandahl$virtual_explorer$ToolBox_Model$Color2B = {ctor: 'Color2B'};
-var _psandahl$virtual_explorer$ToolBox_Model$Color2G = {ctor: 'Color2G'};
-var _psandahl$virtual_explorer$ToolBox_Model$Color2R = {ctor: 'Color2R'};
-var _psandahl$virtual_explorer$ToolBox_Model$Color1B = {ctor: 'Color1B'};
-var _psandahl$virtual_explorer$ToolBox_Model$Color1G = {ctor: 'Color1G'};
-var _psandahl$virtual_explorer$ToolBox_Model$Color1R = {ctor: 'Color1R'};
-var _psandahl$virtual_explorer$ToolBox_Model$Color0B = {ctor: 'Color0B'};
-var _psandahl$virtual_explorer$ToolBox_Model$Color0G = {ctor: 'Color0G'};
-var _psandahl$virtual_explorer$ToolBox_Model$Color0R = {ctor: 'Color0R'};
-var _psandahl$virtual_explorer$ToolBox_Model$Octave2Altitude = {ctor: 'Octave2Altitude'};
-var _psandahl$virtual_explorer$ToolBox_Model$Octave2VerticalWaveLength = {ctor: 'Octave2VerticalWaveLength'};
-var _psandahl$virtual_explorer$ToolBox_Model$Octave2HorizontalWaveLength = {ctor: 'Octave2HorizontalWaveLength'};
-var _psandahl$virtual_explorer$ToolBox_Model$Octave1Altitude = {ctor: 'Octave1Altitude'};
-var _psandahl$virtual_explorer$ToolBox_Model$Octave1VerticalWaveLength = {ctor: 'Octave1VerticalWaveLength'};
-var _psandahl$virtual_explorer$ToolBox_Model$Octave1HorizontalWaveLength = {ctor: 'Octave1HorizontalWaveLength'};
-var _psandahl$virtual_explorer$ToolBox_Model$Octave0Altitude = {ctor: 'Octave0Altitude'};
-var _psandahl$virtual_explorer$ToolBox_Model$Octave0VerticalWaveLength = {ctor: 'Octave0VerticalWaveLength'};
-var _psandahl$virtual_explorer$ToolBox_Model$Octave0HorizontalWaveLength = {ctor: 'Octave0HorizontalWaveLength'};
 var _psandahl$virtual_explorer$ToolBox_Model$UseFog = {ctor: 'UseFog'};
 
 var _psandahl$virtual_explorer$Composer_Model$Model = F7(
@@ -13538,120 +13505,9 @@ var _psandahl$virtual_explorer$ToolBox_Update$toggleCheckbox = F2(
 var _psandahl$virtual_explorer$ToolBox_Update$setSliderValue = F3(
 	function (slider, value, model) {
 		var _p1 = slider;
-		switch (_p1.ctor) {
-			case 'Octave0HorizontalWaveLength':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{octave0HorizontalWaveLength: value});
-			case 'Octave0VerticalWaveLength':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{octave0VerticalWaveLength: value});
-			case 'Octave0Altitude':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{octave0Altitude: value});
-			case 'Octave1HorizontalWaveLength':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{octave1HorizontalWaveLength: value});
-			case 'Octave1VerticalWaveLength':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{octave1VerticalWaveLength: value});
-			case 'Octave1Altitude':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{octave1Altitude: value});
-			case 'Octave2HorizontalWaveLength':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{octave2HorizontalWaveLength: value});
-			case 'Octave2VerticalWaveLength':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{octave2VerticalWaveLength: value});
-			case 'Octave2Altitude':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{octave2Altitude: value});
-			case 'Color0R':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						color0: A2(_elm_community$linear_algebra$Math_Vector3$setX, value / 255.0, model.color0)
-					});
-			case 'Color0G':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						color0: A2(_elm_community$linear_algebra$Math_Vector3$setY, value / 255.0, model.color0)
-					});
-			case 'Color0B':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						color0: A2(_elm_community$linear_algebra$Math_Vector3$setZ, value / 255.0, model.color0)
-					});
-			case 'Color1R':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						color1: A2(_elm_community$linear_algebra$Math_Vector3$setX, value / 255.0, model.color1)
-					});
-			case 'Color1G':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						color1: A2(_elm_community$linear_algebra$Math_Vector3$setY, value / 255.0, model.color1)
-					});
-			case 'Color1B':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						color1: A2(_elm_community$linear_algebra$Math_Vector3$setZ, value / 255.0, model.color1)
-					});
-			case 'Color2R':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						color2: A2(_elm_community$linear_algebra$Math_Vector3$setX, value / 255.0, model.color2)
-					});
-			case 'Color2G':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						color2: A2(_elm_community$linear_algebra$Math_Vector3$setY, value / 255.0, model.color2)
-					});
-			case 'Color2B':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						color2: A2(_elm_community$linear_algebra$Math_Vector3$setZ, value / 255.0, model.color2)
-					});
-			case 'Color3R':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						color3: A2(_elm_community$linear_algebra$Math_Vector3$setX, value / 255.0, model.color3)
-					});
-			case 'Color3G':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						color3: A2(_elm_community$linear_algebra$Math_Vector3$setY, value / 255.0, model.color3)
-					});
-			case 'Color3B':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						color3: A2(_elm_community$linear_algebra$Math_Vector3$setZ, value / 255.0, model.color3)
-					});
-			default:
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{fogPower: value});
-		}
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{fogPower: value});
 	});
 var _psandahl$virtual_explorer$ToolBox_Update$setSliderValue2 = F3(
 	function (change, value, model) {
@@ -13670,15 +13526,9 @@ var _psandahl$virtual_explorer$ToolBox_Update$openToolBox = function (model) {
 };
 var _psandahl$virtual_explorer$ToolBox_Update$init = {
 	state: _psandahl$virtual_explorer$ToolBox_Model$Closed,
-	octave0HorizontalWaveLength: _psandahl$virtual_explorer$Settings$octave0MaxWaveLength,
-	octave0VerticalWaveLength: _psandahl$virtual_explorer$Settings$octave0MaxWaveLength,
-	octave0Altitude: 0,
-	octave1HorizontalWaveLength: _psandahl$virtual_explorer$Settings$octave1MaxWaveLength,
-	octave1VerticalWaveLength: _psandahl$virtual_explorer$Settings$octave1MaxWaveLength,
-	octave1Altitude: 0,
-	octave2HorizontalWaveLength: _psandahl$virtual_explorer$Settings$octave2MaxWaveLength,
-	octave2VerticalWaveLength: _psandahl$virtual_explorer$Settings$octave2MaxWaveLength,
-	octave2Altitude: 0,
+	octave0: A3(_elm_community$linear_algebra$Math_Vector3$vec3, _psandahl$virtual_explorer$Settings$octave0MaxWaveLength, _psandahl$virtual_explorer$Settings$octave0MaxWaveLength, 0),
+	octave1: A3(_elm_community$linear_algebra$Math_Vector3$vec3, _psandahl$virtual_explorer$Settings$octave1MaxWaveLength, _psandahl$virtual_explorer$Settings$octave1MaxWaveLength, 0),
+	octave2: A3(_elm_community$linear_algebra$Math_Vector3$vec3, _psandahl$virtual_explorer$Settings$octave2MaxWaveLength, _psandahl$virtual_explorer$Settings$octave2MaxWaveLength, 0),
 	color0: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 115 / 255, 69 / 255, 35 / 255),
 	color1: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 57 / 255, 118 / 255, 40 / 255),
 	color2: A3(_elm_community$linear_algebra$Math_Vector3$vec3, 45 / 255, 58 / 255, 61 / 255),
@@ -14268,7 +14118,7 @@ var _psandahl$virtual_explorer$Graphics_View$terrainEntities = F3(
 					_psandahl$virtual_explorer$Graphics_Internal_Terrain$vertexShader,
 					_psandahl$virtual_explorer$Graphics_Internal_Terrain$fragmentShader,
 					model.terrainMesh,
-					{uProjectionMatrix: model.projectionMatrix, uViewMatrix: camera.viewMatrix, uModelMatrix: tileModelMatrix, uWorldOffset: camera.worldOffset, uOctave0HorizontalWaveLength: toolBox.octave0HorizontalWaveLength, uOctave0VerticalWaveLength: toolBox.octave0VerticalWaveLength, uOctave0Altitude: toolBox.octave0Altitude, uOctave1HorizontalWaveLength: toolBox.octave1HorizontalWaveLength, uOctave1VerticalWaveLength: toolBox.octave1VerticalWaveLength, uOctave1Altitude: toolBox.octave1Altitude, uOctave2HorizontalWaveLength: toolBox.octave2HorizontalWaveLength, uOctave2VerticalWaveLength: toolBox.octave2VerticalWaveLength, uOctave2Altitude: toolBox.octave2Altitude, uMaxTerrainAltitude: _psandahl$virtual_explorer$Settings$maxTerrainAltitude, uColor0: toolBox.color0, uColor1: toolBox.color1, uColor2: toolBox.color2, uColor3: toolBox.color3, uAmbientLightColor: toolBox.ambientLightColor, uAmbientLightStrength: toolBox.ambientLightStrength, uSunLightColor: toolBox.sunLightColor, uSunLightDirection: toolBox.sunLightDirection, uUseFog: toolBox.useFog, uFog: toolBox.fog, uFogPower: toolBox.fogPower, uFogDistance: _psandahl$virtual_explorer$Settings$farPlane, uCameraPosition: camera.position});
+					{uProjectionMatrix: model.projectionMatrix, uViewMatrix: camera.viewMatrix, uModelMatrix: tileModelMatrix, uWorldOffset: camera.worldOffset, uOctave0: toolBox.octave0, uOctave1: toolBox.octave1, uOctave2: toolBox.octave2, uMaxTerrainAltitude: _psandahl$virtual_explorer$Settings$maxTerrainAltitude, uColor0: toolBox.color0, uColor1: toolBox.color1, uColor2: toolBox.color2, uColor3: toolBox.color3, uAmbientLightColor: toolBox.ambientLightColor, uAmbientLightStrength: toolBox.ambientLightStrength, uSunLightColor: toolBox.sunLightColor, uSunLightDirection: toolBox.sunLightDirection, uUseFog: toolBox.useFog, uFog: toolBox.fog, uFogPower: toolBox.fogPower, uFogDistance: _psandahl$virtual_explorer$Settings$farPlane, uCameraPosition: camera.position});
 			},
 			model.terrainPager.translationMatrices);
 	});
@@ -14905,6 +14755,131 @@ var _psandahl$virtual_explorer$ToolBox_View$colorSliderGroup2 = F3(
 					})
 			});
 	});
+var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup2 = F3(
+	function (caption, _p8, values) {
+		var _p9 = _p8;
+		var altitude = _elm_community$linear_algebra$Math_Vector3$getZ(values);
+		var vertical = _elm_community$linear_algebra$Math_Vector3$getY(values);
+		var horizontal = _elm_community$linear_algebra$Math_Vector3$getX(values);
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$style(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'width', _1: '95%'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '5px'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '1%'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'border', _1: '2px solid gray'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '5px'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'line-height', _1: '80%'},
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$span,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$style(
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'font-size', _1: '12px'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'font-family', _1: 'sans-serif'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '2.5%'},
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(caption),
+						_1: {ctor: '[]'}
+					}),
+				_1: A2(
+					_elm_lang$core$List$map,
+					function (_p10) {
+						var _p11 = _p10;
+						return A2(
+							_elm_lang$html$Html$input,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$type_('range'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$min(
+										_elm_lang$core$Basics$toString(_p11._1)),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$max(
+											_elm_lang$core$Basics$toString(_p11._2)),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$value(
+												_elm_lang$core$Basics$toString(_p11._3)),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$step('1.0'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('slider'),
+													_1: {
+														ctor: '::',
+														_0: _psandahl$virtual_explorer$ToolBox_View$onSliderChange2(
+															_psandahl$virtual_explorer$ToolBox_Model$Change(_p11._0)),
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									}
+								}
+							},
+							{ctor: '[]'});
+					},
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple4', _0: _p9._0._0, _1: _p9._0._1, _2: _p9._0._2, _3: horizontal},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple4', _0: _p9._1._0, _1: _p9._1._1, _2: _p9._1._2, _3: vertical},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple4', _0: _p9._2._0, _1: _p9._2._1, _2: _p9._2._2, _3: altitude},
+								_1: {ctor: '[]'}
+							}
+						}
+					})
+			});
+	});
 var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup = F2(
 	function (caption, sliders) {
 		return A2(
@@ -14972,8 +14947,8 @@ var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup = F2(
 					}),
 				_1: A2(
 					_elm_lang$core$List$map,
-					function (_p8) {
-						var _p9 = _p8;
+					function (_p12) {
+						var _p13 = _p12;
 						return A2(
 							_elm_lang$html$Html$input,
 							{
@@ -14982,15 +14957,15 @@ var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup = F2(
 								_1: {
 									ctor: '::',
 									_0: _elm_lang$html$Html_Attributes$min(
-										_elm_lang$core$Basics$toString(_p9._1)),
+										_elm_lang$core$Basics$toString(_p13._1)),
 									_1: {
 										ctor: '::',
 										_0: _elm_lang$html$Html_Attributes$max(
-											_elm_lang$core$Basics$toString(_p9._2)),
+											_elm_lang$core$Basics$toString(_p13._2)),
 										_1: {
 											ctor: '::',
 											_0: _elm_lang$html$Html_Attributes$value(
-												_elm_lang$core$Basics$toString(_p9._3)),
+												_elm_lang$core$Basics$toString(_p13._3)),
 											_1: {
 												ctor: '::',
 												_0: _elm_lang$html$Html_Attributes$step('1.0'),
@@ -14999,7 +14974,7 @@ var _psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup = F2(
 													_0: _elm_lang$html$Html_Attributes$class('slider'),
 													_1: {
 														ctor: '::',
-														_0: _psandahl$virtual_explorer$ToolBox_View$onSliderChange(_p9._0),
+														_0: _psandahl$virtual_explorer$ToolBox_View$onSliderChange(_p13._0),
 														_1: {ctor: '[]'}
 													}
 												}
@@ -15120,58 +15095,148 @@ var _psandahl$virtual_explorer$ToolBox_View$pane = function (model) {
 					{ctor: '[]'}),
 				_1: {
 					ctor: '::',
-					_0: A2(
-						_psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup,
+					_0: A3(
+						_psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup2,
 						'Octave0 horizontal/vertical/altitude',
 						{
-							ctor: '::',
-							_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave0HorizontalWaveLength, _1: 1, _2: _psandahl$virtual_explorer$Settings$octave0MaxWaveLength, _3: model.octave0HorizontalWaveLength},
+							ctor: '_Tuple3',
+							_0: {
+								ctor: '_Tuple3',
+								_0: F2(
+									function (model, value) {
+										return _elm_lang$core$Native_Utils.update(
+											model,
+											{
+												octave0: A2(_elm_community$linear_algebra$Math_Vector3$setX, value, model.octave0)
+											});
+									}),
+								_1: 1,
+								_2: _psandahl$virtual_explorer$Settings$octave0MaxWaveLength
+							},
 							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave0VerticalWaveLength, _1: 1, _2: _psandahl$virtual_explorer$Settings$octave0MaxWaveLength, _3: model.octave0VerticalWaveLength},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave0Altitude, _1: 0, _2: _psandahl$virtual_explorer$Settings$octave0MaxAltitude, _3: model.octave0Altitude},
-									_1: {ctor: '[]'}
-								}
+								ctor: '_Tuple3',
+								_0: F2(
+									function (model, value) {
+										return _elm_lang$core$Native_Utils.update(
+											model,
+											{
+												octave0: A2(_elm_community$linear_algebra$Math_Vector3$setY, value, model.octave0)
+											});
+									}),
+								_1: 1,
+								_2: _psandahl$virtual_explorer$Settings$octave0MaxWaveLength
+							},
+							_2: {
+								ctor: '_Tuple3',
+								_0: F2(
+									function (model, value) {
+										return _elm_lang$core$Native_Utils.update(
+											model,
+											{
+												octave0: A2(_elm_community$linear_algebra$Math_Vector3$setZ, value, model.octave0)
+											});
+									}),
+								_1: 0,
+								_2: _psandahl$virtual_explorer$Settings$octave0MaxAltitude
 							}
-						}),
+						},
+						model.octave0),
 					_1: {
 						ctor: '::',
-						_0: A2(
-							_psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup,
-							'Octave1 horizontal/vertical/altitude',
+						_0: A3(
+							_psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup2,
+							'Octave0 horizontal/vertical/altitude',
 							{
-								ctor: '::',
-								_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave1HorizontalWaveLength, _1: 1, _2: _psandahl$virtual_explorer$Settings$octave1MaxWaveLength, _3: model.octave1HorizontalWaveLength},
+								ctor: '_Tuple3',
+								_0: {
+									ctor: '_Tuple3',
+									_0: F2(
+										function (model, value) {
+											return _elm_lang$core$Native_Utils.update(
+												model,
+												{
+													octave1: A2(_elm_community$linear_algebra$Math_Vector3$setX, value, model.octave1)
+												});
+										}),
+									_1: 1,
+									_2: _psandahl$virtual_explorer$Settings$octave1MaxWaveLength
+								},
 								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave1VerticalWaveLength, _1: 1, _2: _psandahl$virtual_explorer$Settings$octave1MaxWaveLength, _3: model.octave1VerticalWaveLength},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave1Altitude, _1: 0, _2: _psandahl$virtual_explorer$Settings$octave1MaxAltitude, _3: model.octave1Altitude},
-										_1: {ctor: '[]'}
-									}
+									ctor: '_Tuple3',
+									_0: F2(
+										function (model, value) {
+											return _elm_lang$core$Native_Utils.update(
+												model,
+												{
+													octave1: A2(_elm_community$linear_algebra$Math_Vector3$setY, value, model.octave1)
+												});
+										}),
+									_1: 1,
+									_2: _psandahl$virtual_explorer$Settings$octave1MaxWaveLength
+								},
+								_2: {
+									ctor: '_Tuple3',
+									_0: F2(
+										function (model, value) {
+											return _elm_lang$core$Native_Utils.update(
+												model,
+												{
+													octave1: A2(_elm_community$linear_algebra$Math_Vector3$setZ, value, model.octave1)
+												});
+										}),
+									_1: 0,
+									_2: _psandahl$virtual_explorer$Settings$octave1MaxAltitude
 								}
-							}),
+							},
+							model.octave1),
 						_1: {
 							ctor: '::',
-							_0: A2(
-								_psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup,
-								'Octave2 horizontal/vertical/altitude',
+							_0: A3(
+								_psandahl$virtual_explorer$ToolBox_View$octaveSliderGroup2,
+								'Octave0 horizontal/vertical/altitude',
 								{
-									ctor: '::',
-									_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave2HorizontalWaveLength, _1: 1, _2: _psandahl$virtual_explorer$Settings$octave2MaxWaveLength, _3: model.octave2HorizontalWaveLength},
+									ctor: '_Tuple3',
+									_0: {
+										ctor: '_Tuple3',
+										_0: F2(
+											function (model, value) {
+												return _elm_lang$core$Native_Utils.update(
+													model,
+													{
+														octave2: A2(_elm_community$linear_algebra$Math_Vector3$setX, value, model.octave2)
+													});
+											}),
+										_1: 1,
+										_2: _psandahl$virtual_explorer$Settings$octave2MaxWaveLength
+									},
 									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave2VerticalWaveLength, _1: 1, _2: _psandahl$virtual_explorer$Settings$octave2MaxWaveLength, _3: model.octave2VerticalWaveLength},
-										_1: {
-											ctor: '::',
-											_0: {ctor: '_Tuple4', _0: _psandahl$virtual_explorer$ToolBox_Model$Octave2Altitude, _1: 0, _2: _psandahl$virtual_explorer$Settings$octave2MaxAltitude, _3: model.octave2Altitude},
-											_1: {ctor: '[]'}
-										}
+										ctor: '_Tuple3',
+										_0: F2(
+											function (model, value) {
+												return _elm_lang$core$Native_Utils.update(
+													model,
+													{
+														octave2: A2(_elm_community$linear_algebra$Math_Vector3$setY, value, model.octave2)
+													});
+											}),
+										_1: 1,
+										_2: _psandahl$virtual_explorer$Settings$octave2MaxWaveLength
+									},
+									_2: {
+										ctor: '_Tuple3',
+										_0: F2(
+											function (model, value) {
+												return _elm_lang$core$Native_Utils.update(
+													model,
+													{
+														octave2: A2(_elm_community$linear_algebra$Math_Vector3$setZ, value, model.octave2)
+													});
+											}),
+										_1: 0,
+										_2: _psandahl$virtual_explorer$Settings$octave2MaxAltitude
 									}
-								}),
+								},
+								model.octave2),
 							_1: {
 								ctor: '::',
 								_0: A3(
