@@ -15,6 +15,7 @@ import Settings
 import Graphics.Internal.SkyDome as SkyDome
 import Graphics.Internal.TerrainPager as TerrainPager
 import Graphics.Internal.Terrain as Terrain
+import Graphics.Internal.WaterSurface as WaterSurface
 import Math.Matrix4 as Mat4 exposing (Mat4)
 import Window exposing (Size)
 
@@ -29,6 +30,7 @@ init viewport camera =
     , cursor = Default
     , skyDomeMesh = SkyDome.makeMesh
     , terrainMesh = Terrain.makeMesh
+    , waterMesh = WaterSurface.makeMesh
     , terrainPager = TerrainPager.init (getAspectRatio viewport) camera
     }
 

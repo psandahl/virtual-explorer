@@ -8,6 +8,7 @@ import Composer.Model exposing (Msg(..))
 import Graphics.Internal.SkyDome as SkyDome
 import Graphics.Internal.Sun as Sun
 import Graphics.Internal.Terrain as Terrain
+import Graphics.Internal.WaterSurface as WaterSurface
 import Graphics.Model exposing (Cursor(..), Model)
 import Html exposing (Attribute, Html)
 import Html.Attributes as Attr
@@ -19,6 +20,7 @@ import ToolBox.Model as ToolBox
 import WebGL as GL exposing (Entity)
 import WebGL.Settings as Settings
 import WebGL.Settings.DepthTest as DepthTest
+import WebGL.Settings.Blend as Blend
 
 
 {-| Main view function for the graphics view.
@@ -32,7 +34,6 @@ view camera toolBox model =
             [ GL.antialias
             , GL.depth 1
             , GL.alpha False
-            , GL.clearColor (135.0 / 255.0) (206.0 / 255.0) (235.0 / 255.0) 1
             ]
             [ Attr.height model.viewport.height
             , Attr.width model.viewport.width
@@ -43,7 +44,7 @@ view camera toolBox model =
             ]
          <|
             skyDomeEntity camera toolBox model
-                :: terrainEntities camera toolBox model
+                :: (terrainEntities camera toolBox model ++ [ waterSurfaceEntity camera toolBox model ])
         )
             :: Sun.sunWithFlares model.viewport model.projectionMatrix camera.viewMatrix toolBox.sunLightDirection
 
@@ -105,6 +106,26 @@ terrainEntities camera toolBox model =
         )
     <|
         model.terrainPager.translationMatrices
+
+
+{-| Produce the water surface.
+-}
+waterSurfaceEntity : Camera.Model -> ToolBox.Model -> Model -> Entity
+waterSurfaceEntity camera toolBox model =
+    GL.entityWith
+        [ DepthTest.default
+        , Settings.cullFace Settings.back
+        , Blend.add Blend.srcAlpha Blend.oneMinusSrcAlpha
+        ]
+        WaterSurface.vertexShader
+        WaterSurface.fragmentShader
+        model.waterMesh
+        { uProjectionMatrix = model.projectionMatrix
+        , uViewMatrix = camera.viewMatrix
+        , uHeight = 150.0
+        , uColor = toolBox.sky1
+        , uTransparancy = 0.2
+        }
 
 
 onMouseDown : Attribute Msg
