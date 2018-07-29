@@ -56,4 +56,6 @@ type alias Model =
     , ambientLightStrength : Float
     , sunLightColor : Vec3
     , sunLightDirection : Vec3
+    , waterHeight : Float
+    , waterOpacity : Float
     }

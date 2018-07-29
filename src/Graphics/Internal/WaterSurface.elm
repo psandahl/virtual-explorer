@@ -9,9 +9,9 @@ module Graphics.Internal.WaterSurface
 {-| Implementation of a WaterSurface.
 -}
 
-import Settings
 import Math.Matrix4 exposing (Mat4)
 import Math.Vector3 as Vec3 exposing (Vec3)
+import Settings
 import WebGL as GL exposing (Mesh, Shader)
 
 
@@ -42,7 +42,7 @@ makeMesh =
         indices =
             [ ( 1, 0, 2 ), ( 1, 2, 3 ) ]
     in
-        GL.indexedTriangles vertices indices
+    GL.indexedTriangles vertices indices
 
 
 {-| WaterSurface's vertex shader. Just doing transformations.
@@ -52,7 +52,7 @@ vertexShader :
         { uniforms
             | uViewMatrix : Mat4
             , uProjectionMatrix : Mat4
-            , uHeight : Float
+            , uWaterHeight : Float
         }
         {}
 vertexShader =
@@ -63,13 +63,13 @@ attribute vec3 aPosition;
 
 uniform mat4 uViewMatrix;
 uniform mat4 uProjectionMatrix;
-uniform float uHeight;
+uniform float uWaterHeight;
 
 void main()
 {
     // Adjust the height.
     mat4 modelMatrix = mat4(1.0);
-    modelMatrix[3][1] = uHeight;
+    modelMatrix[3][1] = uWaterHeight;
 
     mat4 mvp = uProjectionMatrix * uViewMatrix * modelMatrix;
 
@@ -85,7 +85,7 @@ fragmentShader :
     Shader {}
         { uniforms
             | uColor : Vec3
-            , uTransparancy : Float
+            , uWaterOpacity : Float
         }
         {}
 fragmentShader =
@@ -93,10 +93,10 @@ fragmentShader =
 precision mediump float;
 
 uniform vec3 uColor;
-uniform float uTransparancy;
+uniform float uWaterOpacity;
 
 void main()
 {
-    gl_FragColor = vec4(uColor, uTransparancy);
+    gl_FragColor = vec4(uColor, uWaterOpacity);
 }
     |]

@@ -19,8 +19,8 @@ import Settings
 import ToolBox.Model as ToolBox
 import WebGL as GL exposing (Entity)
 import WebGL.Settings as Settings
-import WebGL.Settings.DepthTest as DepthTest
 import WebGL.Settings.Blend as Blend
+import WebGL.Settings.DepthTest as DepthTest
 
 
 {-| Main view function for the graphics view.
@@ -122,9 +122,9 @@ waterSurfaceEntity camera toolBox model =
         model.waterMesh
         { uProjectionMatrix = model.projectionMatrix
         , uViewMatrix = camera.viewMatrix
-        , uHeight = 150.0
+        , uWaterHeight = toolBox.waterHeight
         , uColor = toolBox.sky1
-        , uTransparancy = 0.2
+        , uWaterOpacity = toolBox.waterOpacity
         }
 
 

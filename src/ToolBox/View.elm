@@ -124,6 +124,7 @@ pane model =
             )
             model.color3
         , fogControlGroup model
+        , waterControlGroup model
         ]
 
 
@@ -287,6 +288,51 @@ fogControlGroup model =
             , Attr.step "0.1"
             , Attr.class "slider"
             , onSliderChange <| Change (\model value -> { model | fogPower = value })
+            ]
+            []
+        ]
+
+
+waterControlGroup : Model -> Html Msg
+waterControlGroup model =
+    Html.div
+        [ Attr.style
+            [ ( "width", "95%" )
+            , ( "margin-top", "5px" )
+            , ( "margin-left", "1%" )
+            , ( "border", "2px solid gray" )
+            , ( "border-radius", "5px" )
+            , ( "line-height", "80%" )
+            ]
+        ]
+        [ Html.span
+            [ Attr.style
+                [ ( "font-size", "12px" )
+                , ( "font-family", "sans-serif" )
+                , ( "color", "white" )
+                , ( "margin-left", "2.5%" )
+                ]
+            ]
+            [ Html.text "Water surface height/opacity"
+            ]
+        , Html.input
+            [ Attr.type_ "range"
+            , Attr.min <| toString -Settings.maxTerrainAltitude
+            , Attr.max <| toString Settings.maxTerrainAltitude
+            , Attr.value <| toString model.waterHeight
+            , Attr.step "1.0"
+            , Attr.class "slider"
+            , onSliderChange <| Change (\model value -> { model | waterHeight = value })
+            ]
+            []
+        , Html.input
+            [ Attr.type_ "range"
+            , Attr.min "0.0"
+            , Attr.max "1.0"
+            , Attr.value <| toString model.waterOpacity
+            , Attr.step "0.05"
+            , Attr.class "slider"
+            , onSliderChange <| Change (\model value -> { model | waterOpacity = value })
             ]
             []
         ]

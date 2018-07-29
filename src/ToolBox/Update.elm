@@ -36,6 +36,8 @@ init =
     , ambientLightStrength = 0.2
     , sunLightColor = Vec3.vec3 1 1 1
     , sunLightDirection = Vec3.normalize <| Vec3.vec3 -1.5 1 0 -- Sun from the east (remember: north is positive z)
+    , waterHeight = -Settings.maxTerrainAltitude
+    , waterOpacity = 0.0
     }
 
 
